@@ -16,4 +16,24 @@
   justify-content: space-between;
 }
 
+.custom-list li::marker {
+  color: #6c63ff;
+}
 
+.flex-wrap-container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  column-gap: 50px;
+}
+
+.flex-wrap-container > div {
+  margin: 30px 0;
+  width: 100%;
+}
+
+@media screen and (max-width: 1200px) {
+  .flex-wrap-container {
+    flex-direction: column;
+  }
+}
