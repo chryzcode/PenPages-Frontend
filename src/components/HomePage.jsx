@@ -74,6 +74,15 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+
+      <div className="text-center my-20">
+        <p className="text-4xl font-bold max-w-5xl mx-auto">
+          Write and share your content by <Link className="text-customPurple">getting started</Link> on PenPages.
+        </p>
+        <div className="text-2xl mt-14">
+          Contact us via <Link className="text-customPurple">E-mail</Link>
+        </div>
+      </div>
     </div>
   );
 };
