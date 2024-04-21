@@ -25,6 +25,7 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   column-gap: 50px;
+  align-items: center;
 }
 
 .flex-wrap-container > div {

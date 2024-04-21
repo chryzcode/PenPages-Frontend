@@ -19,17 +19,17 @@ const HomePage = () => {
           <Link className="text-xl bg-customPurple py-3 px-6 text-white rounded-full" to="/">
             Get Started
           </Link>
-          <img className=" mx-auto my-10 home-page-image-size" src={addContentSVG} />
+          <img className=" mx-auto my-16 home-page-image-size" src={addContentSVG} />
         </div>
       </div>
 
-      <div className="text-center mt-20">
+      <div className="text-center mt-32">
         <p className="text-4xl  font-semibold max-w-xl  mx-auto">
           <span className="text-customPurple">Publish</span> your poem, article and e-book{" "}
           <span className="text-customPurple">at a go</span>.
         </p>
 
-        <div className="flex-wrap-container py-20">
+        <div className="flex-wrap-container py-20 align-middle">
           <div className="text-center mx-auto">
             <p className="text-3xl font-bold max-w-xl mx-auto">
               <span className="text-customPurple">No</span> content, niche and audience
@@ -57,20 +57,20 @@ const HomePage = () => {
         </p>
 
         <div className="flex-wrap-container py-20">
-          <div className="mx-auto w-9/12">
-            <img className=" w-8/12 mx-auto" src={contentStructureSVG} />
+          <div className="mx-auto w-6/12">
+            <img className=" w-6/12 mx-auto" src={contentStructureSVG} />
           </div>
 
           <div className="text-center mx-auto">
             <p className="text-3xl font-bold max-w-xl mx-auto">
               <span className="text-customPurple">Seamless</span> user experience
             </p>
-            <div className="text-left text-xl list-disc custom-list py-10 mx-auto w-4/5 pl-10">
+            <ul className="text-left text-xl list-disc custom-list py-10 mx-auto w-4/5 pl-10">
               <li className="py-2">Sign up with just a few clicks.</li>
               <li className="py-2">Same text editor for different content.</li>
               <li className="py-2">Interactive comment/ reply system.</li>
               <li className="py-2">High content search engine optimization (SEO).</li>
-            </div>
+            </ul>
           </div>
         </div>
       </div>
