@@ -1,5 +1,6 @@
 import React from "react";
 import addContentSVG from "../assets/images/add-content.svg";
+import publishArticleSVG from "../assets/images/publish-article.svg";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
@@ -10,7 +11,7 @@ const HomePage = () => {
           <p className="text-5xl my-10 font-semibold">
             The <span className="text-customPurple">all in one</span> content creation platform!
           </p>
-          <p className="text-2xl my-10 max-w-xl mx-auto">
+          <p className="text-2xl my-14 max-w-xl mx-auto">
             Create your content seamlessly as a poet, blogger and author on PenPages.
           </p>
           <Link className="text-xl bg-customPurple py-3 px-6 text-white rounded-full" to="/">
@@ -20,10 +21,21 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="text-center max-w-3xl mx-auto my-20">
-        <p className="text-4xl my-10 font-semibold">
+      <div className="text-center my-32">
+        <p className="text-4xl my-10 font-semibold max-w-xl  mx-auto">
           Publish your poem, article and e-book <span className="text-customPurple">at a go</span>.
         </p>
+
+        <div className="flex flex-nowrap space-x-56 my-20">
+          <div className="w-1.2">
+            <p className="text-3xl my-10 font-bold">
+              <span className="text-customPurple">No</span> content, niche and audience
+              <span className="text-customPurple"> limitation</span>!
+            </p>
+          </div>
+
+          <img className="w-1.2  " src={publishArticleSVG} />
+        </div>
       </div>
     </div>
   );
