@@ -16,7 +16,7 @@ const HomePage = () => {
           <p className="text-2xl my-14 max-w-xl mx-auto">
             Create your content seamlessly as a poet, blogger and author on PenPages.
           </p>
-          <Link className="text-xl bg-customPurple py-3 px-6 text-white rounded-full" to="/">
+          <Link className="text-xl bg-customPurple py-3 px-6 text-white rounded-full" to="/sign-up">
             Get Started
           </Link>
           <img className=" mx-auto my-16 home-page-image-size" src={addContentSVG} />
@@ -77,10 +77,13 @@ const HomePage = () => {
 
       <div className="text-center my-20">
         <p className="text-4xl font-bold max-w-5xl mx-auto">
-          Write and share your content by <Link className="text-customPurple">getting started</Link> on PenPages.
+          Write and share your content by{" "}
+          <Link className="text-customPurple underline" to="/sign-up">
+            getting started
+          </Link> on <span className="text-customPurple">PenPages</span>.
         </p>
         <div className="text-2xl mt-14">
-          Contact us via <Link className="text-customPurple">E-mail</Link>
+          Contact us via <Link className="text-customPurple underline">E-mail</Link>
         </div>
       </div>
     </div>
