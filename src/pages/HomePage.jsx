@@ -4,6 +4,7 @@ import publishArticleSVG from "../assets/images/publish-article.svg";
 import contentStructureSVG from "../assets/images/content-structure.svg";
 import { Link } from "react-router-dom";
 
+
 const HomePage = () => {
   return (
     <div className="mx-10">

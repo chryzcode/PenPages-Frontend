@@ -1,8 +1,8 @@
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
 import "./index.css";
 import MainLayout from "./layout/MainLayout";
-import HomePage from "../public/pages/HomePage";
-import SignUpPage from "../public/pages/SignUpPage";
+import HomePage from "./pages/HomePage";
+import SignUpPage from "./pages/SignUpPage";
 
 function App() {
   const router = createBrowserRouter(
