@@ -82,6 +82,14 @@ const SignUpPage = () => {
               />
             </div>
           </form>
+
+          <div className="mx-auto w-32 my-10">
+            <button
+              className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
+              type="submit">
+              Sign Up
+            </button>
+          </div>
         </div>
       </div>
     </div>
