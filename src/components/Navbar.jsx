@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 const Navbar = () => {
   return (
     <nav className="main-nav">
-      <div>PenPages</div>
+      <NavLink to="/">PenPages</NavLink>
 
       <span className="nav-links text-xl">
         <NavLink className="pr-6">Feeds</NavLink>
@@ -13,7 +13,9 @@ const Navbar = () => {
 
       <span className="nav-links text-xl">
         <NavLink className="pr-6">login</NavLink>
-        <NavLink to="/sign-up" className=" bg-customPurple py-1 px-3 text-white rounded-full text-lg">
+        <NavLink
+          to="/sign-up"
+          className="bg-customPurple hover:bg-indigo-600 text-lg font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
           sign up
         </NavLink>
       </span>

@@ -1,7 +1,7 @@
 import React from "react";
-import addContentSVG from "../assets/images/add-content.svg";
-import publishArticleSVG from "../assets/images/publish-article.svg";
-import contentStructureSVG from "../assets/images/content-structure.svg";
+import AddContentSVG from "../assets/images/add-content.svg";
+import PublishArticleSVG from "../assets/images/publish-article.svg";
+import ContentStructureSVG from "../assets/images/content-structure.svg";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
@@ -19,7 +19,7 @@ const HomePage = () => {
           <Link className="text-xl bg-customPurple py-3 px-6 text-white rounded-full" to="/sign-up">
             Get Started
           </Link>
-          <img className=" mx-auto my-16 home-page-image-size" src={addContentSVG} />
+          <img className=" mx-auto my-16 home-page-image-size" src={AddContentSVG} />
         </div>
       </div>
 
@@ -46,7 +46,7 @@ const HomePage = () => {
           </div>
 
           <div className="mx-auto">
-            <img className="home-page-image-size mx-auto" src={publishArticleSVG} />
+            <img className="home-page-image-size mx-auto" src={PublishArticleSVG} />
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@ const HomePage = () => {
 
         <div className="flex-wrap-container py-20">
           <div className="mx-auto w-6/12">
-            <img className=" w-6/12 mx-auto" src={contentStructureSVG} />
+            <img className=" w-6/12 mx-auto" src={ContentStructureSVG} />
           </div>
 
           <div className="text-center mx-auto">
