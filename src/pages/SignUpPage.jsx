@@ -1,7 +1,35 @@
 import React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import SignUpSVG from "../assets/images/sign-up.svg";
 
-const SignUpPage = () => {
+const SignUpPage = ({ addJobSubmit }) => {
+  const [title, setTitle] = useState("");
+  const [type, setType] = useState("Full-Time");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  const [salary, setSalary] = useState("Under $50K");
+  const [companyName, setCompanyName] = useState("");
+  const [companyDescription, setCompanyDescription] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+
+  const navigate = useNavigate();
+
+  const submitForm = e => {
+    e.preventDefault();
+    const newUser = {
+      firstName,
+      lastName,
+      email,
+      username,
+      password,
+    };
+    addJobSubmit(newUser);
+    toast.success("Registered successfully");
+    return navigate("/jobs");
+  };
   return (
     <div className="my-10 mx-10">
       <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Sign Up</p>
