@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SignUpSVG from "../assets/images/sign-up.svg";
+import { Link } from "react-router-dom";
 
 const SignUpPage = ({ signUpSubmit }) => {
   const [firstName, setFirstName] = useState("");
@@ -37,17 +38,18 @@ const SignUpPage = ({ signUpSubmit }) => {
     };
     // Call signUp function
     const data = await signUp(newUser);
-    if (data.msg) {
-      setErrorMessage(data.msg);
-      toast.error(data.msg);
+    if (data.error) {
+      setErrorMessage(data.error);
+      toast.error(errorMessage);
     } else {
-      toast.success("Signed up successfully");
+      console.log(data);
+      toast.success(data.success);
       navigate("/");
     }
   };
 
   return (
-    <div className="my-10 mx-10">
+    <div className="mx-10">
       <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Sign Up</p>
       <div className="flex-wrap-container py-5 align-middle px-10">
         <div>
@@ -142,7 +144,7 @@ const SignUpPage = ({ signUpSubmit }) => {
               />
             </div>
 
-            <div className="mx-auto w-32 my-10">
+            <div className="mx-auto w-32 my-8 text-center">
               <button
                 className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                 type="submit">
@@ -150,6 +152,9 @@ const SignUpPage = ({ signUpSubmit }) => {
               </button>
             </div>
           </form>
+          <div className="text-customPurple text-center">
+            <Link to=" ">Forgot password</Link>
+          </div>
         </div>
 
         <div>
