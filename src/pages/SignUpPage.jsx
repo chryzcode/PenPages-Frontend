@@ -10,11 +10,24 @@ const SignUpPage = ({ signUpSubmit }) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const navigate = useNavigate();
 
-  const submitForm = e => {
+  const signUp = async newUser => {
+    const res = await fetch("/api/user/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUser),
+    });
+    return res.json();
+  };
+
+  const submitForm = async e => {
     e.preventDefault();
+
     const newUser = {
       firstName,
       lastName,
@@ -22,10 +35,17 @@ const SignUpPage = ({ signUpSubmit }) => {
       username,
       password,
     };
-    signUpSubmit(newUser);
-    toast.success("Signed up successfully");
-    return navigate("/");
+    // Call signUp function
+    const data = await signUp(newUser);
+    if (data.msg) {
+      setErrorMessage(data.msg);
+      toast.error(data.msg);
+    } else {
+      toast.success("Signed up successfully");
+      navigate("/");
+    }
   };
+
   return (
     <div className="my-10 mx-10">
       <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Sign Up</p>
