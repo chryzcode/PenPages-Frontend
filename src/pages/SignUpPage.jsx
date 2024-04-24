@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import SignUpSVG from "../assets/images/sign-up.svg";
 import { Link } from "react-router-dom";
 
-const SignUpPage = ({ signUpSubmit }) => {
+const SignUpPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -37,11 +37,9 @@ const SignUpPage = ({ signUpSubmit }) => {
     };
     // Call signUp function
     const data = await signUp(newUser);
-    console.log(data, data.error);
     if (data.error) {
       toast.error(data.error);
     } else {
-      console.log(data);
       toast.success(data.success);
       navigate("/");
     }
@@ -152,7 +150,7 @@ const SignUpPage = ({ signUpSubmit }) => {
             </div>
           </form>
           <div className="text-customPurple text-center">
-            <Link to=" ">Forgot password</Link>
+            <Link to=" ">Sign In</Link>
           </div>
         </div>
 
