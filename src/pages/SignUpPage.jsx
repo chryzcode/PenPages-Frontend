@@ -49,7 +49,7 @@ const SignUpPage = ({ signUpSubmit }) => {
   };
 
   return (
-    <div className="my-10 mx-10">
+    <div className="mx-10">
       <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Sign Up</p>
       <div className="flex-wrap-container py-5 align-middle px-10">
         <div>
@@ -144,7 +144,7 @@ const SignUpPage = ({ signUpSubmit }) => {
               />
             </div>
 
-            <div className="mx-auto w-32 my-10">
+            <div className="mx-auto w-32 my-8 text-center">
               <button
                 className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                 type="submit">
@@ -152,14 +152,14 @@ const SignUpPage = ({ signUpSubmit }) => {
               </button>
             </div>
           </form>
+          <div className="text-customPurple text-center">
+            <Link to=" ">Forgot password</Link>
+          </div>
         </div>
 
         <div>
           <img src={SignUpSVG} />
         </div>
-      </div>
-      <div className="text-customPurple text-center">
-        <Link>Forgot password</Link>
       </div>
     </div>
   );
