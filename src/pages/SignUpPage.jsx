@@ -4,16 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SignUpSVG from "../assets/images/sign-up.svg";
 
-const SignUpPage = ({ addJobSubmit }) => {
-  const [title, setTitle] = useState("");
-  const [type, setType] = useState("Full-Time");
-  const [location, setLocation] = useState("");
-  const [description, setDescription] = useState("");
-  const [salary, setSalary] = useState("Under $50K");
-  const [companyName, setCompanyName] = useState("");
-  const [companyDescription, setCompanyDescription] = useState("");
-  const [contactEmail, setContactEmail] = useState("");
-  const [contactPhone, setContactPhone] = useState("");
+const SignUpPage = ({ addUserSubmit }) => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
 
   const navigate = useNavigate();
 
@@ -26,18 +23,14 @@ const SignUpPage = ({ addJobSubmit }) => {
       username,
       password,
     };
-    addJobSubmit(newUser);
-    toast.success("Registered successfully");
-    return navigate("/jobs");
+    addUserSubmit(newUser);
+    toast.success("Signed up successfully");
+    return navigate("/");
   };
   return (
     <div className="my-10 mx-10">
       <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Sign Up</p>
       <div className="flex-wrap-container py-5 align-middle px-10">
-        <div>
-          <img src={SignUpSVG} />
-        </div>
-
         <div>
           <form action="">
             <div className="my-3">
@@ -118,6 +111,10 @@ const SignUpPage = ({ addJobSubmit }) => {
               Sign Up
             </button>
           </div>
+        </div>
+
+        <div>
+          <img src={SignUpSVG} />
         </div>
       </div>
     </div>
