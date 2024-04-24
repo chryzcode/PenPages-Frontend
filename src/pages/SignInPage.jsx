@@ -2,6 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import signInSVG from "../assets/images/sign-in.svg";
+import { Link } from "react-router-dom";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
@@ -83,7 +85,7 @@ const SignInPage = () => {
               <button
                 className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                 type="submit">
-                Sign Up
+                Sign In
               </button>
             </div>
           </form>
@@ -93,7 +95,7 @@ const SignInPage = () => {
         </div>
 
         <div>
-          <img src={SignUpSVG} />
+          <img src={signInSVG} />
         </div>
       </div>
     </div>
