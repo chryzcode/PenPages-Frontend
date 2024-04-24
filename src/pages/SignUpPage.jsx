@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SignUpSVG from "../assets/images/sign-up.svg";
+import { Link } from "react-router-dom";
 
 const SignUpPage = ({ signUpSubmit }) => {
   const [firstName, setFirstName] = useState("");
@@ -37,11 +38,12 @@ const SignUpPage = ({ signUpSubmit }) => {
     };
     // Call signUp function
     const data = await signUp(newUser);
-    if (data.msg) {
-      setErrorMessage(data.msg);
-      toast.error(data.msg);
+    if (data.error) {
+      setErrorMessage(data.error);
+      toast.error(errorMessage);
     } else {
-      toast.success("Signed up successfully");
+      console.log(data);
+      toast.success(data.success);
       navigate("/");
     }
   };
@@ -155,6 +157,9 @@ const SignUpPage = ({ signUpSubmit }) => {
         <div>
           <img src={SignUpSVG} />
         </div>
+      </div>
+      <div className="text-customPurple text-center">
+        <Link>Forgot password</Link>
       </div>
     </div>
   );
