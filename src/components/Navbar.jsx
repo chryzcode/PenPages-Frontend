@@ -12,7 +12,9 @@ const Navbar = () => {
       </span>
 
       <span className="nav-links text-xl">
-        <NavLink className="pr-6">login</NavLink>
+        <NavLink to="/sign-in" className="pr-6">
+          login
+        </NavLink>
         <NavLink
           to="/sign-up"
           className="bg-customPurple hover:bg-indigo-600 text-lg font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">

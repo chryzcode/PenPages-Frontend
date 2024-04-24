@@ -1,26 +1,21 @@
 import React from "react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import SignUpSVG from "../assets/images/sign-up.svg";
-import { Link } from "react-router-dom";
+import { useState } from "react";
 
-const SignUpPage = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+const SignInPage = () => {
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
-  const signUp = async newUser => {
-    const res = await fetch("/api/user/auth/register", {
+  const signIn = async user => {
+    const res = await fetch("/api/user/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newUser),
+      body: JSON.stringify(user),
     });
     return res.json();
   };
@@ -28,15 +23,12 @@ const SignUpPage = () => {
   const submitForm = async e => {
     e.preventDefault();
 
-    const newUser = {
-      firstName,
-      lastName,
+    const user = {
       email,
-      username,
       password,
     };
-    // Call signUp function
-    const data = await signUp(newUser);
+
+    const data = await signIn(user);
     if (data.error) {
       toast.error(data.error);
     } else {
@@ -52,47 +44,11 @@ const SignUpPage = () => {
         <div>
           <form onSubmit={submitForm}>
             <div className="my-3">
-              <label htmlFor="firstName" className="block mb-2">
-                First Name
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                value={firstName}
-                onChange={e => {
-                  setFirstName(e.target.value);
-                }}
-                className="border rounded w-full py-2 px-3 mb-2"
-                placeholder="John"
-                required
-              />
-            </div>
-
-            <div className="my-3">
-              <label htmlFor="lastName" className="block mb-2">
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                value={lastName}
-                onChange={e => {
-                  setLastName(e.target.value);
-                }}
-                className="border rounded w-full py-2 px-3 mb-2"
-                placeholder="Doe"
-                required
-              />
-            </div>
-
-            <div className="my-3">
               <label htmlFor="email" className="block mb-2">
-                Email Address
+                Email / Username
               </label>
               <input
-                type="email"
+                type="text"
                 id="email"
                 name="email"
                 value={email}
@@ -100,25 +56,7 @@ const SignUpPage = () => {
                   setEmail(e.target.value);
                 }}
                 className="border rounded w-full py-2 px-3 mb-2"
-                placeholder="johndoe@gmail.com"
-                required
-              />
-            </div>
-
-            <div className="my-3">
-              <label htmlFor="username" className="block mb-2">
-                Username
-              </label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={username}
-                onChange={e => {
-                  setUsername(e.target.value);
-                }}
-                className="border rounded w-full py-2 px-3 mb-2"
-                placeholder="Jdoe"
+                placeholder="JDoe or johndoe@gmail.com"
                 required
               />
             </div>
@@ -150,7 +88,7 @@ const SignUpPage = () => {
             </div>
           </form>
           <div className="text-customPurple text-center">
-            <Link to=" ">Sign In</Link>
+            <Link to=" ">Forgot password</Link>
           </div>
         </div>
 
@@ -162,4 +100,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default SignInPage;
