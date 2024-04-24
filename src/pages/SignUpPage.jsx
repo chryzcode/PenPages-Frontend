@@ -11,7 +11,6 @@ const SignUpPage = ({ signUpSubmit }) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const navigate = useNavigate();
 
@@ -38,9 +37,9 @@ const SignUpPage = ({ signUpSubmit }) => {
     };
     // Call signUp function
     const data = await signUp(newUser);
+    console.log(data, data.error);
     if (data.error) {
-      setErrorMessage(data.error);
-      toast.error(errorMessage);
+      toast.error(data.error);
     } else {
       console.log(data);
       toast.success(data.success);
