@@ -6,18 +6,18 @@ const Navbar = () => {
     <nav className="main-nav">
       <NavLink to="/">PenPages</NavLink>
 
-      <span className="nav-links text-xl">
-        <NavLink className="pr-6">Feeds</NavLink>
-        <NavLink>Explore</NavLink>
+      <span className="text-md">
+        <NavLink className="pr-6 hover:text-customPurple">Feeds</NavLink>
+        <NavLink className="hover:text-customPurple">Explore</NavLink>
       </span>
 
-      <span className="nav-links text-xl">
-        <NavLink to="/sign-in" className="pr-6">
+      <span className=" text-md">
+        <NavLink to="/sign-in" className="pr-6 hover:text-customPurple">
           login
         </NavLink>
         <NavLink
           to="/sign-up"
-          className="bg-customPurple hover:bg-indigo-600 text-lg font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
+          className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
           sign up
         </NavLink>
       </span>

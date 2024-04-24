@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SignUpSVG from "../assets/images/sign-up.svg";
-import { Link } from "react-router-dom";
+
 
 const SignUpPage = () => {
   const [firstName, setFirstName] = useState("");
@@ -149,9 +149,6 @@ const SignUpPage = () => {
               </button>
             </div>
           </form>
-          <div className="text-customPurple text-center">
-            <Link to=" ">Sign In</Link>
-          </div>
         </div>
 
         <div>
