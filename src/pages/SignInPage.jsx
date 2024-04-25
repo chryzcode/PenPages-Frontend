@@ -1,9 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import signInSVG from "../assets/images/sign-in.svg";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
+import Spinner from "../components/Spinner";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
@@ -34,14 +36,18 @@ const SignInPage = () => {
     if (data.error) {
       toast.error(data.error);
     } else {
+      const token = data.token;
+      Cookies.set("accessToken", token, { expires: 2 }); // Set cookie to expire after 2 days
       toast.success(data.success);
-      navigate("/");
+      navigate("/current-user");
     }
   };
 
+ 
+
   return (
     <div className="mx-10">
-      <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Sign Up</p>
+      <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Sign In</p>
       <div className="flex-wrap-container py-5 align-middle px-10">
         <div>
           <form onSubmit={submitForm}>
@@ -102,4 +108,4 @@ const SignInPage = () => {
   );
 };
 
-export default SignInPage;
+export { SignInPage as default, fetchWithAuth };

@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import SignInPage from "./pages/SignInPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const router = createBrowserRouter(
@@ -13,6 +14,7 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/current-user" element={<ProfilePage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     )
