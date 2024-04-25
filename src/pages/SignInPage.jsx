@@ -43,8 +43,6 @@ const SignInPage = () => {
     }
   };
 
- 
-
   return (
     <div className="mx-10">
       <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Sign In</p>
@@ -108,4 +106,4 @@ const SignInPage = () => {
   );
 };
 
-export { SignInPage as default, fetchWithAuth };
+export default SignInPage;

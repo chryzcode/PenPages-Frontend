@@ -1,16 +1,15 @@
 import React from "react";
-import useAuth from "../components/FetchWithAuth";
+import FetchWithAuth from "../components/FetchWithAuth";
+import Auth from "../components/Auth";
 
 const ProfilePage = () => {
-  //   useAuth();
-
-
+  const user = FetchWithAuth("api/user/current-user", { method: "GET" });
+  const name = user.firstName;
   return (
     <div>
-      <h1>Profile Page</h1>
-      {/* Profile content */}
+      <h1>Profile Page {name}</h1>
     </div>
   );
 };
 
-export default ProfilePage;
+export default Auth(ProfilePage);

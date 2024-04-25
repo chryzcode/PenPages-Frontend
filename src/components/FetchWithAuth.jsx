@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 
 // Function to make authenticated requests with the token from the cookie
 
-const navigate = useNavigate();
 const FetchWithAuth = async (url, options = {}) => {
+  const navigate = useNavigate();
   const token = Cookies.get("accessToken");
   if (!token) {
     navigate("/sign-in");
@@ -15,13 +15,13 @@ const FetchWithAuth = async (url, options = {}) => {
   const headers = {
     ...options.headers,
     Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
   };
 
   const response = await fetch(url, { ...options, headers });
 
   // Handle authentication errors here if needed
-
-  return response;
+  return response.json();
 };
 
 export default FetchWithAuth;
