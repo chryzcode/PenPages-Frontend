@@ -5,13 +5,14 @@ import Cookies from "js-cookie";
 const Navbar = () => {
   const isAuthenticated = !!Cookies.get("accessToken");
 
- 
   return (
     <nav className="main-nav">
       <NavLink to="/">PenPages</NavLink>
 
       <span className="text-md">
-        <NavLink className="pr-6 hover:text-customPurple">Feeds</NavLink>
+        <NavLink to="/posts" className="pr-6 hover:text-customPurple">
+          Feeds
+        </NavLink>
         <NavLink className="hover:text-customPurple">Explore</NavLink>
       </span>
 
