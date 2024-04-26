@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SignUpSVG from "../assets/images/sign-up.svg";
+import Spinner from "../components/Spinner";
 
 const SignUpPage = () => {
   const [firstName, setFirstName] = useState("");
@@ -17,25 +18,25 @@ const SignUpPage = () => {
   const signUp = async newUser => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/user/auth/login", {
+      const res = await fetch("/api/user/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(newUser),
       });
       const data = await res.json();
       if (data.error) {
         toast.error(data.error);
       } else {
+        navigate("/");
         toast.success(data.success);
-        navigate("/current-user");
       }
     } catch (error) {
       console.error("Error signing up:", error);
       toast.error("Failed to sign up");
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -153,7 +154,7 @@ const SignUpPage = () => {
               <button
                 className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                 type="submit">
-                Sign Up
+                Sign Up {isLoading && <Spinner />}
               </button>
             </div>
           </form>
