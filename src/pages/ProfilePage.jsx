@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Auth from "../components/Auth";
 import Cookies from "js-cookie";
 import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
