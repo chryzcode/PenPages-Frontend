@@ -4,25 +4,39 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SignUpSVG from "../assets/images/sign-up.svg";
 
-
 const SignUpPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const signUp = async newUser => {
-    const res = await fetch("/api/user/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newUser),
-    });
-    return res.json();
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/user/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+      const data = await res.json();
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success(data.success);
+        navigate("/current-user");
+      }
+    } catch (error) {
+      console.error("Error signing up:", error);
+      toast.error("Failed to sign up");
+    } finally {
+      setIsLoading(false); // Set loading to false after API call completes
+    }
   };
 
   const submitForm = async e => {
@@ -36,13 +50,14 @@ const SignUpPage = () => {
       password,
     };
     // Call signUp function
-    const data = await signUp(newUser);
-    if (data.error) {
-      toast.error(data.error);
-    } else {
-      toast.success(data.success);
-      navigate("/");
-    }
+    // const data = await signUp(newUser);
+    // if (data.error) {
+    //   toast.error(data.error);
+    // } else {
+    //   toast.success(data.success);
+    //   navigate("/");
+    // }
+    signIn(newUser);
   };
 
   return (

@@ -21,7 +21,7 @@ const FetchWithAuth = async (url, options = {}) => {
   const response = await fetch(url, { ...options, headers });
 
   // Handle authentication errors here if needed
-  return response.json();
+  return response;
 };
 
 export default FetchWithAuth;
