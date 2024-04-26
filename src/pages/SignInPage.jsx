@@ -100,7 +100,7 @@ const SignInPage = () => {
                 disabled={isLoading}
                 className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto "
                 type="submit">
-                Sign In {isLoading && <Spinner />}
+                Sign In {isLoading && <Spinner size={10}/>}
               </button>
             </div>
           </form>

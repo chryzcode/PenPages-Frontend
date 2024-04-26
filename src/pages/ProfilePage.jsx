@@ -33,20 +33,19 @@ const ProfilePage = () => {
   }, []); // Run only once when component mounts
 
   return (
-    <div>
-      <h1>Profile Page</h1>
-
+    <>
       {isLoading ? (
         <h2>
-          <Spinner />
+          <Spinner size={100} color={"#6c63ff"} display={"block"} />
         </h2>
       ) : (
         <div>
+          <h1>Profile Page</h1>
           <span>First Name: {userData.firstName}</span>
           {/* Render other user data here */}
         </div>
       )}
-    </div>
+    </>
   );
 };
 
