@@ -1,13 +1,11 @@
 import React from "react";
-import FetchWithAuth from "../components/FetchWithAuth";
 import Auth from "../components/Auth";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
-  const response = FetchWithAuth("api/user/current-user", { method: "GET" });
-
   return (
     <div>
-      <h1>Profile Page </h1>
+      <h1>Profile Page</h1>
     </div>
   );
 };

@@ -24,13 +24,13 @@ const SignInPage = () => {
         },
         body: JSON.stringify(user),
       });
-      const data = res.json();
+      const data = await res.json();
       if (data.error) {
         toast.error(data.error);
       } else {
         console.log(data);
         const token = data.token;
-        Cookies.set("accessToken", token, { expires: 2 }); // Set cookie to expire after 2 days
+        Cookies.set("accessToken", token, { expires: 2 });
         toast.success(data.success);
         navigate("/current-user");
       }
@@ -38,7 +38,7 @@ const SignInPage = () => {
       console.error("Error signing in:", error);
       toast.error("Failed to sign in");
     } finally {
-      setIsLoading(false); // Set loading to false after API call completes
+      setIsLoading(false);
     }
   };
 
@@ -98,9 +98,9 @@ const SignInPage = () => {
             <div className="mx-auto w-32 my-8 text-center">
               <button
                 disabled={isLoading}
-                className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
+                className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto "
                 type="submit">
-                Sign In
+                Sign In {isLoading && <Spinner />}
               </button>
             </div>
           </form>
@@ -111,7 +111,6 @@ const SignInPage = () => {
         <div>
           <img src={signInSVG} />
         </div>
-        {isLoading && <div>Loading...</div>} {/* Render loading spinner when isLoading is true */}
       </div>
     </div>
   );

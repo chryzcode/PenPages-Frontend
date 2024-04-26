@@ -35,7 +35,7 @@ const SignUpPage = () => {
       console.error("Error signing up:", error);
       toast.error("Failed to sign up");
     } finally {
-      setIsLoading(false); // Set loading to false after API call completes
+      setIsLoading(false); 
     }
   };
 
@@ -49,15 +49,8 @@ const SignUpPage = () => {
       username,
       password,
     };
-    // Call signUp function
-    // const data = await signUp(newUser);
-    // if (data.error) {
-    //   toast.error(data.error);
-    // } else {
-    //   toast.success(data.success);
-    //   navigate("/");
-    // }
-    signIn(newUser);
+
+    signUp(newUser);
   };
 
   return (
