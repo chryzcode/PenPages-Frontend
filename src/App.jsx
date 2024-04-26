@@ -11,8 +11,8 @@ import SignOutPage from "./pages/SignOutPage";
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<HomePage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/current-user" element={<ProfilePage />} />
