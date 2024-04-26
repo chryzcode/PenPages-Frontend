@@ -104,6 +104,7 @@ const SignInPage = () => {
               </button>
             </div>
           </form>
+
           <div className="text-customPurple text-center">
             <Link to=" ">Forgot password</Link>
           </div>
