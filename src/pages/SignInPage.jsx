@@ -10,21 +10,39 @@ import Spinner from "../components/Spinner";
 const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const signIn = async user => {
-    const res = await fetch("/api/user/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user),
-    });
-    return res.json();
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/user/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+      const data = await res.json();
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        console.log(data);
+        const token = data.token;
+        Cookies.set("accessToken", token, { expires: 2 });
+        toast.success(data.success);
+        navigate("/current-user");
+      }
+    } catch (error) {
+      console.error("Error signing in:", error);
+      toast.error("Failed to sign in");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const submitForm = async e => {
+  const submitForm = e => {
     e.preventDefault();
 
     const user = {
@@ -32,15 +50,7 @@ const SignInPage = () => {
       password,
     };
 
-    const data = await signIn(user);
-    if (data.error) {
-      toast.error(data.error);
-    } else {
-      const token = data.token;
-      Cookies.set("accessToken", token, { expires: 2 }); // Set cookie to expire after 2 days
-      toast.success(data.success);
-      navigate("/current-user");
-    }
+    signIn(user);
   };
 
   return (
@@ -87,17 +97,18 @@ const SignInPage = () => {
 
             <div className="mx-auto w-32 my-8 text-center">
               <button
-                className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
+                disabled={isLoading}
+                className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto "
                 type="submit">
-                Sign In
+                Sign In {isLoading && <Spinner />}
               </button>
             </div>
           </form>
+
           <div className="text-customPurple text-center">
             <Link to=" ">Forgot password</Link>
           </div>
         </div>
-
         <div>
           <img src={signInSVG} />
         </div>

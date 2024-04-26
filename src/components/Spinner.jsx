@@ -1,12 +1,12 @@
 import ClipLoader from "react-spinners/ClipLoader";
 
 const override = {
-  display: "block",
-  margin: "100px auto",
+  margin: "0 auto",
+  zIndex: "9999",
 };
 
-const Spinner = ({ loading }) => {
-  return <ClipLoader color="#4338ca" loading={loading} cssOverride={override} size={150} />;
+const Spinner = () => {
+  return <ClipLoader color="white" cssOverride={override} size={10} />;
 };
 
 export default Spinner;
