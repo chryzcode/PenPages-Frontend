@@ -5,6 +5,7 @@ import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 
 const ProfilePage = () => {
+  const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -12,7 +13,7 @@ const ProfilePage = () => {
     const fetchUserData = async () => {
       const token = Cookies.get("accessToken");
       try {
-        const res = await fetch("/api/user/current-user", {
+        const res = await fetch(`${API_BASE_URL}user/current-user`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

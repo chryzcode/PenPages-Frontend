@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import Spinner from "../components/Spinner";
 
 const SignInPage = () => {
+  const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +18,7 @@ const SignInPage = () => {
   const signIn = async user => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/user/auth/login", {
+      const res = await fetch(`${API_BASE_URL}user/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -100,7 +101,7 @@ const SignInPage = () => {
                 disabled={isLoading}
                 className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto "
                 type="submit">
-                Sign In {isLoading && <Spinner size={10}/>}
+                Sign In {isLoading && <Spinner size={10} />}
               </button>
             </div>
           </form>

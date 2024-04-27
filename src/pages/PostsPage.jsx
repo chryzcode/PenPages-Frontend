@@ -3,13 +3,14 @@ import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 
 const PostsPage = () => {
+  const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     const getPosts = async () => {
       try {
-        const res = await fetch("/api/post", {
+        const res = await fetch(`${API_BASE_URL}post`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

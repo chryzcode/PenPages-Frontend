@@ -6,6 +6,7 @@ import SignUpSVG from "../assets/images/sign-up.svg";
 import Spinner from "../components/Spinner";
 
 const SignUpPage = () => {
+  const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,7 +19,7 @@ const SignUpPage = () => {
   const signUp = async newUser => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/user/auth/register", {
+      const res = await fetch(`${API_BASE_URL}user/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
