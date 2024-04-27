@@ -23,7 +23,7 @@ const ProfilePage = () => {
         const data = await res.json();
         setUserData(data["user"]);
       } catch (error) {
-        console.error("Error in fetching data:", error);
+        console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
       } finally {
         setIsLoading(false);

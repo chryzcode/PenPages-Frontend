@@ -7,8 +7,8 @@ const PostsPage = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    try {
-      const getPosts = async () => {
+    const getPosts = async () => {
+      try {
         const res = await fetch("/api/post", {
           method: "GET",
           headers: {
@@ -17,18 +17,18 @@ const PostsPage = () => {
         });
         const data = await res.json();
         setPosts(data["allPosts"]);
-      };
-      getPosts();
-    } catch (error) {
-      console.error("Error in fetching data:", error);
-      toast.error("Failed to get data");
-    } finally {
-      setIsLoading(false);
-    }
+      } catch (error) {
+        console.log("Error in fetching data:", error);
+        toast.error("Failed to get data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getPosts();
   }, []);
-  console.log(posts);
   return (
-    <>
+    <div>
       {isLoading ? (
         <h2>
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
@@ -36,11 +36,11 @@ const PostsPage = () => {
       ) : (
         <div>
           {posts.map(post => (
-            <p>{post.title}</p>
+            <p key={post._id}>{post.title}</p>
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 };
 
