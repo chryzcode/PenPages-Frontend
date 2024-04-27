@@ -33,7 +33,7 @@ const SignUpPage = () => {
         toast.success(data.success);
       }
     } catch (error) {
-      console.error("Error signing up:", error);
+      console.log("Error signing up:", error);
       toast.error("Failed to sign up");
     } finally {
       setIsLoading(false);
@@ -154,7 +154,7 @@ const SignUpPage = () => {
               <button
                 className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                 type="submit">
-                Sign Up {isLoading && <Spinner size={10}/>}
+                Sign Up {isLoading && <Spinner size={10} />}
               </button>
             </div>
           </form>

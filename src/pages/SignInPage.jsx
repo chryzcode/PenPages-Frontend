@@ -35,7 +35,7 @@ const SignInPage = () => {
         navigate("/current-user");
       }
     } catch (error) {
-      console.error("Error signing in:", error);
+      console.log("Error signing in:", error);
       toast.error("Failed to sign in");
     } finally {
       setIsLoading(false);

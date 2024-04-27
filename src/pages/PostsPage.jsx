@@ -1,27 +1,22 @@
 import React, { useEffect, useState } from "react";
-import Auth from "../components/Auth";
-import Cookies from "js-cookie";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 
-const ProfilePage = () => {
-  const [userData, setUserData] = useState(null);
+const PostsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = Cookies.get("accessToken");
+    const getPosts = async () => {
       try {
-        const res = await fetch("/api/user/current-user", {
+        const res = await fetch("/api/post", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         });
-
         const data = await res.json();
-        setUserData(data["user"]);
+        setPosts(data["allPosts"]);
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
@@ -30,24 +25,23 @@ const ProfilePage = () => {
       }
     };
 
-    fetchUserData();
-  }, []); // Run only once when component mounts
-
+    getPosts();
+  }, []);
   return (
-    <>
+    <div>
       {isLoading ? (
         <h2>
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
         </h2>
       ) : (
         <div>
-          <h1>Profile Page</h1>
-          <span>First Name: {userData.firstName}</span>
-          {/* Render other user data here */}
+          {posts.map(post => (
+            <p key={post._id}>{post.title}</p>
+          ))}
         </div>
       )}
-    </>
+    </div>
   );
 };
 
-export default Auth(ProfilePage);
+export default PostsPage;
