@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
-    <div className="mx-10">
+    <div className="mx-10 my-10">
       <div className="text-center max-w-3xl mx-auto">
         <div>
           <p className="text-5xl my-10 font-semibold">
@@ -56,7 +56,7 @@ const HomePage = () => {
           The <span className="text-customPurple">TRIO</span> content platform.
         </p>
 
-        <div className="flex-wrap-container py-20">
+        <div className="flex-wrap-container py-10">
           <div className="mx-auto w-6/12">
             <img className=" w-6/12 mx-auto" src={ContentStructureSVG} />
           </div>
@@ -75,15 +75,19 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="text-center my-20">
-        <p className="text-4xl font-bold max-w-5xl mx-auto">
+      <div className="text-center">
+        <p className="text-2xl font-bold max-w-5xl mx-auto">
           Write and share your content by{" "}
           <Link className="text-customPurple underline" to="/sign-up">
             getting started
-          </Link> on <span className="text-customPurple">PenPages</span>.
+          </Link>{" "}
+          on <span className="text-customPurple">PenPages</span>.
         </p>
-        <div className="text-2xl mt-14">
-          Contact us via <Link className="text-customPurple underline">E-mail</Link>
+        <div className="text-xl mt-14">
+          Contact us via{" "}
+          <a className="text-customPurple underline" href="mailto:theproductconclave@gmail.com">
+            E-mail
+          </a>
         </div>
       </div>
     </div>

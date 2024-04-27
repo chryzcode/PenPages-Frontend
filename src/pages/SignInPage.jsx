@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
 import signInSVG from "../assets/images/sign-in.svg";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import Spinner from "../components/Spinner";
+import Navbar from "../components/Navbar";
 
 const SignInPage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";

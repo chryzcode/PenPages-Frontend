@@ -1,23 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
-import Cookies from "js-cookie";
 
-const Navbar = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const token = Cookies.get("accessToken");
-  console.log(token);
-  useEffect(() => {
-    const checkAuthentication = () => {
-      if (token) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-      }
-    };
-    checkAuthentication();
-  }, []); //
-
-  console.log(isAuthenticated);
+const Navbar = ({ isAuthenticated }) => {
   return (
     <nav className="main-nav">
       <NavLink to="/">PenPages</NavLink>
