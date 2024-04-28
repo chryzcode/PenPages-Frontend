@@ -29,15 +29,27 @@ const PostsPage = () => {
     getPosts();
   }, []);
   return (
-    <div>
+    <div className="container mx-auto my-10">
       {isLoading ? (
         <h2>
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
         </h2>
       ) : (
-        <div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {posts.map(post => (
-            <p key={post._id}>{post.title}</p>
+            <div key={post._id} className="bg-white rounded-xl shadow-md relative">
+              <div className="">
+                <div className="text-gray-600 text-right">{post.type}</div>
+                <img src={post.imageCloudinaryUrl} alt="" />
+
+                <h3 className="text-indigo-500 mb-2">{post.tag}</h3>
+
+                <div className="">
+                  <h3 className="text-xl font-bold">{post.title}</h3>
+                  <div className="text-orange-700 mb-3">{post.author}</div>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       )}

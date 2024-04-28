@@ -46,7 +46,7 @@ const HomePage = () => {
           </div>
 
           <div className="mx-auto">
-            <img className=" w-6/12 mx-auto" src={PublishArticleSVG} />
+            <img className="w-9/12 mx-auto" src={PublishArticleSVG} />
           </div>
         </div>
       </div>
@@ -65,12 +65,12 @@ const HomePage = () => {
             <p className="text-3xl font-bold max-w-xl mx-auto">
               <span className="text-customPurple">Seamless</span> user experience
             </p>
-            <ul className="text-left text-xl list-disc custom-list py-10 mx-auto">
+            <div className="text-left text-xl list-disc custom-list py-10 mx-auto">
               <li className="py-2">Sign up with just a few clicks.</li>
               <li className="py-2">Same text editor for different content.</li>
               <li className="py-2">Interactive comment/ reply system.</li>
               <li className="py-2">High content search engine optimization (SEO).</li>
-            </ul>
+            </div>
           </div>
         </div>
       </div>
