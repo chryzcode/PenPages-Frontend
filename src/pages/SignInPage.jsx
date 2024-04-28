@@ -31,8 +31,7 @@ const SignInPage = () => {
         console.log(data);
         const token = data.token;
         Cookies.set("accessToken", token, { expires: 2 });
-        conso
-        toast.success(data.success);
+        toast.success("Logged in successfully");
         navigate("/current-user");
       }
     } catch (error) {
