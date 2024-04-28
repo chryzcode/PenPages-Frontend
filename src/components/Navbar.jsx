@@ -24,11 +24,13 @@ const Navbar = ({ isAuthenticated }) => {
           </NavLink>
         )}
 
-        <NavLink
-          to="/sign-up"
-          className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
-          sign up
-        </NavLink>
+        {!isAuthenticated ? (
+          <NavLink
+            to="/sign-up"
+            className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
+            sign up
+          </NavLink>
+        ) : null}
       </span>
     </nav>
   );

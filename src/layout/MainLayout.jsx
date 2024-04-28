@@ -6,21 +6,19 @@ import Cookies from "js-cookie";
 import React, { useState, useEffect } from "react";
 
 const MainLayout = () => {
-  const [accessToken, setAccessToken] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const fetchAccessToken = () => {
       const token = Cookies.get("accessToken");
-      setAccessToken(token);
-      if (accessToken) {
+      if (token) {
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
       }
     };
 
-    fetchAccessToken(); 
+    fetchAccessToken();
 
     const intervalId = setInterval(() => {
       fetchAccessToken(); // Fetch access token every 5 seconds
@@ -29,9 +27,7 @@ const MainLayout = () => {
     return () => {
       clearInterval(intervalId); // Clean up interval when component unmounts
     };
-  }, [accessToken]);
-
-
+  }, []);
 
   return (
     <>

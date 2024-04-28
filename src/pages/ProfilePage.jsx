@@ -23,6 +23,7 @@ const ProfilePage = () => {
 
         const data = await res.json();
         setUserData(data["user"]);
+        toast.success("hi");
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
@@ -33,7 +34,7 @@ const ProfilePage = () => {
 
     fetchUserData();
   }, []); // Run only once when component mounts
-
+  
   return (
     <>
       {isLoading ? (
