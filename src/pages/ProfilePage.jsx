@@ -33,7 +33,7 @@ const ProfilePage = () => {
 
     fetchUserData();
   }, []); // Run only once when component mounts
-
+  
   return (
     <>
       {isLoading ? (

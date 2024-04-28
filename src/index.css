@@ -42,8 +42,13 @@ form input:focus {
   outline: none;
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 800px) {
   .flex-wrap-container {
     flex-direction: column;
+  }
+
+  .custom-list > li {
+    width: 80%;
+    margin: 0 auto;
   }
 }

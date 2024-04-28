@@ -5,7 +5,6 @@ import signInSVG from "../assets/images/sign-in.svg";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import Spinner from "../components/Spinner";
-import Navbar from "../components/Navbar";
 
 const SignInPage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -29,10 +28,9 @@ const SignInPage = () => {
       if (data.error) {
         toast.error(data.error);
       } else {
-        console.log(data);
         const token = data.token;
         Cookies.set("accessToken", token, { expires: 2 });
-        toast.success(data.success);
+        toast.success("Logged in successfully");
         navigate("/current-user");
       }
     } catch (error) {

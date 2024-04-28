@@ -36,7 +36,7 @@ const HomePage = () => {
               <span className="text-customPurple"> limitation</span>!
             </p>
             <div>
-              <div className="text-left text-xl list-disc custom-list py-10 mx-auto w-4/5 pl-10">
+              <div className="text-left text-xl list-disc custom-list py-10 mx-auto">
                 <li className="py-2">Share you knowledge in whatever field.</li>
                 <li className="py-2">No usage cost(free).</li>
                 <li className="py-2">No genre limitation.</li>
@@ -46,7 +46,7 @@ const HomePage = () => {
           </div>
 
           <div className="mx-auto">
-            <img className="home-page-image-size mx-auto" src={PublishArticleSVG} />
+            <img className=" w-6/12 mx-auto" src={PublishArticleSVG} />
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@ const HomePage = () => {
             <p className="text-3xl font-bold max-w-xl mx-auto">
               <span className="text-customPurple">Seamless</span> user experience
             </p>
-            <ul className="text-left text-xl list-disc custom-list py-10 mx-auto w-4/5 pl-10">
+            <ul className="text-left text-xl list-disc custom-list py-10 mx-auto">
               <li className="py-2">Sign up with just a few clicks.</li>
               <li className="py-2">Same text editor for different content.</li>
               <li className="py-2">Interactive comment/ reply system.</li>
