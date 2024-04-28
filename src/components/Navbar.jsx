@@ -6,7 +6,7 @@ const Navbar = ({ isAuthenticated }) => {
     <nav className="main-nav">
       <NavLink to="/">PenPages</NavLink>
 
-      <span className="text-md">
+      <span className="hidden sm:block text-md">
         <NavLink to="/posts" className="pr-6 hover:text-customPurple">
           Feeds
         </NavLink>

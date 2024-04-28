@@ -33,10 +33,6 @@
   width: 100%;
 }
 
-.home-page-image-size {
-  width: 500px;
-}
-
 form input:focus {
   border: 1px solid #6c63ff;
   outline: none;
@@ -47,8 +43,15 @@ form input:focus {
     flex-direction: column;
   }
 
-  .custom-list > li {
+  .custom-list {
     width: 80%;
     margin: 0 auto;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .custom-list {
+    width: 100%;
   }
 }
