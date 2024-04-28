@@ -28,7 +28,6 @@ const SignInPage = () => {
       if (data.error) {
         toast.error(data.error);
       } else {
-        console.log(data);
         const token = data.token;
         Cookies.set("accessToken", token, { expires: 2 });
         toast.success("Logged in successfully");
