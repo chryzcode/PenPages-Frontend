@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Spinner from "../components/Spinner";
+import Spinner from "./Spinner";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import PostListing from "./PostListing";
 
-const PostsPage = () => {
+const PostListings = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
@@ -36,22 +36,9 @@ const PostsPage = () => {
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
         </h2>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6  mx-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6   mx-2">
           {posts.map(post => (
-            <Link to="" key={post._id} className="bg-white rounded-xl shadow-md relative">
-              <div>
-                <img src={post.imageCloudinaryUrl} alt="" />
-              </div>
-
-              <div className="py-3 px-5">
-                <div className="text-gray-600 text-right text-sm">{post.type}</div>
-                <h3 className="text-xl font-bold">{post.title}</h3>
-                <div className="">
-                  {/* {post.author} */}
-                  chryz
-                </div>
-              </div>
-            </Link>
+            <PostListing key={post._id} post={post} />
           ))}
         </div>
       )}
@@ -59,4 +46,4 @@ const PostsPage = () => {
   );
 };
 
-export default PostsPage;
+export default PostListings;

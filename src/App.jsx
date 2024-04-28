@@ -7,7 +7,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import SignInPage from "./pages/SignInPage";
 import ProfilePage from "./pages/ProfilePage";
 import SignOutPage from "./pages/SignOutPage";
-import PostsPage from "./pages/PostsPage";
+import PostPage from "./pages/PostPage";
 
 function App() {
   const router = createBrowserRouter(
@@ -18,7 +18,7 @@ function App() {
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/current-user" element={<ProfilePage />} />
         <Route path="/sign-out" element={<SignOutPage />} />
-        <Route path="/posts" element={<PostsPage />} />
+        <Route path="/posts" element={<PostPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     )
