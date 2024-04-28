@@ -45,8 +45,8 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className="mx-auto">
-            <img className="w-9/12 mx-auto" src={PublishArticleSVG} />
+          <div className="mx-auto w-6/12">
+            <img className=" mx-auto w-7/12" src={PublishArticleSVG} />
           </div>
         </div>
       </div>

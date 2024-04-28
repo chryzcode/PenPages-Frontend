@@ -41,6 +41,7 @@ form input:focus {
 @media screen and (max-width: 800px) {
   .flex-wrap-container {
     flex-direction: column;
+    padding: 0;
   }
 
   .custom-list {
