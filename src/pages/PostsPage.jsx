@@ -29,6 +29,12 @@ const PostsPage = () => {
 
     getPosts();
   }, []);
+
+  const formatDate = dateString => {
+    const options = { year: "numeric", month: "short", day: "2-digit" };
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", options);
+  };
   return (
     <div className="container mx-auto my-10">
       {isLoading ? (
@@ -36,22 +42,39 @@ const PostsPage = () => {
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
         </h2>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6  mx-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6   mx-2">
           {posts.map(post => (
-            <Link to="" key={post._id} className="bg-white rounded-xl shadow-md relative">
-              <div>
-                <img src={post.imageCloudinaryUrl} alt="" />
+            <div key={post._id} className="bg-white rounded-xl shadow-md relative  py-5 px-6 text-gray-800">
+              <div className="flex items-center justify-between pb-4">
+                <Link to="" className="flex items-center">
+                  <img className="w-8 mr-3" src={post.author.imageCloudinaryUrl} alt="" />
+                  <div>
+                    <div className="text-sm font-semibold">
+                      {post.author.firstName} {post.author.lastName}
+                    </div>
+                    <div className="text-xs">{post.author.username}</div>
+                  </div>
+                </Link>
+
+                <div className="text-sm font-thin">{post.type}</div>
               </div>
 
-              <div className="py-3 px-5">
-                <div className="text-gray-600 text-right text-sm">{post.type}</div>
-                <h3 className="text-xl font-bold">{post.title}</h3>
+              <Link to="" className="flex  justify-between">
                 <div className="">
-                  {/* {post.author} */}
-                  chryz
+                  <h3 className="text-xl font-bold py-1">{post.title}</h3>
+                  <div className="text-sm">{post.body}</div>
                 </div>
+                <div className="w-48">
+                  <img className="rounded-xl" src={post.imageCloudinaryUrl} alt="" />
+                </div>
+              </Link>
+
+              <div className="flex  justify-between pt-6 text-sm">
+                <div>{formatDate(post.createdAt)}</div>
+
+                <div>5 likes</div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}
