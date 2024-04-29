@@ -3,7 +3,7 @@ import { useParams, useLoaderData, useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import NotFoundPage from "./NotFoundPage";
-import getCurrentUserData from "../utils/CurrentUserData";
+import CurrentUserAuthor from "../utils/CurrentUserAuthor";
 
 const PostPage = () => {
   const formatDate = dateString => {
@@ -18,18 +18,7 @@ const PostPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthor, setIsAuthor] = useState(false);
 
-  const isCurrentUserAuthor = async userId => {
-    // Get current user data
-    const currentUserData = await getCurrentUserData();
-
-    // If current user data is not available, return false
-    if (!currentUserData) {
-      return false;
-    }
-
-    // Compare current user ID with the post author ID
-    return currentUserData._id === userId;
-  };
+  
 
   useEffect(() => {
     const getPost = async () => {
@@ -40,7 +29,7 @@ const PostPage = () => {
           toast.error("Post does not exist");
         } else if (data.post) {
           setPost(data.post);
-          const author = await isCurrentUserAuthor(data.post.author._id);
+          const author = await CurrentUserAuthor(data.post.author._id);
           if (author) {
             setIsAuthor(true);
           }
