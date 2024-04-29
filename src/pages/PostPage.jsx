@@ -91,13 +91,16 @@ const PostPage = () => {
                   <p>{post.body}</p>
                 </div>
 
+                <div>
+                  {likes.map(like => (
+                    <p key={like._id}>
+                      {like.user.firstName} {like.user.lastName}{" "}
+                    </p>
+                  ))}
+                </div>
+
                 <div className="flex tems-center justify-center gap-10 py-5 align-center">
-                  <p>
-                    {likes.map(like => (
-                      <p key={like._id}>{like.user.firstName}</p>
-                    ))}
-                    {post.likes.length} Likes
-                  </p>
+                  {post.likes.length} Likes
                   <p>3 Comments</p>
                 </div>
               </div>
