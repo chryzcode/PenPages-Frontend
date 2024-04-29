@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLoaderData, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import NotFoundPage from "./NotFoundPage";
@@ -17,8 +17,15 @@ const PostPage = () => {
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthor, setIsAuthor] = useState(false);
+  const [likes, setLikes] = useState([]);
 
-  
+  console.log(likes);
+
+  const getPostLikes = async postId => {
+    const res = await fetch(`${API_BASE_URL}post/like/${postId}`);
+    const data = await res.json();
+    return data;
+  };
 
   useEffect(() => {
     const getPost = async () => {
@@ -29,6 +36,8 @@ const PostPage = () => {
           toast.error("Post does not exist");
         } else if (data.post) {
           setPost(data.post);
+          const likes = await getPostLikes(data.post._id);
+          setLikes(likes["likes"]);
           const author = await CurrentUserAuthor(data.post.author._id);
           if (author) {
             setIsAuthor(true);
@@ -60,20 +69,20 @@ const PostPage = () => {
                 <img src={post.imageCloudinaryUrl} alt="" />
                 <h2 className="text-4xl font-bold py-3">{post.title}</h2>
                 <div className="flex sm:flex-2 items-center justify-center gap-10 py-5 align-center ">
-                  <div className="flex items-center">
+                  <Link to="" className="flex items-center">
                     <img className="w-8 mr-3" src={post.author.imageCloudinaryUrl} alt="" />
                     <p>
                       {" "}
                       {post.author.firstName} {post.author.lastName}
                     </p>
-                  </div>
+                  </Link>
                   <p>{formatDate(post.createdAt)}</p>
                   <p>{post.type}</p>
                 </div>
 
                 {isAuthor ? (
-                  <div>
-                    <p>Edit</p>
+                  <div className="flex items-center justify-center gap-5">
+                    <Link to="">Edit</Link>
                     <p>Delete</p>
                   </div>
                 ) : null}
@@ -84,9 +93,9 @@ const PostPage = () => {
 
                 <div className="flex tems-center justify-center gap-10 py-5 align-center">
                   <p>
-                    {/* {post.likes.map(like => (
-                      <p>{like._id}</p>
-                    ))} */}
+                    {likes.map(like => (
+                      <p key={like._id}>{like.user.firstName}</p>
+                    ))}
                     {post.likes.length} Likes
                   </p>
                   <p>3 Comments</p>
