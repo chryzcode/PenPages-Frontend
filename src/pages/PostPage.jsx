@@ -16,8 +16,9 @@ const PostPage = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthor, setIsAuthor] = useState(false);
 
-  const isCurrentUserAuthor = async postId => {
+  const isCurrentUserAuthor = async userId => {
     // Get current user data
     const currentUserData = await getCurrentUserData();
 
@@ -27,7 +28,7 @@ const PostPage = () => {
     }
 
     // Compare current user ID with the post author ID
-    return currentUserData._id === postId.author._id;
+    return currentUserData._id === userId;
   };
 
   useEffect(() => {
@@ -39,6 +40,10 @@ const PostPage = () => {
           toast.error("Post does not exist");
         } else if (data.post) {
           setPost(data.post);
+          const author = await isCurrentUserAuthor(data.post.author._id);
+          if (author) {
+            setIsAuthor(true);
+          }
         }
       } catch (error) {
         console.log("Error in fetching data:", error);
@@ -76,6 +81,13 @@ const PostPage = () => {
                   <p>{formatDate(post.createdAt)}</p>
                   <p>{post.type}</p>
                 </div>
+
+                {isAuthor ? (
+                  <div>
+                    <p>Edit</p>
+                    <p>Delete</p>
+                  </div>
+                ) : null}
 
                 <div className="text-left my-8">
                   <p>{post.body}</p>

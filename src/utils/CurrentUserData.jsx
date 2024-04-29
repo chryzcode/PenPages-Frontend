@@ -14,14 +14,10 @@ const getCurrentUserData = async () => {
       },
     });
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch user data");
-    }
-
     const data = await res.json();
     return data["user"];
   } catch (error) {
-    console.error("Error in fetching data:", error);
+    console.log("Error in fetching data:", error);
     toast.error("Failed to get data");
     return null;
   }
