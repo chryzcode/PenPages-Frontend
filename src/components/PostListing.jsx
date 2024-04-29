@@ -36,7 +36,7 @@ const PostListing = ({ post }) => {
       <div className="flex  justify-between pt-6 text-sm">
         <div>{formatDate(post.createdAt)}</div>
 
-        <div>5 likes</div>
+        <div>{post.likes.length} likes</div>
       </div>
     </div>
   );

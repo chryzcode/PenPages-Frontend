@@ -21,7 +21,7 @@ function App() {
         <Route path="/sign-out" element={<SignOutPage />} />
         <Route path="/posts" element={<PostsPage />} />
         <Route path="/post/:postId" element={<PostPage />} />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage url={"/"} />} />
       </Route>
     )
   );
