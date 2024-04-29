@@ -3,6 +3,7 @@ import { useParams, useLoaderData, useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import NotFoundPage from "./NotFoundPage";
+import getCurrentUserData from "../utils/CurrentUserData";
 
 const PostPage = () => {
   const formatDate = dateString => {
@@ -15,6 +16,19 @@ const PostPage = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const isCurrentUserAuthor = async postId => {
+    // Get current user data
+    const currentUserData = await getCurrentUserData();
+
+    // If current user data is not available, return false
+    if (!currentUserData) {
+      return false;
+    }
+
+    // Compare current user ID with the post author ID
+    return currentUserData._id === postId.author._id;
+  };
 
   useEffect(() => {
     const getPost = async () => {
@@ -40,7 +54,7 @@ const PostPage = () => {
   return (
     <div>
       {" "}
-      <div className="container mx-auto my-10">
+      <div className="container mx-auto my-8">
         {isLoading ? (
           <h2>
             <Spinner size={100} color={"#6c63ff"} display={"block"} />
@@ -51,7 +65,7 @@ const PostPage = () => {
               <div>
                 <img src={post.imageCloudinaryUrl} alt="" />
                 <h2 className="text-4xl font-bold py-3">{post.title}</h2>
-                <div className="flex items-center justify-center space-x-10 py-5 align-center justify-items-center">
+                <div className="flex sm:flex-2 items-center justify-center gap-10 py-5 align-center ">
                   <div className="flex items-center">
                     <img className="w-8 mr-3" src={post.author.imageCloudinaryUrl} alt="" />
                     <p>
@@ -61,6 +75,20 @@ const PostPage = () => {
                   </div>
                   <p>{formatDate(post.createdAt)}</p>
                   <p>{post.type}</p>
+                </div>
+
+                <div className="text-left my-8">
+                  <p>{post.body}</p>
+                </div>
+
+                <div className="flex tems-center justify-center gap-10 py-5 align-center">
+                  <p>
+                    {/* {post.likes.map(like => (
+                      <p>{like._id}</p>
+                    ))} */}
+                    {post.likes.length} Likes
+                  </p>
+                  <p>3 Comments</p>
                 </div>
               </div>
             ) : (
