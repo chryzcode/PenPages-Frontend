@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLoaderData, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import NotFoundPage from "./NotFoundPage";
-import getCurrentUserData from "../utils/CurrentUserData";
+import CurrentUserAuthor from "../utils/CurrentUserAuthor";
 
 const PostPage = () => {
   const formatDate = dateString => {
@@ -16,18 +16,15 @@ const PostPage = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthor, setIsAuthor] = useState(false);
+  const [likes, setLikes] = useState([]);
 
-  const isCurrentUserAuthor = async postId => {
-    // Get current user data
-    const currentUserData = await getCurrentUserData();
+  console.log(likes);
 
-    // If current user data is not available, return false
-    if (!currentUserData) {
-      return false;
-    }
-
-    // Compare current user ID with the post author ID
-    return currentUserData._id === postId.author._id;
+  const getPostLikes = async postId => {
+    const res = await fetch(`${API_BASE_URL}post/like/${postId}`);
+    const data = await res.json();
+    return data;
   };
 
   useEffect(() => {
@@ -39,6 +36,12 @@ const PostPage = () => {
           toast.error("Post does not exist");
         } else if (data.post) {
           setPost(data.post);
+          const likes = await getPostLikes(data.post._id);
+          setLikes(likes["likes"]);
+          const author = await CurrentUserAuthor(data.post.author._id);
+          if (author) {
+            setIsAuthor(true);
+          }
         }
       } catch (error) {
         console.log("Error in fetching data:", error);
@@ -66,28 +69,38 @@ const PostPage = () => {
                 <img src={post.imageCloudinaryUrl} alt="" />
                 <h2 className="text-4xl font-bold py-3">{post.title}</h2>
                 <div className="flex sm:flex-2 items-center justify-center gap-10 py-5 align-center ">
-                  <div className="flex items-center">
+                  <Link to="" className="flex items-center">
                     <img className="w-8 mr-3" src={post.author.imageCloudinaryUrl} alt="" />
                     <p>
                       {" "}
                       {post.author.firstName} {post.author.lastName}
                     </p>
-                  </div>
+                  </Link>
                   <p>{formatDate(post.createdAt)}</p>
                   <p>{post.type}</p>
                 </div>
+
+                {isAuthor ? (
+                  <div className="flex items-center justify-center gap-5">
+                    <Link to="">Edit</Link>
+                    <p>Delete</p>
+                  </div>
+                ) : null}
 
                 <div className="text-left my-8">
                   <p>{post.body}</p>
                 </div>
 
+                <div>
+                  {likes.map(like => (
+                    <p key={like._id}>
+                      {like.user.firstName} {like.user.lastName}{" "}
+                    </p>
+                  ))}
+                </div>
+
                 <div className="flex tems-center justify-center gap-10 py-5 align-center">
-                  <p>
-                    {/* {post.likes.map(like => (
-                      <p>{like._id}</p>
-                    ))} */}
-                    {post.likes.length} Likes
-                  </p>
+                  {post.likes.length} Likes
                   <p>3 Comments</p>
                 </div>
               </div>
