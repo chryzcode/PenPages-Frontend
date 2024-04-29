@@ -10,7 +10,7 @@ const PostListing = ({ post }) => {
   return (
     <div className="bg-white rounded-xl shadow-md relative  py-5 px-6 text-gray-800">
       <div className="flex items-center justify-between pb-4">
-        <Link to="" className="flex items-center">
+        <Link to={``} className="flex items-center">
           <img className="w-8 mr-3" src={post.author.imageCloudinaryUrl} alt="" />
           <div>
             <div className="text-sm font-semibold">
@@ -23,7 +23,7 @@ const PostListing = ({ post }) => {
         <div className="text-sm font-thin">{post.type}</div>
       </div>
 
-      <Link to="" className="flex  justify-between">
+      <Link to={`/post/${post._id}`} className="flex  justify-between">
         <div className="">
           <h3 className="text-xl font-bold py-1">{post.title}</h3>
           <div className="text-sm">{post.body}</div>
