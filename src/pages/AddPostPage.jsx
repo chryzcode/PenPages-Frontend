@@ -13,7 +13,7 @@ const AddPostPage = () => {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
   const [body, setBody] = useState("");
-  const [tag, setTag] = useState("");
+  const [tag, setTag] = useState([]);
   const [type, setType] = useState("article");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,19 +21,21 @@ const AddPostPage = () => {
     navigate("/sign-in");
   }
 
-  const getTags = async () => {
-    try {
-      const res = await fetch(`${API_BASE_URL}tag`);
-      const data = await res.json();
-      console.log(data);
-      setAllTags(data["tags"]);
-    } catch (error) {
-      console.log("Errorr....", error);
-      toast.error("Failed to get data");
-    }
-  };
+  useEffect(() => {
+    const getTags = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}tag`);
+        const data = await res.json();
+        console.log(data);
+        setAllTags(data["tags"]);
+      } catch (error) {
+        console.log("Errorr....", error);
+        toast.error("Failed to get data");
+      }
+    };
 
-  getTags();
+    getTags();
+  }, []);
 
   const addPost = async newPost => {
     try {
@@ -99,9 +101,10 @@ const AddPostPage = () => {
               Image
             </label>
             <input
-              type="image"
+              type="file"
               id="image"
               name="image"
+              accept="image/*" // Accept only image files
               value={image}
               onChange={e => {
                 setImage(e.target.value);
@@ -116,14 +119,18 @@ const AddPostPage = () => {
               Tag
             </label>
             <select
+              multiple
               id="tag"
               name="tag"
               className="border rounded w-full py-2 px-3 mb-2"
               required
               value={tag}
-              onChange={e => setTag(e.target.value)}>
-              <option value="Under $50K">Under $50K</option>
-              <option value="$50K - 60K">$50K - $60K</option>
+              onChange={e => setTag(Array.from(e.target.selectedOptions, option => option.value))}>
+              {allTags.map(tag => (
+                <option value={tag.name} key={tag._id}>
+                  {tag.name}
+                </option>
+              ))}
             </select>
           </div>
 
