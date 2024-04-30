@@ -39,13 +39,13 @@ const AddPostPage = () => {
 
   const addPost = async newPost => {
     try {
-      const res = await fetch(`${API_BASE_URL}`, {
+      const res = await fetch(`${API_BASE_URL}post`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: newPost,
+        body: JSON.stringify(newPost),
       });
       const data = await res.json();
       if (data.error) {

@@ -81,7 +81,7 @@ const PostPage = () => {
 
                 {isAuthor ? (
                   <div className="flex items-center justify-center gap-5">
-                    <Link to="">Edit</Link>
+                    <Link to={`/post/${post._id}/edit`}>Edit</Link>
                     <p>Delete</p>
                   </div>
                 ) : null}
