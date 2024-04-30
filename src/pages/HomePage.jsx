@@ -95,9 +95,15 @@ const HomePage = () => {
       <div className="text-center">
         <p className="text-2xl font-bold max-w-5xl mx-auto">
           Write and share your content by{" "}
-          <Link className="text-customPurple underline" to="/sign-up">
-            getting started
-          </Link>{" "}
+          {isAuthenticated ? (
+            <Link className="text-customPurple underline" to="/create-post">
+              getting started
+            </Link>
+          ) : (
+            <Link className="text-customPurple underline" to="/sign-up">
+              getting started
+            </Link>
+          )}{" "}
           on <span className="text-customPurple">PenPages</span>.
         </p>
         <div className="text-xl mt-14">
