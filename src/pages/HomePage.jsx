@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import AddContentSVG from "../assets/images/add-content.svg";
 import PublishArticleSVG from "../assets/images/publish-article.svg";
 import ContentStructureSVG from "../assets/images/content-structure.svg";
 import { Link } from "react-router-dom";
+import getCurrentUserData from "../utils/CurrentUserData";
 
 const HomePage = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const Authentication = async () => {
+    const authenticated = await getCurrentUserData();
+    if (authenticated) {
+      setIsAuthenticated(true);
+    }
+  };
+
+  Authentication();
   return (
     <div className="mx-10 my-10">
       <div className="text-center max-w-3xl mx-auto">
@@ -16,9 +26,16 @@ const HomePage = () => {
           <p className="text-2xl my-14 max-w-xl mx-auto">
             Create your content seamlessly as a poet, blogger and author on PenPages.
           </p>
-          <Link className="text-xl bg-customPurple py-3 px-6 text-white rounded-full" to="/sign-up">
-            Get Started
-          </Link>
+          {isAuthenticated ? (
+            <Link className="text-xl bg-customPurple py-3 px-6 text-white rounded-full" to="/posts">
+              View Posts
+            </Link>
+          ) : (
+            <Link className="text-xl bg-customPurple py-3 px-6 text-white rounded-full" to="/sign-up">
+              Get Started
+            </Link>
+          )}
+
           <img className=" mx-auto my-16 home-page-image-size" src={AddContentSVG} />
         </div>
       </div>

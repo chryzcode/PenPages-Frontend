@@ -91,15 +91,16 @@ const PostPage = () => {
                   <p>{post.body}</p>
                 </div>
 
-                <div>
+                <div className="flex items-center justify-center flex-col">
                   {likes.map(like => (
-                    <p key={like._id}>
+                    <p className="flex items-center py-3" key={like._id}>
+                      <img className="w-8 mr-3" src={like.user.imageCloudinaryUrl} alt="" />
                       {like.user.firstName} {like.user.lastName}{" "}
                     </p>
                   ))}
                 </div>
 
-                <div className="flex tems-center justify-center gap-10 py-5 align-center">
+                <div className="flex items-center justify-center gap-10 py-5 align-center">
                   {post.likes.length} Likes
                   <p>3 Comments</p>
                 </div>
