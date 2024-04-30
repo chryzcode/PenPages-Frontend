@@ -10,27 +10,36 @@ const Navbar = ({ isAuthenticated }) => {
         <NavLink to="/posts" className="pr-6 hover:text-customPurple">
           Feeds
         </NavLink>
-        <NavLink className="hover:text-customPurple">Explore</NavLink>
+        {isAuthenticated ? (
+          <NavLink to="/create-post" className="pr-6 hover:text-customPurple">
+            create post
+          </NavLink>
+        ) : null}
+        <NavLink className="pr-6 hover:text-customPurple">Explore</NavLink>
       </span>
 
       <span className=" text-md">
         {isAuthenticated ? (
-          <NavLink to="/sign-out" className="pr-6 hover:text-customPurple">
-            logout
-          </NavLink>
+          <>
+            <NavLink
+              to="/sign-out"
+              className=" bg-customPurple hover:bg-indigo-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
+              logout
+            </NavLink>
+          </>
         ) : (
-          <NavLink to="/sign-in" className="pr-6 hover:text-customPurple">
-            login
-          </NavLink>
-        )}
+          <>
+            <NavLink to="/sign-in" className="pr-6 hover:text-customPurple">
+              login
+            </NavLink>
 
-        {!isAuthenticated ? (
-          <NavLink
-            to="/sign-up"
-            className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
-            sign up
-          </NavLink>
-        ) : null}
+            <NavLink
+              to="/sign-up"
+              className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
+              sign up
+            </NavLink>
+          </>
+        )}
       </span>
     </nav>
   );
