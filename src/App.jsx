@@ -10,6 +10,7 @@ import SignOutPage from "./pages/SignOutPage";
 import PostsPage from "./pages/PostsPage";
 import PostPage from "./pages/PostPage";
 import AddPostPage from "./pages/AddPostPage";
+import EditPostPage from "./pages/EditPostPage";
 
 function App() {
   const router = createBrowserRouter(
@@ -23,6 +24,7 @@ function App() {
         <Route path="/posts" element={<PostsPage />} />
         <Route path="/post/:postId" element={<PostPage />} />
         <Route path="/create-post" element={<AddPostPage />} />
+        <Route path="/post/:postId/edit" element={<EditPostPage />} />
         <Route path="*" element={<NotFoundPage url={"/"} />} />
       </Route>
     )

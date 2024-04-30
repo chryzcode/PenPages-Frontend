@@ -12,7 +12,6 @@ const PostPage = () => {
     return date.toLocaleDateString("en-US", options);
   };
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
-  const navigate = useNavigate();
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -82,7 +81,7 @@ const PostPage = () => {
 
                 {isAuthor ? (
                   <div className="flex items-center justify-center gap-5">
-                    <Link to="">Edit</Link>
+                    <Link to={`/post/${post._id}/edit`}>Edit</Link>
                     <p>Delete</p>
                   </div>
                 ) : null}
