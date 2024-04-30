@@ -9,6 +9,7 @@ import ProfilePage from "./pages/ProfilePage";
 import SignOutPage from "./pages/SignOutPage";
 import PostsPage from "./pages/PostsPage";
 import PostPage from "./pages/PostPage";
+import AddPostPage from "./pages/AddPostPage";
 
 function App() {
   const router = createBrowserRouter(
@@ -21,6 +22,7 @@ function App() {
         <Route path="/sign-out" element={<SignOutPage />} />
         <Route path="/posts" element={<PostsPage />} />
         <Route path="/post/:postId" element={<PostPage />} />
+        <Route path="/create-post" element={<AddPostPage />} />
         <Route path="*" element={<NotFoundPage url={"/"} />} />
       </Route>
     )
