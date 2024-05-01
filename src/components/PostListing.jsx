@@ -28,8 +28,8 @@ const PostListing = ({ post }) => {
           <h3 className="text-xl font-bold py-1">{post.title}</h3>
           <div className="text-sm">{post.body}</div>
         </div>
-        <div className="w-48">
-          <img className="rounded-xl" src={post.imageCloudinaryUrl} alt="" />
+        <div className="flex justify-center items-center">
+          <img className="rounded-xl object-contain  h-32 w-32" src={post.imageCloudinaryUrl} alt="" />
         </div>
       </Link>
 

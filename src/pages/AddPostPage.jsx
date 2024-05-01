@@ -105,7 +105,6 @@ const AddPostPage = () => {
               id="image"
               name="image"
               accept="image/*" // Accept only image files
-              value={image}
               onChange={e => {
                 setImage(e.target.value);
               }}
