@@ -18,7 +18,7 @@ const PostPage = () => {
   const [isAuthor, setIsAuthor] = useState(false);
   const [likes, setLikes] = useState([]);
 
-  console.log(likes);
+
 
   const getPostLikes = async postId => {
     const res = await fetch(`${API_BASE_URL}post/like/${postId}`);
