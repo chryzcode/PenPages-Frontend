@@ -4,40 +4,30 @@ import "react-toastify/ReactToastify.css";
 import Navbar from "../components/Navbar";
 import Cookies from "js-cookie";
 import React, { useState, useEffect } from "react";
-import getCurrentUserData from "../utils/CurrentUserData";
 
 const MainLayout = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const Authentication = async () => {
-    const authenticated = await getCurrentUserData();
-    if (authenticated) {
-      setIsAuthenticated(true);
-    }
-  };
+  useEffect(() => {
+    const fetchAccessToken = () => {
+      const token = Cookies.get("accessToken");
+      if (token) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
 
-  Authentication();
+    fetchAccessToken();
 
-  // useEffect(() => {
-  //   const fetchAccessToken = () => {
-  //     const token = Cookies.get("accessToken");
-  //     if (token) {
-  //       setIsAuthenticated(true);
-  //     } else {
-  //       setIsAuthenticated(false);
-  //     }
-  //   };
+    const intervalId = setInterval(() => {
+      fetchAccessToken(); // Fetch access token every 5 seconds
+    }, 5000);
 
-  //   fetchAccessToken();
-
-  //   const intervalId = setInterval(() => {
-  //     fetchAccessToken(); // Fetch access token every 5 seconds
-  //   }, 5000);
-
-  //   return () => {
-  //     clearInterval(intervalId); // Clean up interval when component unmounts
-  //   };
-  // }, []);
+    return () => {
+      clearInterval(intervalId); // Clean up interval when component unmounts
+    };
+  }, []);
 
   return (
     <>

@@ -14,14 +14,14 @@ const Auth = WrappedComponent => {
       }
     };
 
+    Authentication();
+
     // useEffect(() => {
     //   if (!token) {
     //     navigate("/sign-in");
     //     toast.error("Authentication timeout");
     //   }
     // }, [token, navigate]);
-
-    Authentication();
 
     // Return the wrapped component here
     return <WrappedComponent {...props} />;

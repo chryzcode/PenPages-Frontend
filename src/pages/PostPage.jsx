@@ -4,6 +4,7 @@ import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import NotFoundPage from "./NotFoundPage";
 import CurrentUserAuthor from "../utils/CurrentUserAuthor";
+import Cookies from "js-cookie";
 
 const PostPage = () => {
   const formatDate = dateString => {
@@ -12,18 +13,41 @@ const PostPage = () => {
     return date.toLocaleDateString("en-US", options);
   };
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
+  const token = Cookies.get("accessToken");
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthor, setIsAuthor] = useState(false);
   const [likes, setLikes] = useState([]);
-
-
+  const navigate = useNavigate();
 
   const getPostLikes = async postId => {
     const res = await fetch(`${API_BASE_URL}post/like/${postId}`);
     const data = await res.json();
     return data;
+  };
+
+  const deletePost = async () => {
+    const res = await fetch(`${API_BASE_URL}post/${postId}`, {
+      method: "DELETE",
+      headers: {
+        "Type-Content": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+    if (data.error) {
+      toast.error(data.error);
+    } else if (data.status == 200) {
+      toast.success("Post deleted successfully");
+      navigate("/posts");
+    }
+  };
+
+  const onDeleteClick = () => {
+    const confirm = window.confirm("Are you sure you wan to delete this post?");
+    if (!confirm) return;
+    deletePost();
   };
 
   useEffect(() => {
