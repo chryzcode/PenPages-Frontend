@@ -37,9 +37,7 @@ const PostPage = () => {
         },
       });
       const data = await res.json();
-      if (data.error) {
-        toast.error(data.error);
-      } else if (data.succes) {
+      if (data.succes) {
         toast.success("Post deleted successfully");
         navigate("/posts");
       }
