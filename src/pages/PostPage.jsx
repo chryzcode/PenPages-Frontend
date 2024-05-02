@@ -28,19 +28,24 @@ const PostPage = () => {
   };
 
   const deletePost = async () => {
-    const res = await fetch(`${API_BASE_URL}post/${postId}`, {
-      method: "DELETE",
-      headers: {
-        "Type-Content": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    if (data.error) {
-      toast.error(data.error);
-    } else if (data.status == 200) {
-      toast.success("Post deleted successfully");
-      navigate("/posts");
+    try {
+      const res = await fetch(`${API_BASE_URL}post/${postId}`, {
+        method: "DELETE",
+        headers: {
+          "Type-Content": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (data.error) {
+        toast.error(data.error);
+      } else if (data.succes) {
+        toast.success("Post deleted successfully");
+        navigate("/posts");
+      }
+    } catch (error) {
+      console.log("error...", error);
+      toast.error("Failed to deleted post");
     }
   };
 
@@ -106,7 +111,7 @@ const PostPage = () => {
                 {isAuthor ? (
                   <div className="flex items-center justify-center gap-5">
                     <Link to={`/post/${post._id}/edit`}>Edit</Link>
-                    <p>Delete</p>
+                    <Link onClick={onDeleteClick}>Delete</Link>
                   </div>
                 ) : null}
 
