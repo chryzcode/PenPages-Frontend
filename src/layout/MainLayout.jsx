@@ -4,24 +4,21 @@ import "react-toastify/ReactToastify.css";
 import Navbar from "../components/Navbar";
 import Cookies from "js-cookie";
 import React, { useState, useEffect } from "react";
+import getCurrentUserData from "../utils/CurrentUserData";
 
 const MainLayout = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const fetchAccessToken = () => {
-      const token = Cookies.get("accessToken");
-      if (token) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-      }
+    const fetchUserData = async () => {
+      const userData = await getCurrentUserData();
+      setIsAuthenticated(userData !== null);
     };
 
-    fetchAccessToken();
+    fetchUserData();
 
     const intervalId = setInterval(() => {
-      fetchAccessToken(); // Fetch access token every 5 seconds
+      fetchUserData(); // Fetch user data every 5 seconds
     }, 5000);
 
     return () => {
