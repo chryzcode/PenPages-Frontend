@@ -32,18 +32,20 @@ const PostPage = () => {
       const res = await fetch(`${API_BASE_URL}post/${postId}`, {
         method: "DELETE",
         headers: {
-          "Type-Content": "application/json",
+          "Content-Type": "application/json", // Correcting header name
           Authorization: `Bearer ${token}`,
         },
       });
       const data = await res.json();
-      if (data.succes) {
+      if (res.ok) {
         toast.success("Post deleted successfully");
         navigate("/posts");
+      } else {
+        toast.error(data.error || "Failed to delete post"); // Display server error message if available
       }
     } catch (error) {
-      console.log("error...", error);
-      toast.error("Failed to deleted post");
+      console.log("Error:", error);
+      toast.error("Failed to delete post");
     }
   };
 
