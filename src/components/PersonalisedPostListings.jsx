@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { toast } from "react-toastify";
 import PostListing from "./PostListing";
-
+import Auth from "./Auth";
+import Cookies from "js-cookie";
 
 const PersonalisedPostListings = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
+  const token = Cookies.get("accessToken");
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     const getPosts = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}personalised/post`, {
+        const res = await fetch(`${API_BASE_URL}post/personalised/posts`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -50,4 +52,4 @@ const PersonalisedPostListings = () => {
   );
 };
 
-export default PersonalisedPostListings;
+export default Auth(PersonalisedPostListings);
