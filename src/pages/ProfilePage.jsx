@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from "react";
 import Auth from "../components/Auth";
-import Cookies from "js-cookie";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
 const ProfilePage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { username } = useParams();
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = Cookies.get("accessToken");
       try {
-        const res = await fetch(`${API_BASE_URL}user/current-user`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
+        const res = await fetch(`${API_BASE_URL}user/profile/${username}`);
         const data = await res.json();
-        setUserData(data["user"]);
+        if (data.user) {
+          setUserData(data["user"]);
+        } else if (data.error) {
+          toast.error(data.error);
+        }
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
@@ -33,7 +30,7 @@ const ProfilePage = () => {
 
     fetchUserData();
   }, []); // Run only once when component mounts
-  
+
   return (
     <>
       {isLoading ? (

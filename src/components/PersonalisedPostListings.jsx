@@ -22,6 +22,7 @@ const PersonalisedPostListings = () => {
           },
         });
         const data = await res.json();
+        console.log(data);
         setPosts(data["allPosts"]);
       } catch (error) {
         console.log("Error in fetching data:", error);

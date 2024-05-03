@@ -12,6 +12,7 @@ import PostPage from "./pages/PostPage";
 import AddPostPage from "./pages/AddPostPage";
 import EditPostPage from "./pages/EditPostPage";
 import PersonalisedPostListings from "./components/PersonalisedPostListings";
+import ProfileSettingsPage from "./pages/ProfileSettingsPage";
 
 function App() {
   const router = createBrowserRouter(
@@ -20,7 +21,8 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile/:username" element={<ProfilePage />} />
+        <Route path="/profile" element={<ProfileSettingsPage />} />
         <Route path="/sign-out" element={<SignOutPage />} />
         <Route path="/posts" element={<PostsPage />} />
         <Route path="/personalised/posts" element={<PersonalisedPostListings />} />
