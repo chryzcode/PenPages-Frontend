@@ -21,7 +21,7 @@ const getCurrentUserData = async () => {
       }
     } catch (error) {
       console.log("Error in fetching data:", error);
-      toast.error("Failed to get data");
+      // toast.error("Failed to get data");
     }
   }
   return null;
