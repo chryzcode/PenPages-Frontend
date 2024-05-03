@@ -17,18 +17,14 @@ const getCurrentUserData = async () => {
 
       const data = await res.json();
       if (data.user) {
-        return data["user"];
-      } else {
-        return null;
+        return data.user;
       }
     } catch (error) {
       console.log("Error in fetching data:", error);
       toast.error("Failed to get data");
-      return null;
     }
-  } else {
-    return null;
   }
+  return null;
 };
 
 export default getCurrentUserData;

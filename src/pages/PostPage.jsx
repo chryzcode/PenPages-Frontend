@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import NotFoundPage from "./NotFoundPage";
 import CurrentUserAuthor from "../utils/CurrentUserAuthor";
 import Cookies from "js-cookie";
+import { FaThumbsUp } from "react-icons/fa6";
 
 const PostPage = () => {
   const formatDate = dateString => {
@@ -55,6 +56,10 @@ const PostPage = () => {
     deletePost();
   };
 
+  const likePost = async () => {
+    
+  }
+
   useEffect(() => {
     const getPost = async () => {
       try {
@@ -94,7 +99,7 @@ const PostPage = () => {
           <div className="w-9/12 mx-auto text-center">
             {post ? (
               <div>
-                <img src={post.imageCloudinaryUrl} alt="" />
+                <img className="w-60 h-60 object-contain mx-auto" src={post.imageCloudinaryUrl} alt="" />
                 <h2 className="text-4xl font-bold py-3">{post.title}</h2>
                 <div className="flex sm:flex-2 items-center justify-center gap-10 py-5 align-center ">
                   <Link to="" className="flex items-center">
@@ -129,7 +134,13 @@ const PostPage = () => {
                 </div>
 
                 <div className="flex items-center justify-center gap-10 py-5 align-center">
-                  {post.likes.length} Likes
+                  <div className="flex items-center justify-center gap-2 align-center">
+                    <Link>
+                      {" "}
+                      <FaThumbsUp className="text-customPurple" />
+                    </Link>
+                    {post.likes.length} Likes
+                  </div>
                   <p>3 Comments</p>
                 </div>
               </div>
