@@ -57,8 +57,30 @@ const PostPage = () => {
   };
 
   const likePost = async () => {
-    
-  }
+    try {
+      const res = await fetch(`${API_BASE_URL}post/like/${postId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Correcting header name
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Post liked");
+        setLikes(data.postLikesCount);
+      } else {
+        toast.error(data.error || "Failed to like post"); // Display server error message if available
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to like post");
+    }
+  };
+
+  const onLikeClick = () => {
+    likePost();
+  };
 
   useEffect(() => {
     const getPost = async () => {
@@ -135,9 +157,9 @@ const PostPage = () => {
 
                 <div className="flex items-center justify-center gap-10 py-5 align-center">
                   <div className="flex items-center justify-center gap-2 align-center">
-                    <Link>
+                    <Link onClick={onLikeClick}>
                       {" "}
-                      <FaThumbsUp className="text-customPurple" />
+                      <FaThumbsUp className="text-customPurple text-lg" />
                     </Link>
                     {post.likes.length} Likes
                   </div>
