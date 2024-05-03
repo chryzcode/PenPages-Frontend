@@ -11,9 +11,14 @@ const Navbar = ({ isAuthenticated }) => {
           Feeds
         </NavLink>
         {isAuthenticated ? (
-          <NavLink to="/create-post" className="pr-6 hover:text-customPurple">
-            create post
-          </NavLink>
+          <>
+            <NavLink to="/create-post" className="pr-6 hover:text-customPurple">
+              Personalised post
+            </NavLink>
+            <NavLink to="/create-post" className="pr-6 hover:text-customPurple">
+              Create post
+            </NavLink>
+          </>
         ) : null}
         <NavLink className="pr-6 hover:text-customPurple">Explore</NavLink>
       </span>
