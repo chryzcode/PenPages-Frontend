@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Auth from "./Auth";
-import { json } from "react-router-dom";
+import Spinner from "./Spinner";
 import { toast } from "react-toastify";
 
 const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -9,6 +9,8 @@ const PostComment = ({ postId }) => {
   const [comments, setComments] = useState([]);
   const token = Cookies.get("accessToken");
   const [commentBody, setCommentBody] = useState("");
+  const [commentsLoading, setCommentsLoading] = useState(true);
+  const [postCommentLoading, setPostCommentLoading] = useState(false);
 
   useEffect(() => {
     const getPostComments = async () => {
@@ -19,36 +21,39 @@ const PostComment = ({ postId }) => {
           toast.error(data.error);
         } else if (data.comments) {
           setComments(data.comments);
+          setCommentsLoading(false);
         }
       } catch (error) {
         console.log("error....", error);
         toast.error("Failed to fetch post comments");
       }
     };
-    const createComment = async newComment => {
-      try {
-        const res = await fetch(`${API_BASE_URL}comment/${postId}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(newComment),
-        });
-        const data = await res.json();
-        if (data.error) {
-          toast.error(data.error);
-        } else if (data.comment) {
-          toast.success("Comment successfully added");
-        }
-      } catch (error) {
-        console.log("error....", error);
-        toast.error("Failed to post comment");
-      }
-    };
 
     getPostComments();
   }, []);
+
+  const createComment = async newComment => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/${postId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newComment),
+      });
+      const data = await res.json();
+      if (data.error) {
+        toast.error(data.error);
+      } else if (data.comment) {
+        setPostCommentLoading(true);
+        toast.success("Comment successfully added");
+      }
+    } catch (error) {
+      console.log("error....", error);
+      toast.error("Failed to post comment");
+    }
+  };
 
   const submitForm = async e => {
     e.preventDefault();
@@ -61,7 +66,7 @@ const PostComment = ({ postId }) => {
   return (
     <div>
       <div className="mx-10">
-        <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Comments</p>
+        <p className="text-2xl text-customPurple  font-semibold mx-auto text-center py-7">Comments</p>
         <div>
           <form onSubmit={submitForm}>
             <div className="my-3">
@@ -87,7 +92,7 @@ const PostComment = ({ postId }) => {
                 className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                 type="submit">
                 Comment
-                {/* {isLoading && <Spinner size={10} />} */}
+                {postCommentLoading && <Spinner size={10} />}
               </button>
             </div>
           </form>

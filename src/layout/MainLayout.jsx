@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import Navbar from "../components/Navbar";
-import Cookies from "js-cookie";
 import React, { useState, useEffect } from "react";
 import getCurrentUserData from "../utils/CurrentUserData";
 
