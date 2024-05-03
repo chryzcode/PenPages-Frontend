@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import NotFoundPage from "./NotFoundPage";
 import CurrentUserAuthor from "../utils/CurrentUserAuthor";
 import Cookies from "js-cookie";
-import { FaThumbsUp } from "react-icons/fa6";
+import { FaThumbsUp, FaThumbsDown } from "react-icons/fa6";
 
 const PostPage = () => {
   const formatDate = dateString => {
@@ -20,6 +20,7 @@ const PostPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthor, setIsAuthor] = useState(false);
   const [likes, setLikes] = useState([]);
+  const [liked, setLiked] = useState(false);
   const navigate = useNavigate();
 
   const getPostLikes = async postId => {
@@ -159,7 +160,11 @@ const PostPage = () => {
                   <div className="flex items-center justify-center gap-2 align-center">
                     <Link onClick={onLikeClick}>
                       {" "}
-                      <FaThumbsUp className="text-customPurple text-lg" />
+                      {liked ? (
+                        <FaThumbsDown className="text-customPurple text-lg" />
+                      ) : (
+                        <FaThumbsUp className="text-customPurple text-lg" />
+                      )}
                     </Link>
                     {post.likes.length} Likes
                   </div>
