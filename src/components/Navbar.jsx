@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-const Navbar = ({ isAuthenticated }) => {
+const Navbar = ({ isAuthenticated, userData }) => {
   return (
     <nav className="main-nav">
       <NavLink to="/">PenPages</NavLink>
@@ -11,9 +11,14 @@ const Navbar = ({ isAuthenticated }) => {
           Feeds
         </NavLink>
         {isAuthenticated ? (
-          <NavLink to="/create-post" className="pr-6 hover:text-customPurple">
-            create post
-          </NavLink>
+          <>
+            <NavLink to="/personalised/posts" className="pr-6 hover:text-customPurple">
+              Personalised post
+            </NavLink>
+            <NavLink to="/create-post" className="pr-6 hover:text-customPurple">
+              Create post
+            </NavLink>
+          </>
         ) : null}
         <NavLink className="pr-6 hover:text-customPurple">Explore</NavLink>
       </span>
@@ -21,6 +26,9 @@ const Navbar = ({ isAuthenticated }) => {
       <span className=" text-md">
         {isAuthenticated ? (
           <>
+            <NavLink to="/profile" className="pr-6 hover:text-customPurple">
+              {userData.firstName}
+            </NavLink>
             <NavLink
               to="/sign-out"
               className=" bg-customPurple hover:bg-indigo-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
