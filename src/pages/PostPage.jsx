@@ -6,6 +6,8 @@ import NotFoundPage from "./NotFoundPage";
 import CurrentUserAuthor from "../utils/CurrentUserAuthor";
 import Cookies from "js-cookie";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa6";
+import getCurrentUserData from "../utils/CurrentUserData";
+
 
 const PostPage = () => {
   const formatDate = dateString => {
@@ -21,6 +23,7 @@ const PostPage = () => {
   const [isAuthor, setIsAuthor] = useState(false);
   const [likes, setLikes] = useState([]);
   const [liked, setLiked] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
   const navigate = useNavigate();
 
   const getPostLikes = async postId => {
@@ -70,6 +73,7 @@ const PostPage = () => {
       if (res.ok) {
         toast.success("Post liked");
         setLikes(data.postLikesCount);
+        setLiked(prevLiked => !prevLiked);
       } else {
         toast.error(data.error || "Failed to like post"); // Display server error message if available
       }
@@ -94,6 +98,10 @@ const PostPage = () => {
           setPost(data.post);
           const likes = await getPostLikes(data.post._id);
           setLikes(likes["likes"]);
+          const checkAuthentication = await getCurrentUserData();
+          if (checkAuthentication) {
+            setAuthenticated(true);
+          }
           const author = await CurrentUserAuthor(data.post.author._id);
           if (author) {
             setIsAuthor(true);
@@ -158,14 +166,19 @@ const PostPage = () => {
 
                 <div className="flex items-center justify-center gap-10 py-5 align-center">
                   <div className="flex items-center justify-center gap-2 align-center">
-                    <Link onClick={onLikeClick}>
-                      {" "}
-                      {liked ? (
-                        <FaThumbsDown className="text-customPurple text-lg" />
-                      ) : (
-                        <FaThumbsUp className="text-customPurple text-lg" />
-                      )}
-                    </Link>
+                    {authenticated ? (
+                      <>
+                        {" "}
+                        <Link onClick={onLikeClick}>
+                          {" "}
+                          {liked ? (
+                            <FaThumbsDown className="text-customPurple text-lg" />
+                          ) : (
+                            <FaThumbsUp className="text-customPurple text-lg" />
+                          )}
+                        </Link>
+                      </>
+                    ) : null}
                     {post.likes.length} Likes
                   </div>
                   <p>3 Comments</p>
