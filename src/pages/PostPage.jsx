@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import NotFoundPage from "./NotFoundPage";
 import CurrentUserAuthor from "../utils/CurrentUserAuthor";
 import Cookies from "js-cookie";
+import { FaThumbsUp, FaThumbsDown } from "react-icons/fa6";
 
 const PostPage = () => {
   const formatDate = dateString => {
@@ -19,6 +20,7 @@ const PostPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthor, setIsAuthor] = useState(false);
   const [likes, setLikes] = useState([]);
+  const [liked, setLiked] = useState(false);
   const navigate = useNavigate();
 
   const getPostLikes = async postId => {
@@ -53,6 +55,32 @@ const PostPage = () => {
     const confirm = window.confirm("Are you sure you wan to delete this post?");
     if (!confirm) return;
     deletePost();
+  };
+
+  const likePost = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}post/like/${postId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Correcting header name
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Post liked");
+        setLikes(data.postLikesCount);
+      } else {
+        toast.error(data.error || "Failed to like post"); // Display server error message if available
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to like post");
+    }
+  };
+
+  const onLikeClick = () => {
+    likePost();
   };
 
   useEffect(() => {
@@ -94,7 +122,7 @@ const PostPage = () => {
           <div className="w-9/12 mx-auto text-center">
             {post ? (
               <div>
-                <img src={post.imageCloudinaryUrl} alt="" />
+                <img className="w-60 h-60 object-contain mx-auto" src={post.imageCloudinaryUrl} alt="" />
                 <h2 className="text-4xl font-bold py-3">{post.title}</h2>
                 <div className="flex sm:flex-2 items-center justify-center gap-10 py-5 align-center ">
                   <Link to="" className="flex items-center">
@@ -129,7 +157,17 @@ const PostPage = () => {
                 </div>
 
                 <div className="flex items-center justify-center gap-10 py-5 align-center">
-                  {post.likes.length} Likes
+                  <div className="flex items-center justify-center gap-2 align-center">
+                    <Link onClick={onLikeClick}>
+                      {" "}
+                      {liked ? (
+                        <FaThumbsDown className="text-customPurple text-lg" />
+                      ) : (
+                        <FaThumbsUp className="text-customPurple text-lg" />
+                      )}
+                    </Link>
+                    {post.likes.length} Likes
+                  </div>
                   <p>3 Comments</p>
                 </div>
               </div>

@@ -8,18 +8,20 @@ import getCurrentUserData from "../utils/CurrentUserData";
 
 const MainLayout = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const userData = await getCurrentUserData();
-      setIsAuthenticated(userData !== null);
+      const fetchedUserData = await getCurrentUserData();
+      if (fetchedUserData !== null) {
+        setUserData(fetchedUserData);
+        setIsAuthenticated(true);
+      }
     };
 
-    fetchUserData();
+    fetchUserData(); // Fetch initial user data
 
-    const intervalId = setInterval(() => {
-      fetchUserData(); // Fetch user data every 5 seconds
-    }, 5000);
+    const intervalId = setInterval(fetchUserData, 5000); // Setup interval to fetch user data every 5 seconds
 
     return () => {
       clearInterval(intervalId); // Clean up interval when component unmounts
