@@ -16,6 +16,9 @@ const MainLayout = () => {
       if (fetchedUserData !== null) {
         setUserData(fetchedUserData);
         setIsAuthenticated(true);
+      } else {
+        setUserData(null);
+        setIsAuthenticated(false);
       }
     };
 

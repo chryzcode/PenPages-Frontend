@@ -7,7 +7,7 @@ import CurrentUserAuthor from "../utils/CurrentUserAuthor";
 import Cookies from "js-cookie";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa6";
 import getCurrentUserData from "../utils/CurrentUserData";
-
+import PostComment from "../components/PostComment";
 
 const PostPage = () => {
   const formatDate = dateString => {
@@ -183,6 +183,7 @@ const PostPage = () => {
                   </div>
                   <p>3 Comments</p>
                 </div>
+                <PostComment postId={postId} />
               </div>
             ) : (
               <NotFoundPage url={"/posts"} />
