@@ -30,7 +30,7 @@ const MainLayout = () => {
 
   return (
     <>
-      <Navbar isAuthenticated={isAuthenticated} />
+      <Navbar isAuthenticated={isAuthenticated} userData={userData} />
       <Outlet />
       <ToastContainer />
     </>

@@ -20,7 +20,7 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
-        <Route path="/current-user" element={<ProfilePage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/sign-out" element={<SignOutPage />} />
         <Route path="/posts" element={<PostsPage />} />
         <Route path="/personalised/posts" element={<PersonalisedPostListings />} />
