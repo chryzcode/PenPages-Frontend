@@ -181,7 +181,7 @@ const PostPage = () => {
                     ) : null}
                     {post.likes.length} Likes
                   </div>
-                  <p>3 Comments</p>
+                  <p>{post.comments.length} Comments</p>
                 </div>
                 <PostComment postId={postId} />
               </div>
