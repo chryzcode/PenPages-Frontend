@@ -6,34 +6,13 @@ import { toast } from "react-toastify";
 
 const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
 const PostComment = ({ postId }) => {
-  const [comments, setComments] = useState([]);
   const token = Cookies.get("accessToken");
   const [commentBody, setCommentBody] = useState("");
-  const [commentsLoading, setCommentsLoading] = useState(true);
   const [postCommentLoading, setPostCommentLoading] = useState(false);
-
-  useEffect(() => {
-    const getPostComments = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}comment/${postId}`);
-        const data = await res.json();
-        if (data.error) {
-          toast.error(data.error);
-        } else if (data.comments) {
-          setComments(data.comments);
-          setCommentsLoading(false);
-        }
-      } catch (error) {
-        console.log("error....", error);
-        toast.error("Failed to fetch post comments");
-      }
-    };
-
-    getPostComments();
-  }, []);
 
   const createComment = async newComment => {
     try {
+      setPostCommentLoading(true);
       const res = await fetch(`${API_BASE_URL}comment/${postId}`, {
         method: "POST",
         headers: {
@@ -42,23 +21,26 @@ const PostComment = ({ postId }) => {
         },
         body: JSON.stringify(newComment),
       });
+
       const data = await res.json();
       if (data.error) {
         toast.error(data.error);
       } else if (data.comment) {
-        setPostCommentLoading(true);
+        setCommentBody("");
         toast.success("Comment successfully added");
       }
     } catch (error) {
       console.log("error....", error);
       toast.error("Failed to post comment");
+    } finally {
+      setPostCommentLoading(false);
     }
   };
 
   const submitForm = async e => {
     e.preventDefault();
     const newComment = {
-      commentBody,
+      body: commentBody,
     };
     createComment(newComment);
   };
