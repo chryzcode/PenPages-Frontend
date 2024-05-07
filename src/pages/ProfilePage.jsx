@@ -9,6 +9,8 @@ const ProfilePage = () => {
   const { username } = useParams();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [postLoading, setPostLoading] = useState(true);
+  const [posts, setPosts] = useState([])
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,6 +34,27 @@ const ProfilePage = () => {
       }
     };
 
+    const getUserPosts = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}post/${username}/posts`);
+        const data = await res.json();
+        console.log(data);
+        if (data.posts) {
+          setPosts(data["posts"]);
+        } else if (data.error) {
+          console.log("error");
+          toast.error(data.error);
+        }
+      } catch (error) {
+        console.log("Error in fetching data:", error);
+        toast.error("Failed to get data");
+      } finally {
+        setPostLoading(false);
+      }
+
+    }
+
+    getUserPosts();
     fetchUserData();
   }, []); // Run only once when component mounts
 
@@ -43,13 +66,17 @@ const ProfilePage = () => {
         </h2>
       ) : (
         <div className="container mx-auto my-8 text-center">
-          <p>UserProfile</p>
           {user && ( // Conditional rendering
             <div>
-              <h1>
+              <img className="w-52 h-52 object-contain mx-auto" src={user.imageCloudinaryUrl} alt="" />
+              <h1 className="text-3xl py-2">
                 {user.firstName} {user.lastName}
               </h1>
-              <p>{user.username}</p>
+                <p className="font-semibold">@{user.username}</p>
+                
+                {/* <div>
+                  {user.bio}
+                </div> */}
             </div>
             // Render other user data here
           )}
