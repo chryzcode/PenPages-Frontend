@@ -41,9 +41,11 @@ const ProfileSettingsPage = () => {
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
         </h2>
       ) : (
-        <div>
-          <h1>Profile Page</h1>
-          <span>First Name: {userData.firstName}</span>
+        <div className="container mx-auto my-8">
+
+          <h1>
+            {userData.firstName} {userData.lastName}
+          </h1>
           {/* Render other user data here */}
         </div>
       )}

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const ProfilePage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const { username } = useParams();
-  const [userData, setUserData] = useState(null);
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ const ProfilePage = () => {
         const data = await res.json();
         console.log(data);
         if (data.user) {
-          setUserData(data["user"]);
+          setUser(data["user"]);
         } else if (data.error) {
           console.log("error");
           toast.error(data.error);
@@ -42,10 +42,15 @@ const ProfilePage = () => {
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
         </h2>
       ) : (
-        <div>
+        <div className="container mx-auto my-8 text-center">
           <p>UserProfile</p>
-          {userData && ( // Conditional rendering
-            <span>First Name: {userData.firstName}</span>
+          {user && ( // Conditional rendering
+            <div>
+              <h1>
+                {user.firstName} {user.lastName}
+              </h1>
+              <p>{user.username}</p>
+            </div>
             // Render other user data here
           )}
         </div>
