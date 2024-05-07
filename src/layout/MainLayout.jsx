@@ -23,11 +23,11 @@ const MainLayout = () => {
 
     fetchUserData(); // Fetch initial user data
 
-    const intervalId = setInterval(fetchUserData, 5000); // Setup interval to fetch user data every 5 seconds
+    // const intervalId = setInterval(fetchUserData, 5000); // Setup interval to fetch user data every 5 seconds
 
-    return () => {
-      clearInterval(intervalId); // Clean up interval when component unmounts
-    };
+    // return () => {
+    //   clearInterval(intervalId); // Clean up interval when component unmounts
+    // };
   }, []);
 
   return (
