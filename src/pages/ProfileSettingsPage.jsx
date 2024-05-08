@@ -11,6 +11,7 @@ const ProfileSettingsPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [image, setImage] = useState("");
+  const [bio, setBio] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -26,10 +27,11 @@ const ProfileSettingsPage = () => {
 
         const data = await res.json();
         setUserData(data["user"]);
-        const { firstName, lastName, image, } = data.uswe;
+        const { firstName, lastName, image, bio } = data.user;
         setFirstName(firstName);
         setLastName(lastName);
-        setImage(image)
+        setImage(image);
+        setBio(bio);
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
@@ -41,8 +43,37 @@ const ProfileSettingsPage = () => {
     fetchUserData();
   }, []); // Run only once when component mounts
 
+  const updateUser = async updatedUser => {
+     try {
+      const res = await fetch(`${API_BASE_URL}user/update`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedUser),
+      });
+      const data = await res.json();
+      if (data.error) {
+        toast.error(data.error);
+      } else if (data.user) {
+        toast.success("Post updated published");
+        setUserData(data.user)
+        setIsLoading(true);
+        
+      }
+    } catch (error) {
+      console.log("Errorrr....", error);
+      toast.error("Failed to publish post");
+    }
+  };
+
   const submitForm = async e => {
     e.preventDefault();
+    const updatedUser = {
+
+    }
+    updateUser(updateUser)
   };
 
   return (
@@ -53,13 +84,10 @@ const ProfileSettingsPage = () => {
         </h2>
       ) : (
         <div className="container mx-auto my-8">
-          <h1>
-            {userData.firstName} {userData.lastName}
-          </h1>
           <div className="mx-10">
-            <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Create Post</p>
+            <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Edit Profile</p>
             <div>
-              <form onSubmit="">
+              <form onSubmit={submitForm}>
                 <div className="my-3">
                   <label htmlFor="firstName" className="block mb-2">
                     First Name
@@ -104,77 +132,56 @@ const ProfileSettingsPage = () => {
                     type="file"
                     id="image"
                     name="image"
-                    accept="image/*" // Accept only image files
+                    // accept="image/*" // Accept only image files
+                    // value={image}
                     onChange={e => {
                       setImage(e.target.value);
                     }}
                     className="border rounded w-full py-2 px-3 mb-2"
-                    required
                   />
                 </div>
 
-                <div className="mb-4">
-                  <label htmlFor="tag" className="block mb-2">
-                    Tag
-                  </label>
-                  <select
-                    multiple
-                    id="tag"
-                    name="tag"
-                    className="border rounded w-full py-2 px-3 mb-2"
-                    required
-                    value={tag}
-                    onChange={e => setTag(Array.from(e.target.selectedOptions, option => option.value))}>
-                    {allTags.map(tag => (
-                      <option value={tag.name} key={tag._id}>
-                        {tag.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="type" className="block mb-2">
-                    Type
-                  </label>
-                  <select
-                    id="type"
-                    name="type"
-                    className="border rounded w-full py-2 px-3 mb-2"
-                    required
-                    value={type}
-                    onChange={e => setType(e.target.value)}>
-                    <option value="article">Article</option>
-                    <option value="book">Book</option>
-                    <option value="poem">Poem</option>
-                  </select>
-                </div>
-
                 <div className="my-3">
-                  <label htmlFor="body" className="block mb-2">
-                    Body
+                  <label htmlFor="bio" className="block mb-2">
+                    Bio
                   </label>
                   <textarea
                     className="border rounded w-full py-2 px-3 mb-2"
                     type="text"
-                    name="body"
-                    value={body}
-                    id="body"
+                    name="bio"
+                    value={bio}
+                    id="bio"
                     cols="30"
                     rows="10"
                     onChange={e => {
-                      setBody(e.target.value);
+                      setBio(e.target.value);
                     }}
-                    placeholder="....."
-                    required></textarea>
+                    placeholder="....."></textarea>
+                </div>
+
+                <div className="my-3">
+                  <label htmlFor="password" className="block mb-2">
+                    Password
+                  </label>
+                  <input
+                    type="text"
+                    id="password"
+                    name="password"
+                    onChange={e => {
+                      setFirstName(e.target.value);
+                    }}
+                    className="border rounded w-full py-2 px-3 mb-2"
+                    placeholder="********"
+                    required
+                  />
                 </div>
 
                 <div className="mx-auto w-32 my-8 text-center">
                   <button
                     className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                     type="submit">
-                    Publish
-                    {isLoading && <Spinner size={10} />}
+                    Update
+                    {/* {isLoading && <Spinner size={10} />} */}
                   </button>
                 </div>
               </form>
