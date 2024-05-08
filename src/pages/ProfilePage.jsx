@@ -65,39 +65,37 @@ const ProfilePage = () => {
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
         </h2>
       ) : (
-        <div className="container mx-auto my-8 text-center">
-          {user && ( // Conditional rendering
-            <div>
+        <div className="container mx-auto my-8">
+          {user && (
+            <div className="text-center">
               <img className="w-52 h-52 object-contain mx-auto" src={user.imageCloudinaryUrl} alt="" />
               <h1 className="text-3xl py-2">
                 {user.firstName} {user.lastName}
               </h1>
               <p className="font-semibold">@{user.username}</p>
-
               <div>{user.bio}</div>
             </div>
-
-            // Render other user data here
           )}
 
-          {postLoading ? (
-            <h2>
-              <Spinner size={100} color={"#6c63ff"} display={"block"} />
-            </h2>
-          ) :
-            posts && posts.length > 0 ? (
+          <div className="my-6 ">
+            {postLoading ? (
+              <h2>
+                <Spinner size={100} color={"#6c63ff"} display={"block"} />
+              </h2>
+            ) : posts && posts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mx-2">
                 {posts.map(post => (
                   <PostListing key={post._id} post={post} />
                 ))}
               </div>
             ) : (
-              <p className="text-center text-customPurple text-4xl">No posts available</p>
+              <p className="text-center text-customPurple text-3xl">No posts available</p>
             )}
+          </div>
         </div>
-       
-      </>
-              
-      }) 
+      )}
+    </>
+  );
+};
 
 export default ProfilePage;
