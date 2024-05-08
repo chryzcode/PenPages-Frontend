@@ -12,12 +12,13 @@ const ProfileSettingsPage = () => {
   const [lastName, setLastName] = useState("");
   const [image, setImage] = useState("");
   const [bio, setBio] = useState("");
-  const [password, setPassword] = useState("")
+  const [password, setPassword] = useState("");
   const [updateIsLoading, setUpdateIsLoading] = useState(false);
+  const [username, setUsername] = useState("")
+  const token = Cookies.get("accessToken");
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = Cookies.get("accessToken");
       try {
         const res = await fetch(`${API_BASE_URL}user/current-user`, {
           method: "GET",
@@ -34,7 +35,7 @@ const ProfileSettingsPage = () => {
         setLastName(lastName);
         setImage(image);
         setBio(bio);
-        setPassword(password)
+        setPassword(password);
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
@@ -77,7 +78,7 @@ const ProfileSettingsPage = () => {
     const updatedUser = {
       firstName,
       lastName,
-      image,
+      // image,
       bio,
       password,
     };
@@ -122,6 +123,24 @@ const ProfileSettingsPage = () => {
                     type="text"
                     id="lastName"
                     name="firstName"
+                    value={lastName}
+                    onChange={e => {
+                      setLastName(e.target.value);
+                    }}
+                    className="border rounded w-full py-2 px-3 mb-2"
+                    placeholder="Doe"
+                    required
+                  />
+                </div>
+
+                <div className="my-3">
+                  <label htmlFor="username" className="block mb-2">
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    id="username"
+                    name="username"
                     value={lastName}
                     onChange={e => {
                       setLastName(e.target.value);
@@ -187,8 +206,7 @@ const ProfileSettingsPage = () => {
                   <button
                     className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                     type="submit">
-                    Update
-                    {updateIsLoading && <Spinner size={10} />}
+                    Update {updateIsLoading && <Spinner size={10} />}
                   </button>
                 </div>
               </form>
