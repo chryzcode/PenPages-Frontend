@@ -12,6 +12,8 @@ const ProfileSettingsPage = () => {
   const [lastName, setLastName] = useState("");
   const [image, setImage] = useState("");
   const [bio, setBio] = useState("");
+  const [password, setPassword] = useState("")
+  const [updateIsLoading, setUpdateIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -27,11 +29,12 @@ const ProfileSettingsPage = () => {
 
         const data = await res.json();
         setUserData(data["user"]);
-        const { firstName, lastName, image, bio } = data.user;
+        const { firstName, lastName, image, bio, password } = data.user;
         setFirstName(firstName);
         setLastName(lastName);
         setImage(image);
         setBio(bio);
+        setPassword(password)
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
@@ -44,7 +47,8 @@ const ProfileSettingsPage = () => {
   }, []); // Run only once when component mounts
 
   const updateUser = async updatedUser => {
-     try {
+    try {
+      setUpdateIsLoading(true);
       const res = await fetch(`${API_BASE_URL}user/update`, {
         method: "PUT",
         headers: {
@@ -57,23 +61,27 @@ const ProfileSettingsPage = () => {
       if (data.error) {
         toast.error(data.error);
       } else if (data.user) {
-        toast.success("Post updated published");
-        setUserData(data.user)
-        setIsLoading(true);
-        
+        toast.success("Profile updated");
+        setUserData(data.user);
       }
     } catch (error) {
       console.log("Errorrr....", error);
-      toast.error("Failed to publish post");
+      toast.error("Failed to update profile");
+    } finally {
+      setUpdateIsLoading(false);
     }
   };
 
   const submitForm = async e => {
     e.preventDefault();
     const updatedUser = {
-
-    }
-    updateUser(updateUser)
+      firstName,
+      lastName,
+      image,
+      bio,
+      password,
+    };
+    updateUser(updatedUser);
   };
 
   return (
@@ -116,10 +124,10 @@ const ProfileSettingsPage = () => {
                     name="firstName"
                     value={lastName}
                     onChange={e => {
-                      setFirstName(e.target.value);
+                      setLastName(e.target.value);
                     }}
                     className="border rounded w-full py-2 px-3 mb-2"
-                    placeholder="John"
+                    placeholder="Doe"
                     required
                   />
                 </div>
@@ -168,11 +176,10 @@ const ProfileSettingsPage = () => {
                     id="password"
                     name="password"
                     onChange={e => {
-                      setFirstName(e.target.value);
+                      setPassword(e.target.value);
                     }}
                     className="border rounded w-full py-2 px-3 mb-2"
                     placeholder="********"
-                    required
                   />
                 </div>
 
@@ -181,7 +188,7 @@ const ProfileSettingsPage = () => {
                     className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                     type="submit">
                     Update
-                    {/* {isLoading && <Spinner size={10} />} */}
+                    {updateIsLoading && <Spinner size={10} />}
                   </button>
                 </div>
               </form>
