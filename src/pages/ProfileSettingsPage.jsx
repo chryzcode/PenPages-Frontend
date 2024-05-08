@@ -12,7 +12,8 @@ const ProfileSettingsPage = () => {
   const [lastName, setLastName] = useState("");
   const [image, setImage] = useState("");
   const [bio, setBio] = useState("");
-  const [password, setPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [updateIsLoading, setUpdateIsLoading] = useState(false);
   const [username, setUsername] = useState("");
   const token = Cookies.get("accessToken");
@@ -30,12 +31,11 @@ const ProfileSettingsPage = () => {
 
         const data = await res.json();
         setUserData(data["user"]);
-        const { firstName, lastName, image, bio, password, username } = data.user;
+        const { firstName, lastName, image, bio, username } = data.user;
         setFirstName(firstName);
         setLastName(lastName);
         setImage(image);
         setBio(bio);
-        setPassword(password);
         setUsername(username);
       } catch (error) {
         console.log("Error in fetching data:", error);
@@ -82,7 +82,8 @@ const ProfileSettingsPage = () => {
       // image,
       bio,
       username,
-      password,
+      currentPassword,
+      newPassword,
     };
     updateUser(updatedUser);
   };
@@ -189,15 +190,31 @@ const ProfileSettingsPage = () => {
                 </div>
 
                 <div className="my-3">
-                  <label htmlFor="password" className="block mb-2">
-                    Password
+                  <label htmlFor="currentPassword" className="block mb-2">
+                    Current Password
                   </label>
                   <input
                     type="text"
-                    id="password"
-                    name="password"
+                    id="currentPassword"
+                    name="currentPassword"
                     onChange={e => {
-                      setPassword(e.target.value);
+                      setCurrentPassword(e.target.value);
+                    }}
+                    className="border rounded w-full py-2 px-3 mb-2"
+                    placeholder="********"
+                  />
+                </div>
+
+                <div className="my-3">
+                  <label htmlFor="newPassword" className="block mb-2">
+                    New Password
+                  </label>
+                  <input
+                    type="text"
+                    id="newPassword"
+                    name="newPassword"
+                    onChange={e => {
+                      setNewPassword(e.target.value);
                     }}
                     className="border rounded w-full py-2 px-3 mb-2"
                     placeholder="********"
