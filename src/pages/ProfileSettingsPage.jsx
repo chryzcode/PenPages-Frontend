@@ -14,7 +14,7 @@ const ProfileSettingsPage = () => {
   const [bio, setBio] = useState("");
   const [password, setPassword] = useState("");
   const [updateIsLoading, setUpdateIsLoading] = useState(false);
-  const [username, setUsername] = useState("")
+  const [username, setUsername] = useState("");
   const token = Cookies.get("accessToken");
 
   useEffect(() => {
@@ -30,12 +30,13 @@ const ProfileSettingsPage = () => {
 
         const data = await res.json();
         setUserData(data["user"]);
-        const { firstName, lastName, image, bio, password } = data.user;
+        const { firstName, lastName, image, bio, password, username } = data.user;
         setFirstName(firstName);
         setLastName(lastName);
         setImage(image);
         setBio(bio);
         setPassword(password);
+        setUsername(username);
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
@@ -80,6 +81,7 @@ const ProfileSettingsPage = () => {
       lastName,
       // image,
       bio,
+      username,
       password,
     };
     updateUser(updatedUser);
@@ -141,9 +143,9 @@ const ProfileSettingsPage = () => {
                     type="text"
                     id="username"
                     name="username"
-                    value={lastName}
+                    value={username}
                     onChange={e => {
-                      setLastName(e.target.value);
+                      setUsername(e.target.value);
                     }}
                     className="border rounded w-full py-2 px-3 mb-2"
                     placeholder="Doe"
