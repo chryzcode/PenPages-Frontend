@@ -55,7 +55,7 @@ const PostPage = () => {
   };
 
   const onDeleteClick = () => {
-    const confirm = window.confirm("Are you sure you wan to delete this post?");
+    const confirm = window.confirm("Are you sure you want to delete this post?");
     if (!confirm) return;
     deletePost();
   };

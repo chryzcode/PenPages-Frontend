@@ -3,6 +3,7 @@ import Auth from "../components/Auth";
 import Cookies from "js-cookie";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const ProfileSettingsPage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -17,6 +18,7 @@ const ProfileSettingsPage = () => {
   const [updateIsLoading, setUpdateIsLoading] = useState(false);
   const [username, setUsername] = useState("");
   const token = Cookies.get("accessToken");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -72,6 +74,34 @@ const ProfileSettingsPage = () => {
     } finally {
       setUpdateIsLoading(false);
     }
+  };
+
+  const deactivateUser = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}user/delete`, {
+        method: "DELETE",
+        headers: {
+          "Type-Content": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (data.error) {
+        toast.error(data.error);
+      } else if (data.success) {
+        toast.success(data.success);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log("error......", error);
+      toast.error("Failed to deactivate account");
+    }
+  };
+
+  const onClickDeactivate = () => {
+    const confirm = window.confirm("Are you sure you want to deactivate this account?");
+    if (!confirm) return;
+    deactivateUser();
   };
 
   const submitForm = async e => {
@@ -230,9 +260,11 @@ const ProfileSettingsPage = () => {
                 </div>
               </form>
             </div>
-            <div className=" bg-red-500 hover:bg-red-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
+            <button
+              onClick={onClickDeactivate}
+              className=" bg-red-500 hover:bg-red-600 text-sm font-semibold text-white py-2 px-4 focus:outline-none focus:shadow-outline block ml-auto">
               Deactivate account
-            </div>
+            </button>
           </div>
         </div>
       )}
