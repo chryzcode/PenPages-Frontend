@@ -62,8 +62,8 @@ const ProfileSettingsPage = () => {
       const data = await res.json();
       if (data.error) {
         toast.error(data.error);
-      } else if (data.user) {
-        toast.success("Profile updated");
+      } else if (data.success) {
+        toast.success(data.success);
         setUserData(data.user);
       }
     } catch (error) {
