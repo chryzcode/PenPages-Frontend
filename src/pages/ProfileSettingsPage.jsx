@@ -230,6 +230,9 @@ const ProfileSettingsPage = () => {
                 </div>
               </form>
             </div>
+            <div className=" bg-red-500 hover:bg-red-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
+              Deactivate account
+            </div>
           </div>
         </div>
       )}
