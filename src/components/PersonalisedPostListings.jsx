@@ -14,7 +14,7 @@ const PersonalisedPostListings = () => {
   useEffect(() => {
     const getPosts = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}post/personalised/posts`, {
+        const res = await fetch(`${API_BASE_URL}post/user/personalised/posts`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
