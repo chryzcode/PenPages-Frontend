@@ -262,7 +262,7 @@ const ProfileSettingsPage = () => {
             </div>
             <button
               onClick={onClickDeactivate}
-              className=" bg-red-500 hover:bg-red-600 text-sm font-semibold text-white py-2 px-4 focus:outline-none focus:shadow-outline block ml-auto">
+              className=" bg-red-500 hover:bg-red-600 text-sm  text-white py-2 px-4 focus:outline-none focus:shadow-outline block ml-auto">
               Deactivate account
             </button>
           </div>
