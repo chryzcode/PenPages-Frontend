@@ -24,7 +24,7 @@ function App() {
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/profile/:username" element={<ProfilePage />} />
           <Route path="/not-found" element={<NotFoundPage url={"/"} />} />
-          <Route path="/profile" element={<ProfileSettingsPage />} />
+          <Route path="/settings" element={<ProfileSettingsPage />} />
           <Route path="/sign-out" element={<SignOutPage />} />
           <Route path="/posts" element={<PostsPage />} />
           <Route path="/personalised/posts" element={<PersonalisedPostListings />} />

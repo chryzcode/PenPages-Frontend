@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { IoMdArrowDropdown } from "react-icons/io";
 
 const Navbar = ({ isAuthenticated, userData }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <nav className="main-nav">
       <NavLink to="/">PenPages</NavLink>
@@ -27,19 +33,19 @@ const Navbar = ({ isAuthenticated, userData }) => {
       <span>
         {isAuthenticated ? (
           <>
-            <NavLink className=" relative">
+            <span onClick={toggleDropdown} className="cursor-pointer relative">
               {userData.firstName}
               <IoMdArrowDropdown className="inline-flex" />
-            </NavLink>
+            </span>
 
-            <ul className="absolute hidden py-2 mt-2  rounded-lg p-5 ">
-              <li>
+            <ul className={`absolute ${isOpen ? "block" : "hidden"} py-2 mt-2 rounded-lg p-5`}>
+              <li className="hover:text-customPurple">
                 <a href={`/profile/${userData.username}`}>Profile</a>
               </li>
-              <li>
-                <a href="/profile">Settings</a>
+              <li className="hover:text-customPurple">
+                <a href="/settings">Settings</a>
               </li>
-              <li>
+              <li className="hover:text-customPurple">
                 <a href="/sign-out">Logout</a>
               </li>
             </ul>
