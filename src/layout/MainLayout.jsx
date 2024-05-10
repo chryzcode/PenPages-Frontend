@@ -4,6 +4,7 @@ import "react-toastify/ReactToastify.css";
 import Navbar from "../components/Navbar";
 import React, { useState, useEffect } from "react";
 import getCurrentUserData from "../utils/CurrentUserData";
+import MiniAuthNavBar from "../components/MiniAuthNavBar";
 
 const MainLayout = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,9 +16,13 @@ const MainLayout = () => {
       if (fetchedUserData !== null) {
         setUserData(fetchedUserData);
         setIsAuthenticated(true);
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("userData", JSON.stringify(fetchedUserData));
       } else {
         setUserData(null);
         setIsAuthenticated(false);
+        localStorage.removeItem("isAuthenticated");
+        localStorage.removeItem("userData");
       }
     };
 
