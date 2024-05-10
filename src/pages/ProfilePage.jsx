@@ -73,7 +73,7 @@ const ProfilePage = () => {
                 {user.firstName} {user.lastName}
               </h1>
               <p className="font-semibold">@{user.username}</p>
-              <div>{user.bio}</div>
+              <div className="text-lg my-4">{user.bio}</div>
             </div>
           )}
 
