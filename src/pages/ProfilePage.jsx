@@ -12,6 +12,7 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [postLoading, setPostLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  const [followersCount, setFollowersCount] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,9 +20,9 @@ const ProfilePage = () => {
       try {
         const res = await fetch(`${API_BASE_URL}user/profile/${username}`);
         const data = await res.json();
-        console.log(data);
         if (data.user) {
           setUser(data["user"]);
+          getUserFollowwers(data.user._id);
         } else if (data.error) {
           console.log("error");
           toast.error(data.error);
@@ -35,11 +36,27 @@ const ProfilePage = () => {
       }
     };
 
+    const getUserFollowwers = async userId => {
+      try {
+        const res = await fetch(`${API_BASE_URL}follower/count/${userId}`);
+        const data = await res.json();
+        if (data.followersCount) {
+          setFollowersCount(data.followersCount);
+        } else if (data.error) {
+          console.log("error");
+          toast.error(data.error);
+          navigate("/not-found");
+        }
+      } catch (error) {
+        console.log("Error in fetching data:", error);
+        toast.error("Failed to get data");
+      }
+    };
+
     const getUserPosts = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}post/${username}/posts`);
         const data = await res.json();
-        console.log(data);
         if (data.posts) {
           setPosts(data["posts"]);
         } else if (data.error) {
@@ -74,6 +91,9 @@ const ProfilePage = () => {
               </h1>
               <p className="font-semibold">@{user.username}</p>
               <div className="text-lg my-4">{user.bio}</div>
+              <p>
+                {followersCount} {followersCount > 1 ? "followers" : "follower"}
+              </p>
             </div>
           )}
 
