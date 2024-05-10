@@ -5,7 +5,7 @@ const MiniAuthNavBar = ({ isAuthenticated }) => {
   return (
     <>
       {isAuthenticated ? (
-        <div>
+        <div className=" container w-9/12 mx-auto my-8 text-center">
           <NavLink to="/personalised/posts" className="pr-6 hover:text-customPurple">
             Personalised post
           </NavLink>
