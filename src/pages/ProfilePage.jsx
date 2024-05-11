@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import PostListing from "../components/PostListing";
 
+import Followers from "../components/Followers";
+
 const ProfilePage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const { username } = useParams();
@@ -94,6 +96,9 @@ const ProfilePage = () => {
               <p>
                 {followersCount} {followersCount > 1 ? "followers" : "follower"}
               </p>
+              <div>
+                <Followers userId={user._id} />
+              </div>
               <button className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline w-">
                 Follow
               </button>
