@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import PostListing from "../components/PostListing";
+import { Link } from "react-router-dom";
 
 import Followers from "../components/Followers";
 
@@ -18,6 +19,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const authenticated = localStorage.getItem("isAuthenticated");
   const authenticatedUser = localStorage.getItem("userData");
+  const userData = JSON.parse(authenticatedUser);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -78,7 +80,6 @@ const ProfilePage = () => {
     getUserPosts();
     fetchUserData();
   }, []); // Run only once when component mounts
-
   return (
     <>
       {isLoading ? (
@@ -115,13 +116,15 @@ const ProfilePage = () => {
                   <Followers userId={user._id} />
                 </div> */}
               </div>
-              {authenticatedUser ? (
+              {authenticated ? (
                 <div>
                   {" "}
-                  {authenticatedUser.username == username ? (
-                    <button className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline w-">
+                  {userData.username == username ? (
+                    <Link
+                      to="/settings"
+                      className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline w-">
                       Edit
-                    </button>
+                    </Link>
                   ) : (
                     <button className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline w-">
                       Follow
