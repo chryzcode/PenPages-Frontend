@@ -3,6 +3,8 @@ import Auth from "../components/Auth";
 
 const SignOutPage = () => {
   Cookies.remove("accessToken");
+  localStorage.removeItem("isAuthenticated");
+  localStorage.removeItem("userData");
   window.location.href = "/sign-in";
 };
 
