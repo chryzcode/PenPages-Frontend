@@ -22,7 +22,7 @@ const ProfilePage = () => {
         const data = await res.json();
         if (data.user) {
           setUser(data["user"]);
-          getUserFollowwers(data.user._id);
+          getUserFollowers(data.user._id);
         } else if (data.error) {
           console.log("error");
           toast.error(data.error);
@@ -36,7 +36,7 @@ const ProfilePage = () => {
       }
     };
 
-    const getUserFollowwers = async userId => {
+    const getUserFollowers = async userId => {
       try {
         const res = await fetch(`${API_BASE_URL}follower/count/${userId}`);
         const data = await res.json();
