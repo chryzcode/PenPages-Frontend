@@ -86,14 +86,17 @@ const ProfilePage = () => {
           {user && (
             <div className="text-center">
               <img className="w-52 h-52 object-contain mx-auto" src={user.imageCloudinaryUrl} alt="" />
-              <h1 className="text-3xl py-2">
+              <h1 className="text-3xl py-1">
                 {user.firstName} {user.lastName}
               </h1>
               <p className="font-semibold">@{user.username}</p>
-              <div className="text-lg my-4">{user.bio}</div>
+              <div className="text-lg my-2">{user.bio}</div>
               <p>
                 {followersCount} {followersCount > 1 ? "followers" : "follower"}
               </p>
+              <button className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline w-">
+                Follow
+              </button>
             </div>
           )}
 
