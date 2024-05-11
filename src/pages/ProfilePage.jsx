@@ -89,7 +89,7 @@ const ProfilePage = () => {
       ) : (
         <div className="container mx-auto my-8">
           {user && (
-            <div className=" flex justify-between align-middle items-center mb-14">
+            <div className=" flex justify-between align-middle items-center mb- ">
               <div className="flex align-middle items-center ">
                 <img className="w-36 h-36 object-contain mx-auto" src={user.imageCloudinaryUrl} alt="" />
 
@@ -100,10 +100,10 @@ const ProfilePage = () => {
 
                   <div className=" my-1">{user.bio}</div>
                   <p className=" text-sm mt-4">
-                    <span className="pr-3">
+                    <Link className="pr-3">
                       <span className="font-semibold "> {followersCount}</span>{" "}
                       {followersCount > 1 ? "followers" : "follower"}
-                    </span>
+                    </Link>
                     <span>
                       <span className="font-semibold"> 2 </span>following
                     </span>

@@ -18,6 +18,7 @@ const ProfileSettingsPage = () => {
   const [updateIsLoading, setUpdateIsLoading] = useState(false);
   const [username, setUsername] = useState("");
   const token = Cookies.get("accessToken");
+  const [updatePasswordIsLoading, setUpdatePasswordIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,6 +77,31 @@ const ProfileSettingsPage = () => {
     }
   };
 
+  const updatePassword = async updatedPassword => {
+    try {
+      setUpdatePasswordIsLoading(true);
+      const res = await fetch(`${API_BASE_URL}user/update`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedPassword),
+      });
+      const data = await res.json();
+      if (data.error) {
+        toast.error(data.error);
+      } else if (data.success) {
+        toast.success(data.success);
+      }
+    } catch (error) {
+      console.log("Errorrr....", error);
+      toast.error("Failed to update profile");
+    } finally {
+      setUpdatePasswordIsLoading(false);
+    }
+  };
+
   const deactivateUser = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}user/delete`, {
@@ -116,6 +142,15 @@ const ProfileSettingsPage = () => {
       newPassword,
     };
     updateUser(updatedUser);
+  };
+
+  const submitPasswordForm = async e => {
+    e.preventDefault();
+    const updatedPassword = {
+      currentPassword,
+      newPassword,
+    };
+    updatePassword(updatedPassword);
   };
 
   return (
@@ -219,6 +254,18 @@ const ProfileSettingsPage = () => {
                     placeholder="....."></textarea>
                 </div>
 
+                <div className="mx-auto w-32 my-8 text-center">
+                  <button
+                    className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
+                    type="submit">
+                    Update {updateIsLoading && <Spinner size={10} />}
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div>
+              <form onSubmit={submitPasswordForm}>
                 <div className="my-3">
                   <label htmlFor="currentPassword" className="block mb-2">
                     Current Password
@@ -250,16 +297,16 @@ const ProfileSettingsPage = () => {
                     placeholder="********"
                   />
                 </div>
-
                 <div className="mx-auto w-32 my-8 text-center">
                   <button
                     className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                     type="submit">
-                    Update {updateIsLoading && <Spinner size={10} />}
+                    Update Password {updatePasswordIsLoading && <Spinner size={10} />}
                   </button>
                 </div>
               </form>
             </div>
+
             <button
               onClick={onClickDeactivate}
               className=" bg-red-500 hover:bg-red-600 text-sm  text-white py-2 px-4 focus:outline-none focus:shadow-outline block ml-auto">
