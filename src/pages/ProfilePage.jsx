@@ -106,7 +106,7 @@ const ProfilePage = () => {
       ) : (
         <div className="container mx-auto my-8">
           {user && (
-            <div className=" flex justify-between align-middle items-center mb- ">
+            <div className=" flex justify-between align-middle items-center mb-5 w-11/12 mx-auto ">
               <div className="flex align-middle items-center ">
                 <img className="w-36 h-36 object-contain mx-auto" src={user.imageCloudinaryUrl} alt="" />
 
