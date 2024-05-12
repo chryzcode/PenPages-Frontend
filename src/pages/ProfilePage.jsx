@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import PostListing from "../components/PostListing";
+import { Link } from "react-router-dom";
 
 import Followers from "../components/Followers";
 
@@ -16,6 +17,9 @@ const ProfilePage = () => {
   const [posts, setPosts] = useState([]);
   const [followersCount, setFollowersCount] = useState(0);
   const navigate = useNavigate();
+  const authenticated = localStorage.getItem("isAuthenticated");
+  const authenticatedUser = localStorage.getItem("userData");
+  const userData = JSON.parse(authenticatedUser);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -76,7 +80,6 @@ const ProfilePage = () => {
     getUserPosts();
     fetchUserData();
   }, []); // Run only once when component mounts
-
   return (
     <>
       {isLoading ? (
@@ -86,22 +89,49 @@ const ProfilePage = () => {
       ) : (
         <div className="container mx-auto my-8">
           {user && (
-            <div className="text-center">
-              <img className="w-52 h-52 object-contain mx-auto" src={user.imageCloudinaryUrl} alt="" />
-              <h1 className="text-3xl py-1">
-                {user.firstName} {user.lastName}
-              </h1>
-              <p className="font-semibold">@{user.username}</p>
-              <div className="text-lg my-2">{user.bio}</div>
-              <p>
-                {followersCount} {followersCount > 1 ? "followers" : "follower"}
-              </p>
-              <div>
-                <Followers userId={user._id} />
+            <div className=" flex justify-between align-middle items-center mb- ">
+              <div className="flex align-middle items-center ">
+                <img className="w-36 h-36 object-contain mx-auto" src={user.imageCloudinaryUrl} alt="" />
+
+                <div className="pl-10">
+                  <h1 className="text-2xl font-bold align-middle">
+                    {user.firstName} {user.lastName}
+                  </h1>
+
+                  <div className=" my-1">{user.bio}</div>
+                  <p className=" text-sm mt-4">
+                    <Link className="pr-3">
+                      <span className="font-semibold "> {followersCount}</span>{" "}
+                      {followersCount > 1 ? "followers" : "follower"}
+                    </Link>
+                    <span>
+                      <span className="font-semibold"> 2 </span>following
+                    </span>
+                  </p>
+                </div>
               </div>
-              <button className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline w-">
-                Follow
-              </button>
+
+              <div>
+                {/* <div>
+                  <Followers userId={user._id} />
+                </div> */}
+              </div>
+              {authenticated ? (
+                <div>
+                  {" "}
+                  {userData.username == username ? (
+                    <Link
+                      to="/settings"
+                      className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline w-">
+                      Edit
+                    </Link>
+                  ) : (
+                    <button className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline w-">
+                      Follow
+                    </button>
+                  )}{" "}
+                </div>
+              ) : null}
             </div>
           )}
 

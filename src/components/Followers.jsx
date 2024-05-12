@@ -37,8 +37,17 @@ const Followers = ({ userId }) => {
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
         </h2>
       ) : (
-        <div className="container mx-auto my-8">
-          <p>Hello</p>
+        <div className="container bg-orange-400 mx-auto my-8 grid grid-cols-1 gap-6">
+          {followers.map(follower => (
+            <div className="flex py-4 px-4 flex-col text-left">
+              <img className="w-8 mr-3" src={follower.imageCloudinaryUrl} alt="" />
+              <p>
+                {" "}
+                {follower.firstName} {follower.lastName}
+              </p>
+              <p> {follower.username}</p>
+            </div>
+          ))}
         </div>
       )}
     </>
