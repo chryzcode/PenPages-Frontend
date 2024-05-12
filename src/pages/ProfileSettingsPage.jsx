@@ -80,7 +80,7 @@ const ProfileSettingsPage = () => {
   const updatePassword = async updatedPassword => {
     try {
       setUpdatePasswordIsLoading(true);
-      const res = await fetch(`${API_BASE_URL}user/update`, {
+      const res = await fetch(`${API_BASE_URL}user/update/password`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -92,6 +92,8 @@ const ProfileSettingsPage = () => {
       if (data.error) {
         toast.error(data.error);
       } else if (data.success) {
+        setCurrentPassword("");
+        setNewPassword("");
         toast.success(data.success);
       }
     } catch (error) {
@@ -265,6 +267,7 @@ const ProfileSettingsPage = () => {
             </div>
 
             <div>
+              <p className="text-3xl text-customPurple  font-semibold mx-auto text-center py-7">Update Password</p>
               <form onSubmit={submitPasswordForm}>
                 <div className="my-3">
                   <label htmlFor="currentPassword" className="block mb-2">
@@ -274,6 +277,7 @@ const ProfileSettingsPage = () => {
                     type="text"
                     id="currentPassword"
                     name="currentPassword"
+                    value={currentPassword}
                     onChange={e => {
                       setCurrentPassword(e.target.value);
                     }}
@@ -290,6 +294,7 @@ const ProfileSettingsPage = () => {
                     type="text"
                     id="newPassword"
                     name="newPassword"
+                    value={newPassword}
                     onChange={e => {
                       setNewPassword(e.target.value);
                     }}
@@ -301,7 +306,7 @@ const ProfileSettingsPage = () => {
                   <button
                     className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                     type="submit">
-                    Update Password {updatePasswordIsLoading && <Spinner size={10} />}
+                    Update {updatePasswordIsLoading && <Spinner size={10} />}
                   </button>
                 </div>
               </form>

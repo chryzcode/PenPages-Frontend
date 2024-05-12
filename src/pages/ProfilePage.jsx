@@ -16,6 +16,7 @@ const ProfilePage = () => {
   const [postLoading, setPostLoading] = useState(true);
   const [posts, setPosts] = useState([]);
   const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
   const navigate = useNavigate();
   const authenticated = localStorage.getItem("isAuthenticated");
   const authenticatedUser = localStorage.getItem("userData");
@@ -29,6 +30,7 @@ const ProfilePage = () => {
         if (data.user) {
           setUser(data["user"]);
           getUserFollowers(data.user._id);
+          getUserFollowings();
         } else if (data.error) {
           console.log("error");
           toast.error(data.error);
@@ -51,7 +53,22 @@ const ProfilePage = () => {
         } else if (data.error) {
           console.log("error");
           toast.error(data.error);
-          navigate("/not-found");
+        }
+      } catch (error) {
+        console.log("Error in fetching data:", error);
+        toast.error("Failed to get data");
+      }
+    };
+
+    const getUserFollowings = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}follower/${username}/following/count`);
+        const data = await res.json();
+        if (data.followingCount) {
+          setFollowingCount(data.followingCount);
+        } else if (data.error) {
+          console.log("error");
+          toast.error(data.error);
         }
       } catch (error) {
         console.log("Error in fetching data:", error);
@@ -104,9 +121,9 @@ const ProfilePage = () => {
                       <span className="font-semibold "> {followersCount}</span>{" "}
                       {followersCount > 1 ? "followers" : "follower"}
                     </Link>
-                    <span>
-                      <span className="font-semibold"> 2 </span>following
-                    </span>
+                    <Link>
+                      <span className="font-semibold"> {followingCount} </span>following
+                    </Link>
                   </p>
                 </div>
               </div>
