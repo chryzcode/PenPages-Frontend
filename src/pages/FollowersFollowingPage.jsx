@@ -3,6 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import Followers from "../components/Followers";
+import Followings from "../components/Followings";
+import { useNavigate } from "react-router-dom";
 
 const FollowersFollowingPage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -12,6 +14,7 @@ const FollowersFollowingPage = () => {
   const authenticated = localStorage.getItem("isAuthenticated");
   const authenticatedUser = localStorage.getItem("userData");
   const userData = JSON.parse(authenticatedUser);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -20,11 +23,10 @@ const FollowersFollowingPage = () => {
         const data = await res.json();
         if (data.user) {
           setUser(data["user"]);
-          //   getUserFollowers(data.user._id);
-          //   getUserFollowings();
         } else if (data.error) {
           console.log("error");
           toast.error(data.error);
+          navigate("/not-found");
         }
       } catch (error) {
         console.log("Error in fetching data:", error);
@@ -70,11 +72,9 @@ const FollowersFollowingPage = () => {
             ) : null}
           </div>
 
-          <div>
-            <Followers userId={user._id} />
-          </div>
+          <div>{user ? <Followers userId={user._id} /> : null}</div>
 
-          <div className="text-base ">Following</div>
+          <div>{user ? <Followings userId={user._id} /> : null}</div>
         </div>
       )}
     </>
