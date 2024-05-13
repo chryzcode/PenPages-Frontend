@@ -23,8 +23,6 @@ const FollowersFollowingPage = () => {
         const data = await res.json();
         if (data.user) {
           setUser(data["user"]);
-          //   getUserFollowers(data.user._id);
-          //   getUserFollowings();
         } else if (data.error) {
           console.log("error");
           toast.error(data.error);

@@ -53,7 +53,9 @@ const Followings = ({ userId }) => {
                     {" "}
                     {follower.firstName} {follower.lastName}
                   </p>
-                  <p className="text-sm py-1"> {follower.bio}</p>
+                  <p className="text-xs py-1">
+                    {follower.bio && follower.bio.length > 20 ? `${follower.bio.substring(0, 20)}...` : follower.bio}
+                  </p>
                 </div>
               </Link>
             ))}
