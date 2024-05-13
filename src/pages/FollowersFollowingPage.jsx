@@ -71,11 +71,10 @@ const FollowersFollowingPage = () => {
           </div>
 
           <div>
-            <p className="text-base">Followers </p>
             <Followers userId={user._id} />
           </div>
 
-          <div>Following</div>
+          <div className="text-base ">Following</div>
         </div>
       )}
     </>
