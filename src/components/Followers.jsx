@@ -37,15 +37,17 @@ const Followers = ({ userId }) => {
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
         </h2>
       ) : (
-        <div className="container bg-orange-400 mx-auto my-8 grid grid-cols-1 gap-6">
+        <div className="containe mx-auto my-8 grid grid-cols-1 gap-6">
           {followers.map(follower => (
-            <div className="flex py-4 px-4 flex-col text-left">
+            <div className="flex py-4 px-4 bg-gray-200 rounded-lg text-left">
               <img className="w-8 mr-3" src={follower.imageCloudinaryUrl} alt="" />
-              <p>
-                {" "}
-                {follower.firstName} {follower.lastName}
-              </p>
-              <p> {follower.username}</p>
+              <div>
+                <p className="text-sm font-semibold">
+                  {" "}
+                  {follower.firstName} {follower.lastName}
+                </p>
+                <p className="text-sm py-1"> {follower.bio}</p>
+              </div>
             </div>
           ))}
         </div>
