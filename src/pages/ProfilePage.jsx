@@ -6,8 +6,6 @@ import { useNavigate } from "react-router-dom";
 import PostListing from "../components/PostListing";
 import { Link } from "react-router-dom";
 
-import Followers from "../components/Followers";
-
 const ProfilePage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const { username } = useParams();
@@ -117,22 +115,18 @@ const ProfilePage = () => {
 
                   <div className=" my-1">{user.bio}</div>
                   <p className=" text-sm mt-4">
-                    <Link className="pr-3">
+                    <Link to={`/${username}/followings`} className="pr-3">
                       <span className="font-semibold "> {followersCount}</span>{" "}
                       {followersCount > 1 ? "followers" : "follower"}
                     </Link>
-                    <Link>
-                      <span className="font-semibold"> {followingCount} </span>following
+                    <Link to={`/${username}/followings`}>
+                      <span className="font-semibold "> {followingCount}</span>{" "}
+                      {followersCount > 1 ? "followings" : "following"}
                     </Link>
                   </p>
                 </div>
               </div>
 
-              <div>
-                {/* <div>
-                  <Followers userId={user._id} />
-                </div> */}
-              </div>
               {authenticated ? (
                 <div>
                   {" "}

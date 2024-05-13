@@ -13,6 +13,7 @@ import AddPostPage from "./pages/AddPostPage";
 import EditPostPage from "./pages/EditPostPage";
 import PersonalisedPostListings from "./components/PersonalisedPostListings";
 import ProfileSettingsPage from "./pages/ProfileSettingsPage";
+import FollowersFollowingPage from "./pages/FollowersFollowingPage";
 
 function App() {
   const router = createBrowserRouter(
@@ -31,6 +32,7 @@ function App() {
           <Route path="/post/:postId" element={<PostPage />} />
           <Route path="/create-post" element={<AddPostPage />} />
           <Route path="/post/:postId/edit" element={<EditPostPage />} />
+          <Route path="/:username/followings" element={<FollowersFollowingPage />} />
           <Route path="*" element={<NotFoundPage url={"/"} />} />
         </Route>
       </Route>
