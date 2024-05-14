@@ -22,9 +22,11 @@ const PostPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthor, setIsAuthor] = useState(false);
   const [likes, setLikes] = useState([]);
+  const [likesCount, setLikesCount] = useState(0);
   const [liked, setLiked] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const navigate = useNavigate();
+  console.log(likes);
 
   const getPostLikes = async postId => {
     const res = await fetch(`${API_BASE_URL}post/like/${postId}`);
@@ -60,33 +62,6 @@ const PostPage = () => {
     deletePost();
   };
 
-  const likePost = async () => {
-    try {
-      const res = await fetch(`${API_BASE_URL}post/like/${postId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Correcting header name
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast.success("Post liked");
-        setLikes(data.postLikesCount);
-        setLiked(prevLiked => !prevLiked);
-      } else {
-        toast.error(data.error || "Failed to like post"); // Display server error message if available
-      }
-    } catch (error) {
-      console.log("Error:", error);
-      toast.error("Failed to like post");
-    }
-  };
-
-  const onLikeClick = () => {
-    likePost();
-  };
-
   useEffect(() => {
     const getPost = async () => {
       try {
@@ -98,6 +73,7 @@ const PostPage = () => {
           setPost(data.post);
           const likes = await getPostLikes(data.post._id);
           setLikes(likes["likes"]);
+          setLikesCount(likes["likes"].length);
           const checkAuthentication = await getCurrentUserData();
           if (checkAuthentication) {
             setAuthenticated(true);
@@ -115,6 +91,35 @@ const PostPage = () => {
       }
     };
 
+    const likePost = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}post/like/${postId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Correcting header name
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (res.ok) {
+          toast.success("Post liked");
+          setLikes(data.postLikesCount);
+          setLikesCount(data.postLikesCount.length);
+          setLiked(prevLiked => !prevLiked);
+        } else {
+          toast.error(data.error || "Failed to like post"); // Display server error message if available
+        }
+      } catch (error) {
+        console.log("Error:", error);
+        toast.error("Failed to like post");
+      }
+    };
+
+    const onLikeClick = () => {
+      likePost();
+    };
+
+    onLikeClick();
     getPost();
   }, []);
 
@@ -156,12 +161,12 @@ const PostPage = () => {
                 </div>
 
                 <div className="flex items-center justify-center flex-col">
-                  {likes.map(like => (
+                  {/* {likes.map(like => (
                     <p className="flex items-center py-3" key={like._id}>
                       <img className="w-8 mr-3" src={like.user.imageCloudinaryUrl} alt="" />
                       {like.user.firstName} {like.user.lastName}{" "}
                     </p>
-                  ))}
+                  ))} */}
                 </div>
 
                 <div className="flex items-center justify-center gap-10 py-5 align-center">
@@ -179,7 +184,7 @@ const PostPage = () => {
                         </Link>
                       </>
                     ) : null}
-                    {post.likes.length} Likes
+                    {likesCount} Likes
                   </div>
                   <p>{post.comments.length} Comments</p>
                 </div>

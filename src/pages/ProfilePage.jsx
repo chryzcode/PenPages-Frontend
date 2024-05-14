@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import PostListing from "../components/PostListing";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const ProfilePage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -19,6 +20,7 @@ const ProfilePage = () => {
   const authenticated = localStorage.getItem("isAuthenticated");
   const authenticatedUser = localStorage.getItem("userData");
   const userData = JSON.parse(authenticatedUser);
+  const token = Cookies.get("accessToken");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -77,6 +79,30 @@ const ProfilePage = () => {
     const getUserPosts = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}post/${username}/posts`);
+        const data = await res.json();
+        if (data.posts) {
+          setPosts(data["posts"]);
+        } else if (data.error) {
+          console.log("error");
+          toast.error(data.error);
+        }
+      } catch (error) {
+        console.log("Error in fetching data:", error);
+        toast.error("Failed to get data");
+      } finally {
+        setPostLoading(false);
+      }
+    };
+
+    const followUnfollowUser = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}follower/follow-unfollow/${user._id}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await res.json();
         if (data.posts) {
           setPosts(data["posts"]);
