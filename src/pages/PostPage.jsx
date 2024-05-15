@@ -15,6 +15,7 @@ const PostPage = () => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", options);
   };
+
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const token = Cookies.get("accessToken");
   const { postId } = useParams();
@@ -26,40 +27,16 @@ const PostPage = () => {
   const [liked, setLiked] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const navigate = useNavigate();
-  console.log(likes);
 
   const getPostLikes = async postId => {
-    const res = await fetch(`${API_BASE_URL}post/like/${postId}`);
-    const data = await res.json();
-    return data;
-  };
-
-  const deletePost = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}post/${postId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json", // Correcting header name
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await fetch(`${API_BASE_URL}post/like/${postId}`);
       const data = await res.json();
-      if (res.ok) {
-        toast.success("Post deleted successfully");
-        navigate("/posts");
-      } else {
-        toast.error(data.error || "Failed to delete post"); // Display server error message if available
-      }
+      return data;
     } catch (error) {
-      console.log("Error:", error);
-      toast.error("Failed to delete post");
+      console.error("Error fetching post likes:", error);
+      return { likes: [] };
     }
-  };
-
-  const onDeleteClick = () => {
-    const confirm = window.confirm("Are you sure you want to delete this post?");
-    if (!confirm) return;
-    deletePost();
   };
 
   useEffect(() => {
@@ -71,12 +48,13 @@ const PostPage = () => {
           toast.error("Post does not exist");
         } else if (data.post) {
           setPost(data.post);
-          const likes = await getPostLikes(data.post._id);
-          setLikes(likes["likes"]);
-          setLikesCount(likes["likes"].length);
-          const checkAuthentication = await getCurrentUserData();
-          if (checkAuthentication) {
+          const likesData = await getPostLikes(data.post._id);
+          setLikes(likesData.likes);
+          setLikesCount(likesData.likes.length);
+          const currentUserData = await getCurrentUserData();
+          if (currentUserData) {
             setAuthenticated(true);
+            setLiked(likesData.likes.some(like => like.user._id === currentUserData._id));
           }
           const author = await CurrentUserAuthor(data.post.author._id);
           if (author) {
@@ -92,14 +70,14 @@ const PostPage = () => {
     };
 
     getPost();
-  }, []);
+  }, [postId]);
 
   const likePost = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}post/like/${postId}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // Correcting header name
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
@@ -108,9 +86,9 @@ const PostPage = () => {
         toast.success("Post liked");
         setLikes(data.postLikesCount);
         setLikesCount(data.postLikesCount.length);
-        setLiked(prevLiked => !prevLiked);
+        setLiked(true);
       } else {
-        toast.error(data.error || "Failed to like post"); // Display server error message if available
+        toast.error(data.error || "Failed to like post");
       }
     } catch (error) {
       console.log("Error:", error);
@@ -118,18 +96,44 @@ const PostPage = () => {
     }
   };
 
-  const onLikeClick = () => {
-    likePost();
+  const unlikePost = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}post/unlike/${postId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Post unliked");
+        setLikes(data.postLikesCount);
+        setLikesCount(data.postLikesCount.length);
+        setLiked(false);
+      } else {
+        toast.error(data.error || "Failed to unlike post");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to unlike post");
+    }
   };
 
-  
+  const onLikeClick = () => {
+    if (liked) {
+      unlikePost();
+    } else {
+      likePost();
+    }
+  };
+
   useEffect(() => {
     setLikesCount(likes.length);
   }, [likes]);
 
   return (
     <div>
-      {" "}
       <div className="container mx-auto my-8">
         {isLoading ? (
           <h2>
@@ -145,7 +149,6 @@ const PostPage = () => {
                   <Link to="" className="flex items-center">
                     <img className="w-8 mr-3" src={post.author.imageCloudinaryUrl} alt="" />
                     <p>
-                      {" "}
                       {post.author.firstName} {post.author.lastName}
                     </p>
                   </Link>
@@ -164,22 +167,20 @@ const PostPage = () => {
                   <p>{post.body}</p>
                 </div>
 
-                <div className="flex items-center justify-center flex-col">
-                  {/* {likes.map(like => (
+                {/* <div className="flex items-center justify-center flex-col">
+                  {likes.map(like => (
                     <p className="flex items-center py-3" key={like._id}>
                       <img className="w-8 mr-3" src={like.user.imageCloudinaryUrl} alt="" />
-                      {like.user.firstName} {like.user.lastName}{" "}
+                      {like.user.firstName} {like.user.lastName}
                     </p>
-                  ))} */}
-                </div>
+                  ))}
+                </div> */}
 
                 <div className="flex items-center justify-center gap-10 py-5 align-center">
                   <div className="flex items-center justify-center gap-2 align-center">
                     {authenticated ? (
                       <>
-                        {" "}
                         <Link onClick={onLikeClick}>
-                          {" "}
                           {liked ? (
                             <FaThumbsDown className="text-customPurple text-lg" />
                           ) : (
