@@ -84,8 +84,8 @@ const PostPage = () => {
       const data = await res.json();
       if (res.ok) {
         toast.success("Post liked");
-        setLikes(data.postLikesCount);
-        setLikesCount(data.postLikesCount.length);
+        setLikes(prevLikes => [...prevLikes, { user: { _id: "currentUserId" } }]); // Dummy user data
+        setLikesCount(prevCount => prevCount + 1);
         setLiked(true);
       } else {
         toast.error(data.error || "Failed to like post");
@@ -108,8 +108,8 @@ const PostPage = () => {
       const data = await res.json();
       if (res.ok) {
         toast.success("Post unliked");
-        setLikes(data.postLikesCount);
-        setLikesCount(data.postLikesCount.length);
+        setLikes(prevLikes => prevLikes.filter(like => like.user._id !== "currentUserId")); // Dummy user data
+        setLikesCount(prevCount => prevCount - 1);
         setLiked(false);
       } else {
         toast.error(data.error || "Failed to unlike post");
@@ -127,10 +127,6 @@ const PostPage = () => {
       likePost();
     }
   };
-
-  useEffect(() => {
-    setLikesCount(likes.length);
-  }, [likes]);
 
   return (
     <div>
@@ -167,14 +163,14 @@ const PostPage = () => {
                   <p>{post.body}</p>
                 </div>
 
-                {/* <div className="flex items-center justify-center flex-col">
+                <div className="flex items-center justify-center flex-col">
                   {likes.map(like => (
                     <p className="flex items-center py-3" key={like._id}>
                       <img className="w-8 mr-3" src={like.user.imageCloudinaryUrl} alt="" />
                       {like.user.firstName} {like.user.lastName}
                     </p>
                   ))}
-                </div> */}
+                </div>
 
                 <div className="flex items-center justify-center gap-10 py-5 align-center">
                   <div className="flex items-center justify-center gap-2 align-center">
