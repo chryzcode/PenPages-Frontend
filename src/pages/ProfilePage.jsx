@@ -89,14 +89,12 @@ const ProfilePage = () => {
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
-      } finally {
-        setPostLoading(false);
-      }
+      } 
     };
 
-    const followUnfollowUser = async () => {
+    const followUser = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}follower/follow-unfollow/${user._id}`, {
+        const res = await fetch(`${API_BASE_URL}follower/follow/${user._id}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -104,8 +102,8 @@ const ProfilePage = () => {
           },
         });
         const data = await res.json();
-        if (data.posts) {
-          setPosts(data["posts"]);
+        if (res.ok) {
+          toast.error(data.success);
         } else if (data.error) {
           console.log("error");
           toast.error(data.error);
@@ -113,8 +111,29 @@ const ProfilePage = () => {
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
-      } finally {
-        setPostLoading(false);
+      } 
+    };
+
+
+    const unfollowUser = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}follower/unfollow/${user._id}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (res.ok) {
+          toast.error(data.success);
+        } else if (data.error) {
+          console.log("error");
+          toast.error(data.error);
+        }
+      } catch (error) {
+        console.log("Error in fetching data:", error);
+        toast.error("Failed to get data");
       }
     };
 
