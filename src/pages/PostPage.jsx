@@ -91,37 +91,41 @@ const PostPage = () => {
       }
     };
 
-    const likePost = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}post/like/${postId}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json", // Correcting header name
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await res.json();
-        if (res.ok) {
-          toast.success("Post liked");
-          setLikes(data.postLikesCount);
-          setLikesCount(data.postLikesCount.length);
-          setLiked(prevLiked => !prevLiked);
-        } else {
-          toast.error(data.error || "Failed to like post"); // Display server error message if available
-        }
-      } catch (error) {
-        console.log("Error:", error);
-        toast.error("Failed to like post");
-      }
-    };
-
-    const onLikeClick = () => {
-      likePost();
-    };
-
-    onLikeClick();
     getPost();
   }, []);
+
+  const likePost = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}post/like/${postId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Correcting header name
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Post liked");
+        setLikes(data.postLikesCount);
+        setLikesCount(data.postLikesCount.length);
+        setLiked(prevLiked => !prevLiked);
+      } else {
+        toast.error(data.error || "Failed to like post"); // Display server error message if available
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to like post");
+    }
+  };
+
+  const onLikeClick = () => {
+    likePost();
+  };
+
+  
+  useEffect(() => {
+    setLikesCount(likes.length);
+  }, [likes]);
 
   return (
     <div>
