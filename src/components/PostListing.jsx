@@ -10,7 +10,7 @@ const PostListing = ({ post }) => {
   return (
     <div className="bg-white rounded-xl shadow-md relative  py-5 px-6 text-gray-800">
       <div className="flex items-center justify-between pb-4">
-        <Link to={``} className="flex items-center">
+        <Link to={`/profile/${post.author.username}`} className="flex items-center">
           <img className="w-8 mr-3" src={post.author.imageCloudinaryUrl} alt="" />
           <div>
             <div className="text-sm font-semibold">
