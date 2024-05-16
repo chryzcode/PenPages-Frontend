@@ -89,7 +89,9 @@ const ProfilePage = () => {
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
-      } 
+      } finally {
+        setPostLoading(false);
+      }
     };
 
     const followUser = async () => {
@@ -111,9 +113,8 @@ const ProfilePage = () => {
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
-      } 
+      }
     };
-
 
     const unfollowUser = async () => {
       try {
