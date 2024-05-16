@@ -14,6 +14,7 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [postLoading, setPostLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  const [followed, setFollowed] = useState(false);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const navigate = useNavigate();
@@ -94,53 +95,63 @@ const ProfilePage = () => {
       }
     };
 
-    const followUser = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}follower/follow/${user._id}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await res.json();
-        if (res.ok) {
-          toast.error(data.success);
-        } else if (data.error) {
-          console.log("error");
-          toast.error(data.error);
-        }
-      } catch (error) {
-        console.log("Error in fetching data:", error);
-        toast.error("Failed to get data");
-      }
-    };
-
-    const unfollowUser = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}follower/unfollow/${user._id}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await res.json();
-        if (res.ok) {
-          toast.error(data.success);
-        } else if (data.error) {
-          console.log("error");
-          toast.error(data.error);
-        }
-      } catch (error) {
-        console.log("Error in fetching data:", error);
-        toast.error("Failed to get data");
-      }
-    };
-
     getUserPosts();
     fetchUserData();
   }, []); // Run only once when component mounts
+
+  const followUser = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}follower/follow/${user._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setFollowed(true);
+        toast.error(data.success);
+      } else if (data.error) {
+        console.log("error");
+        toast.error(data.error);
+      }
+    } catch (error) {
+      console.log("Error in fetching data:", error);
+      toast.error("Failed to get data");
+    }
+  };
+
+  const unfollowUser = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}follower/unfollow/${user._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setFollowed(false);
+        toast.error(data.success);
+      } else if (data.error) {
+        console.log("error");
+        toast.error(data.error);
+      }
+    } catch (error) {
+      console.log("Error in fetching data:", error);
+      toast.error("Failed to get data");
+    }
+  };
+
+  const onFollowClick = () => {
+    if (followed) {
+      unfollowUser();
+    } else {
+      followUser();
+    }
+  };
   return (
     <>
       {isLoading ? (
@@ -183,8 +194,10 @@ const ProfilePage = () => {
                       Edit
                     </Link>
                   ) : (
-                    <button className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline w-">
-                      Follow
+                    <button
+                      onClick={onFollowClick}
+                      className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline w-">
+                      {followed ? `Unfollow` : `Follow`}
                     </button>
                   )}{" "}
                 </div>
