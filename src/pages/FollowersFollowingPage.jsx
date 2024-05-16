@@ -51,9 +51,9 @@ const FollowersFollowingPage = () => {
             {user && (
               <div className="">
                 <img className="w-24 h-24 object-contain" src={user.imageCloudinaryUrl} alt="" />
-                <h1 className="text-lg font-bold align-middle my-3">
+                <Link to={`/profile/${user.username}`} className="text-lg font-bold align-middle my-3">
                   {user.firstName} {user.lastName}
-                </h1>
+                </Link>
                 <p className="text-sm">{user.bio}</p>
               </div>
             )}

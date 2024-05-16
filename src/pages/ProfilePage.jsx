@@ -111,7 +111,7 @@ const ProfilePage = () => {
       const data = await res.json();
       if (res.ok) {
         setFollowed(true);
-        toast.error(data.success);
+        toast.success(data.success);
       } else if (data.error) {
         console.log("error");
         toast.error(data.error);
@@ -134,7 +134,7 @@ const ProfilePage = () => {
       const data = await res.json();
       if (res.ok) {
         setFollowed(false);
-        toast.error(data.success);
+        toast.success(data.success);
       } else if (data.error) {
         console.log("error");
         toast.error(data.error);
