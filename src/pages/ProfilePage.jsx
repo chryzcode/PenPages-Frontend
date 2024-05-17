@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import PostListing from "../components/PostListing";
-import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const ProfilePage = () => {
@@ -20,7 +18,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const authenticated = localStorage.getItem("isAuthenticated");
   const authenticatedUser = localStorage.getItem("userData");
-  const userData = JSON.parse(authenticatedUser);
+  const userData = authenticatedUser ? JSON.parse(authenticatedUser) : null;
   const token = Cookies.get("accessToken");
 
   useEffect(() => {
@@ -29,16 +27,15 @@ const ProfilePage = () => {
         const res = await fetch(`${API_BASE_URL}user/profile/${username}`);
         const data = await res.json();
         if (data.user) {
-          setUser(data["user"]);
+          setUser(data.user);
           getUserFollowers(data.user._id);
-          getUserFollowings();
+          getUserFollowings(data.user._id);
+          checkIfFollowed(data.user._id);
         } else if (data.error) {
-          console.log("error");
           toast.error(data.error);
           navigate("/not-found");
         }
       } catch (error) {
-        console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
       } finally {
         setIsLoading(false);
@@ -49,30 +46,26 @@ const ProfilePage = () => {
       try {
         const res = await fetch(`${API_BASE_URL}follower/count/${userId}`);
         const data = await res.json();
-        if (data.followersCount) {
+        if (data.followersCount !== undefined) {
           setFollowersCount(data.followersCount);
         } else if (data.error) {
-          console.log("error");
           toast.error(data.error);
         }
       } catch (error) {
-        console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
       }
     };
 
-    const getUserFollowings = async () => {
+    const getUserFollowings = async userId => {
       try {
         const res = await fetch(`${API_BASE_URL}follower/${username}/following/count`);
         const data = await res.json();
-        if (data.followingCount) {
+        if (data.followingCount !== undefined) {
           setFollowingCount(data.followingCount);
         } else if (data.error) {
-          console.log("error");
           toast.error(data.error);
         }
       } catch (error) {
-        console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
       }
     };
@@ -82,22 +75,36 @@ const ProfilePage = () => {
         const res = await fetch(`${API_BASE_URL}post/${username}/posts`);
         const data = await res.json();
         if (data.posts) {
-          setPosts(data["posts"]);
+          setPosts(data.posts);
         } else if (data.error) {
-          console.log("error");
           toast.error(data.error);
         }
       } catch (error) {
-        console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
       } finally {
         setPostLoading(false);
       }
     };
 
-    getUserPosts();
+    const checkIfFollowed = async userId => {
+      if (!userData) return; // Exit if there's no authenticated user
+      try {
+        const res = await fetch(`${API_BASE_URL}follower/${userId}/followers`);
+        const data = await res.json();
+        if (data.allFollowers) {
+          const isFollowed = data.allFollowers.some(follower => follower._id === userData._id);
+          setFollowed(isFollowed);
+        } else if (data.error) {
+          toast.error(data.error);
+        }
+      } catch (error) {
+        toast.error("Failed to get data");
+      }
+    };
+
     fetchUserData();
-  }, []); // Run only once when component mounts
+    getUserPosts();
+  }, [username, API_BASE_URL, navigate, userData ? userData._id : null]); // Added dependencies to useEffect
 
   const followUser = async () => {
     try {
@@ -111,13 +118,12 @@ const ProfilePage = () => {
       const data = await res.json();
       if (res.ok) {
         setFollowed(true);
+        setFollowersCount(prevCount => prevCount + 1); // Increment followers count
         toast.success(data.success);
       } else if (data.error) {
-        console.log("error");
         toast.error(data.error);
       }
     } catch (error) {
-      console.log("Error in fetching data:", error);
       toast.error("Failed to get data");
     }
   };
@@ -134,17 +140,16 @@ const ProfilePage = () => {
       const data = await res.json();
       if (res.ok) {
         setFollowed(false);
+        setFollowersCount(prevCount => prevCount - 1); // Decrement followers count
         toast.success(data.success);
       } else if (data.error) {
-        console.log("error");
         toast.error(data.error);
       }
     } catch (error) {
-      console.log("Error in fetching data:", error);
       toast.error("Failed to get data");
     }
   };
-
+  console.log(followed);
   const onFollowClick = () => {
     if (followed) {
       unfollowUser();
@@ -152,6 +157,7 @@ const ProfilePage = () => {
       followUser();
     }
   };
+
   return (
     <>
       {isLoading ? (
@@ -161,51 +167,48 @@ const ProfilePage = () => {
       ) : (
         <div className="container mx-auto my-8">
           {user && (
-            <div className=" flex justify-between align-middle items-center mb-5 w-11/12 mx-auto ">
-              <div className="flex align-middle items-center ">
+            <div className="flex justify-between align-middle items-center mb-5 w-11/12 mx-auto">
+              <div className="flex align-middle items-center">
                 <img className="w-36 h-36 object-contain mx-auto" src={user.imageCloudinaryUrl} alt="" />
-
                 <div className="pl-10">
                   <h1 className="text-2xl font-bold align-middle">
                     {user.firstName} {user.lastName}
                   </h1>
-
-                  <div className=" my-1">{user.bio}</div>
-                  <p className=" text-sm mt-4">
-                    <Link to={`/${username}/followings`} className="pr-3">
-                      <span className="font-semibold "> {followersCount}</span>{" "}
+                  <div className="my-1">{user.bio}</div>
+                  <p className="text-sm mt-4">
+                    <Link to={`/${username}/followers`} className="pr-3">
+                      <span className="font-semibold"> {followersCount}</span>{" "}
                       {followersCount > 1 ? "followers" : "follower"}
                     </Link>
                     <Link to={`/${username}/followings`}>
-                      <span className="font-semibold "> {followingCount}</span>{" "}
-                      {followersCount > 1 ? "followings" : "following"}
+                      <span className="font-semibold"> {followingCount}</span>{" "}
+                      {followingCount > 1 ? "followings" : "following"}
                     </Link>
                   </p>
                 </div>
               </div>
 
-              {authenticated ? (
+              {authenticated && userData && (
                 <div>
-                  {" "}
-                  {userData.username == username ? (
+                  {userData.username === username ? (
                     <Link
                       to="/settings"
-                      className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline w-">
+                      className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline">
                       Edit
                     </Link>
                   ) : (
                     <button
                       onClick={onFollowClick}
-                      className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline w-">
-                      {followed ? `Unfollow` : `Follow`}
+                      className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold my-2 text-white py-2 px-6 rounded-full focus:outline-none focus:shadow-outline">
+                      {followed ? "Unfollow" : "Follow"}
                     </button>
-                  )}{" "}
+                  )}
                 </div>
-              ) : null}
+              )}
             </div>
           )}
 
-          <div className="my-6 ">
+          <div className="my-6">
             {postLoading ? (
               <h2>
                 <Spinner size={100} color={"#6c63ff"} display={"block"} />

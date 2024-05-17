@@ -120,12 +120,40 @@ const PostPage = () => {
     }
   };
 
+  const deletePost = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}post/${postId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json", // Correcting header name
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Post deleted successfully");
+        navigate("/posts");
+      } else {
+        toast.error(data.error || "Failed to delete post"); // Display server error message if available
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to delete post");
+    }
+  };
+
   const onLikeClick = () => {
     if (liked) {
       unlikePost();
     } else {
       likePost();
     }
+  };
+
+  const onDeleteClick = () => {
+    const confirm = window.confirm("Are you sure you want to delete this post?");
+    if (!confirm) return;
+    deletePost();
   };
 
   return (
