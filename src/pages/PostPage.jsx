@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import NotFoundPage from "./NotFoundPage";
 import CurrentUserAuthor from "../utils/CurrentUserAuthor";
 import Cookies from "js-cookie";
-import { FaThumbsUp, FaThumbsDown } from "react-icons/fa6";
+import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa6";
 import getCurrentUserData from "../utils/CurrentUserData";
 import PostComment from "../components/PostComment";
 
@@ -16,7 +16,7 @@ const PostPage = () => {
     return date.toLocaleDateString("en-US", options);
   };
 
-  const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
+  const API_BASE_URL = "http://localhost:5000/api/v1/";
   const token = Cookies.get("accessToken");
   const { postId } = useParams();
   const [post, setPost] = useState(null);
@@ -26,7 +26,12 @@ const PostPage = () => {
   const [likesCount, setLikesCount] = useState(0);
   const [liked, setLiked] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
+  const [likeOpen, setLikeOpen] = useState(false);
   const navigate = useNavigate();
+
+  const toggleLikes = () => {
+    setIsOpen(!isOpen);
+  };
 
   const getPostLikes = async postId => {
     try {
@@ -213,9 +218,53 @@ const PostPage = () => {
                         </Link>
                       </>
                     ) : null}
-                    {likesCount} Likes
+
+                    <span onClick={toggleLikes} className="cursor-pointer"> {likesCount} Likes</span>
                   </div>
+
                   <p>{post.comments.length} Comments</p>
+                </div>
+                <div className={`absolute ${likeOpen ? "block" : "hidden"}`}>
+                  {likes.map(like => (
+                    <Link
+                      key={like._id}
+                      className="flex items-center justify-center gap-2 align-center"
+                      to={`/profile/${like.user.username}`}>
+                      <img className="w-8" src={like.user.imageCloudinaryUrl} alt="" />
+                      <p>
+                        {like.user.firstName} {like.user.lastName}
+                      </p>
+                      <FaThumbsUp className="text-customPurple text-lg ml-7" />
+                    </Link>
+                  ))}
+                </div>
+
+                <div className={`absolute ${likeOpen ? "block" : "hidden"}flex gap-2 w-10/12 mx-auto my-5  flex-col`}>
+                  {post.comments.map(comment => (
+                    <div key={comment._id} className="my-2">
+                      <div className="flex  items-center justify-between">
+                        <Link to={`/profile/${comment.user.username}`} className="flex items-center">
+                          <img className="w-8 mr-1" src={comment.user.imageCloudinaryUrl} alt="" />
+                          <span className="text-xs font-semibold">
+                            {" "}
+                            {comment.user.firstName} {comment.user.lastName}
+                          </span>
+                        </Link>
+
+                        <div className="text-sm">
+                          <span className="pr-2">Edit</span>
+                          <span>Delete</span>
+                        </div>
+                      </div>
+
+                      <p className="text-left text-sm py-2">{comment.body}</p>
+
+                      <div className="flex align-middle items-center gap-2">
+                        <FaThumbsUp className="text-customPurple text-base" />
+                        <FaComment className="text-customPurple text-sm" />
+                      </div>
+                    </div>
+                  ))}
                 </div>
                 <PostComment postId={postId} />
               </div>
