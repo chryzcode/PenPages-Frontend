@@ -215,6 +215,19 @@ const PostPage = () => {
                     ) : null}
                     {likesCount} Likes
                   </div>
+
+                  <div>
+                    {likes.map(like => (
+                      <Link
+                        className="flex items-center justify-center gap-2 align-center"
+                        to={`/profile/${like.user.username}`}>
+                        <img className="w-8 mr-3" src={like.user.imageCloudinaryUrl} alt="" />
+                        <p>
+                          {like.user.firstName} {like.user.lastName}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
                   <p>{post.comments.length} Comments</p>
                 </div>
                 <PostComment postId={postId} />
