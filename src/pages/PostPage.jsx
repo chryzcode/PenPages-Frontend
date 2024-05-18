@@ -27,10 +27,15 @@ const PostPage = () => {
   const [liked, setLiked] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [likeOpen, setLikeOpen] = useState(false);
+  const [commentOpen, setCommentOpen] = useState(false);
   const navigate = useNavigate();
 
   const toggleLikes = () => {
-    setIsOpen(!isOpen);
+    setLikeOpen(!likeOpen);
+  };
+
+  const toggleComments = () => {
+    setCommentOpen(!commentOpen);
   };
 
   const getPostLikes = async postId => {
@@ -219,12 +224,17 @@ const PostPage = () => {
                       </>
                     ) : null}
 
-                    <span onClick={toggleLikes} className="cursor-pointer"> {likesCount} Likes</span>
+                    <span onClick={toggleLikes} className="cursor-pointer">
+                      {" "}
+                      {likesCount} Likes
+                    </span>
                   </div>
 
-                  <p>{post.comments.length} Comments</p>
+                  <p onClick={toggleComments} className="cursor-pointer">
+                    {post.comments.length} Comments
+                  </p>
                 </div>
-                <div className={`absolute ${likeOpen ? "block" : "hidden"}`}>
+                <div className={`${likeOpen ? "block" : "hidden"}`}>
                   {likes.map(like => (
                     <Link
                       key={like._id}
@@ -239,7 +249,7 @@ const PostPage = () => {
                   ))}
                 </div>
 
-                <div className={`absolute ${likeOpen ? "block" : "hidden"}flex gap-2 w-10/12 mx-auto my-5  flex-col`}>
+                <div className={`${commentOpen ? "flex gap-2 w-10/12 mx-auto my-5  flex-col" : "hidden"} `}>
                   {post.comments.map(comment => (
                     <div key={comment._id} className="my-2">
                       <div className="flex  items-center justify-between">
