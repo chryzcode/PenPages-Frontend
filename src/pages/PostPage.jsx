@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import NotFoundPage from "./NotFoundPage";
 import CurrentUserAuthor from "../utils/CurrentUserAuthor";
 import Cookies from "js-cookie";
-import { FaThumbsUp, FaThumbsDown } from "react-icons/fa6";
+import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa6";
 import getCurrentUserData from "../utils/CurrentUserData";
 import PostComment from "../components/PostComment";
 
@@ -235,16 +235,28 @@ const PostPage = () => {
 
                 <div className="flex gap-2 w-10/12 mx-auto my-5  flex-col">
                   {post.comments.map(comment => (
-                    <div key={comment._id}>
-                      <Link className="flex  items-center" to={`/profile/${comment.user.username}`}>
-                        <img className="w-8 mr-1" src={comment.user.imageCloudinaryUrl} alt="" />
-                        <span className="text-xs font-semibold">
-                          {" "}
-                          {comment.user.firstName} {comment.user.lastName}
-                        </span>
-                      </Link>
+                    <div key={comment._id} className="my-2">
+                      <div className="flex  items-center justify-between">
+                        <Link to={`/profile/${comment.user.username}`} className="flex items-center">
+                          <img className="w-8 mr-1" src={comment.user.imageCloudinaryUrl} alt="" />
+                          <span className="text-xs font-semibold">
+                            {" "}
+                            {comment.user.firstName} {comment.user.lastName}
+                          </span>
+                        </Link>
+
+                        <div className="text-sm">
+                          <span className="pr-2">Edit</span>
+                          <span>Delete</span>
+                        </div>
+                      </div>
 
                       <p className="text-left text-sm py-2">{comment.body}</p>
+
+                      <div className="flex align-middle items-center gap-2">
+                        <FaThumbsUp className="text-customPurple text-base" />
+                        <FaComment className="text-customPurple text-sm" />
+                      </div>
                     </div>
                   ))}
                 </div>
