@@ -16,7 +16,7 @@ const PostPage = () => {
     return date.toLocaleDateString("en-US", options);
   };
 
-  const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
+  const API_BASE_URL = "http://localhost:5000/api/v1/";
   const token = Cookies.get("accessToken");
   const { postId } = useParams();
   const [post, setPost] = useState(null);
@@ -216,19 +216,37 @@ const PostPage = () => {
                     {likesCount} Likes
                   </div>
 
-                  <div>
-                    {likes.map(like => (
-                      <Link
-                        className="flex items-center justify-center gap-2 align-center"
-                        to={`/profile/${like.user.username}`}>
-                        <img className="w-8 mr-3" src={like.user.imageCloudinaryUrl} alt="" />
-                        <p>
-                          {like.user.firstName} {like.user.lastName}
-                        </p>
-                      </Link>
-                    ))}
-                  </div>
                   <p>{post.comments.length} Comments</p>
+                </div>
+                <div>
+                  {likes.map(like => (
+                    <Link
+                      key={like._id}
+                      className="flex items-center justify-center gap-2 align-center"
+                      to={`/profile/${like.user.username}`}>
+                      <img className="w-8" src={like.user.imageCloudinaryUrl} alt="" />
+                      <p>
+                        {like.user.firstName} {like.user.lastName}
+                      </p>
+                      <FaThumbsUp className="text-customPurple text-lg ml-7" />
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="flex gap-2 w-10/12 mx-auto my-5  flex-col">
+                  {post.comments.map(comment => (
+                    <div key={comment._id}>
+                      <Link className="flex  items-center" to={`/profile/${comment.user.username}`}>
+                        <img className="w-8 mr-1" src={comment.user.imageCloudinaryUrl} alt="" />
+                        <span className="text-xs font-semibold">
+                          {" "}
+                          {comment.user.firstName} {comment.user.lastName}
+                        </span>
+                      </Link>
+
+                      <p className="text-left text-sm py-2">{comment.body}</p>
+                    </div>
+                  ))}
                 </div>
                 <PostComment postId={postId} />
               </div>
