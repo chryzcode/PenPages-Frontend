@@ -16,7 +16,7 @@ const PostPage = () => {
     return date.toLocaleDateString("en-US", options);
   };
 
-  const API_BASE_URL = "http://localhost:5000/api/v1/";
+  const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const token = Cookies.get("accessToken");
   const { postId } = useParams();
   const [post, setPost] = useState(null);

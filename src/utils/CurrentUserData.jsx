@@ -1,7 +1,6 @@
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
 
-const API_BASE_URL = "http://localhost:5000/api/v1/";
+const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
 
 const getCurrentUserData = async () => {
   const token = Cookies.get("accessToken");
