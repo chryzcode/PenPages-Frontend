@@ -9,6 +9,7 @@ import { FaThumbsUp, FaThumbsDown } from "react-icons/fa6";
 import getCurrentUserData from "../utils/CurrentUserData";
 import PostComment from "../components/PostComment";
 import Comments from "../components/Comments";
+import Likes from "../components/Likes";
 
 const PostPage = () => {
   const formatDate = dateString => {
@@ -237,16 +238,7 @@ const PostPage = () => {
                 </div>
                 <div className={`${likeOpen ? "block" : "hidden"}`}>
                   {likes.map(like => (
-                    <Link
-                      key={like._id}
-                      className="flex items-center justify-center gap-2 align-center"
-                      to={`/profile/${like.user.username}`}>
-                      <img className="w-8" src={like.user.imageCloudinaryUrl} alt="" />
-                      <p>
-                        {like.user.firstName} {like.user.lastName}
-                      </p>
-                      <FaThumbsUp className="text-customPurple text-lg ml-7" />
-                    </Link>
+                    <Likes key={like._id} like={like} />
                   ))}
                 </div>
 
