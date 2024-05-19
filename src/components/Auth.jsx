@@ -14,7 +14,7 @@ const Auth = WrappedComponent => {
         Cookies.remove("accessToken");
         localStorage.removeItem("isAuthenticated");
         localStorage.removeItem("userData");
-        toast.error("Authentication timeout");
+        // toast.error("Authentication timeout");
       }
     };
 
