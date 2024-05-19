@@ -272,7 +272,7 @@ const PostPage = () => {
 
                 <div className={`${commentOpen ? "flex gap-2 w-10/12 mx-auto my-5  flex-col" : "hidden"} `}>
                   {post.comments.map(comment => (
-                    <Comments key={comment._id} comment={comment} onUpdate={updateComment} />
+                    <Comments key={comment._id} commentId={comment._id} comment={comment} onUpdate={updateComment} />
                   ))}
                 </div>
                 <PostComment postId={postId} />

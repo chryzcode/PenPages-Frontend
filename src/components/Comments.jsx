@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaThumbsUp, FaComment } from "react-icons/fa6";
 
-const Comments = ({ comment, onUpdate }) => {
+const Comments = ({ commentId, comment, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(comment.body);
 
@@ -22,7 +22,7 @@ const Comments = ({ comment, onUpdate }) => {
   };
 
   const handleSaveClick = () => {
-    onUpdate(comment.id, editedComment);
+    onUpdate(commentId, editedComment);
     setIsEditing(false);
   };
 
@@ -41,42 +41,38 @@ const Comments = ({ comment, onUpdate }) => {
           </span>
         </Link>
         <div className="text-sm">
-          {!isEditing ? (
+          {isEditing ? (
+            <>
+              <span className="pr-2 cursor-pointer" onClick={handleSaveClick}>
+                Save
+              </span>
+              <span className="cursor-pointer" onClick={handleCancelClick}>
+                Cancel
+              </span>
+            </>
+          ) : (
             <>
               <span className="pr-2 cursor-pointer" onClick={handleEditClick}>
                 Edit
               </span>
               <span className="cursor-pointer">Delete</span>
             </>
-          ) : null}
+          )}
         </div>
       </div>
       {isEditing ? (
-        <div>
-          <textarea
-            className="border rounded w-full py-2 px-3 my-4 outline-none"
-            value={editedComment}
-            onChange={e => setEditedComment(e.target.value)}
-          />
-
-          <div className="text-right text-sm">
-            <span className="pr-2 cursor-pointer" onClick={handleSaveClick}>
-              Save
-            </span>
-            <span className="cursor-pointer" onClick={handleCancelClick}>
-              Cancel
-            </span>
-          </div>
-        </div>
+        <textarea
+          className="w-full border rounded p-2 my-2"
+          value={editedComment}
+          onChange={e => setEditedComment(e.target.value)}
+        />
       ) : (
-        <div className="my-2">
-          <p className="text-left text-base py-2 my-2">{comment.body}</p>
-          <div className="flex items-center gap-2">
-            <FaThumbsUp className="text-customPurple text-base cursor-pointer" />
-            <FaComment className="text-customPurple text-sm cursor-pointer" />
-          </div>
-        </div>
+        <p className="text-left text-sm py-2">{comment.body}</p>
       )}
+      <div className="flex items-center gap-2">
+        <FaThumbsUp className="text-customPurple text-base cursor-pointer" />
+        <FaComment className="text-customPurple text-sm cursor-pointer" />
+      </div>
     </div>
   );
 };
