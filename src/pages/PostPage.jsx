@@ -188,7 +188,7 @@ const PostPage = () => {
                       {post.author.firstName} {post.author.lastName}
                     </p>
                   </Link>
-                  <p>{formatDate(post.createdAt)}</p>
+                  <p>{post.updatedAt ? formatDate(post.updatedAt) : formatDate(post.createdAt)}</p>
                   <p>{post.type}</p>
                 </div>
 
