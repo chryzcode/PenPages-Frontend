@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import getCurrentUserData from "../utils/CurrentUserData";
+import Cookies from "js-cookie";
 
 const Auth = WrappedComponent => {
   const WithAuthComponent = props => {
@@ -9,7 +10,10 @@ const Auth = WrappedComponent => {
     const Authentication = async () => {
       const authenticated = await getCurrentUserData();
       if (!authenticated) {
-        navigate("/sign-in");
+        // navigate("/sign-in");
+        Cookies.remove("accessToken");
+        localStorage.removeItem("isAuthenticated");
+        localStorage.removeItem("userData");
         toast.error("Authentication timeout");
       }
     };

@@ -5,7 +5,7 @@ const SignOutPage = () => {
   Cookies.remove("accessToken");
   localStorage.removeItem("isAuthenticated");
   localStorage.removeItem("userData");
-  window.location.href = "/sign-in";
+  window.location.href = "/";
 };
 
 export default Auth(SignOutPage);
