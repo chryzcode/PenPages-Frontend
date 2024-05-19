@@ -154,6 +154,34 @@ const PostPage = () => {
     }
   };
 
+  const updateComment = async (commentId, updatedBody) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/${commentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ body: updatedBody }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Comment updated successfully");
+        setPost(prevPost => ({
+          ...prevPost,
+          comments: prevPost.comments.map(comment =>
+            comment._id === commentId ? { ...comment, body: updatedBody, updatedAt: new Date().toISOString() } : comment
+          ),
+        }));
+      } else {
+        toast.error(data.error || "Failed to update comment");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to update comment");
+    }
+  };
+
   const onLikeClick = () => {
     if (liked) {
       unlikePost();
@@ -167,7 +195,6 @@ const PostPage = () => {
     if (!confirm) return;
     deletePost();
   };
-
 
   return (
     <div>
@@ -245,7 +272,7 @@ const PostPage = () => {
 
                 <div className={`${commentOpen ? "flex gap-2 w-10/12 mx-auto my-5  flex-col" : "hidden"} `}>
                   {post.comments.map(comment => (
-                    <Comments key={comment._id} comment={comment} />
+                    <Comments key={comment._id} comment={comment} onUpdate={updateComment} />
                   ))}
                 </div>
                 <PostComment postId={postId} />
