@@ -41,31 +41,33 @@ const Comments = ({ commentId, comment, onUpdate }) => {
           </span>
         </Link>
         <div className="text-sm">
-          {isEditing ? (
-            <>
-              <span className="pr-2 cursor-pointer" onClick={handleSaveClick}>
-                Save
-              </span>
-              <span className="cursor-pointer" onClick={handleCancelClick}>
-                Cancel
-              </span>
-            </>
-          ) : (
+          {!isEditing ? (
             <>
               <span className="pr-2 cursor-pointer" onClick={handleEditClick}>
                 Edit
               </span>
               <span className="cursor-pointer">Delete</span>
             </>
-          )}
+          ) : null}
         </div>
       </div>
       {isEditing ? (
-        <textarea
-          className="w-full border rounded p-2 my-2"
-          value={editedComment}
-          onChange={e => setEditedComment(e.target.value)}
-        />
+        <div>
+          <textarea
+            className="w-full border rounded p-2 my-2"
+            value={editedComment}
+            onChange={e => setEditedComment(e.target.value)}
+          />
+
+          <div className="text-right text-sm">
+            <span className="pr-2 cursor-pointer" onClick={handleSaveClick}>
+              Save
+            </span>
+            <span className="cursor-pointer" onClick={handleCancelClick}>
+              Cancel
+            </span>
+          </div>
+        </div>
       ) : (
         <p className="text-left text-sm py-2">{comment.body}</p>
       )}
