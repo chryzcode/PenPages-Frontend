@@ -1,44 +1,84 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
-import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa6";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { FaThumbsUp, FaComment } from "react-icons/fa6";
 
-const Comments = ({ comment }) => {
+const Comments = ({ comment, onUpdate }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedComment, setEditedComment] = useState(comment.body);
 
-    const formatDate = dateString => {
-      const options = { year: "numeric", month: "short", day: "2-digit" };
-      const date = new Date(dateString);
-      return date.toLocaleDateString("en-US", options);
-    };
+  const formatDate = dateString => {
+    const options = { year: "numeric", month: "short", day: "2-digit" };
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", options);
+  };
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+    setEditedComment(comment.body);
+  };
+
+  const handleSaveClick = () => {
+    onUpdate(comment.id, editedComment);
+    setIsEditing(false);
+  };
 
   return (
     <div className="my-2">
-      <div className="flex  items-center justify-between">
+      <div className="flex items-center justify-between">
         <Link to={`/profile/${comment.user.username}`} className="flex items-center">
-          <img className="w-9 mr-1" src={comment.user.imageCloudinaryUrl} alt="" />
+          <img
+            className="w-9 mr-1"
+            src={comment.user.imageCloudinaryUrl}
+            alt={`${comment.user.firstName} ${comment.user.lastName}`}
+          />
           <span className="text-sm font-semibold">
-            {" "}
-            {comment.user.firstName} {comment.user.lastName}
-            <p className="text-xs font-extralight text-left">
-              {" "}
-              {comment.updatedAt ? formatDate(comment.updatedAt) : formatDate(comment.createdAt)}
-            </p>
+            {`${comment.user.firstName} ${comment.user.lastName}`}
+            <p className="text-xs font-extralight text-left">{formatDate(comment.updatedAt || comment.createdAt)}</p>
           </span>
         </Link>
-
         <div className="text-sm">
-          <span className="pr-2">Edit</span>
-          <span>Delete</span>
+          {!isEditing ? (
+            <>
+              <span className="pr-2 cursor-pointer" onClick={handleEditClick}>
+                Edit
+              </span>
+              <span className="cursor-pointer">Delete</span>
+            </>
+          ) : null}
         </div>
       </div>
+      {isEditing ? (
+        <div>
+          <textarea
+            className="border rounded w-full py-2 px-3 my-4 outline-none"
+            value={editedComment}
+            onChange={e => setEditedComment(e.target.value)}
+          />
 
-      <p className="text-left text-sm py-2">{comment.body}</p>
-
-      <div className="flex align-middle items-center gap-2">
-        <FaThumbsUp className="text-customPurple text-base" />
-        <FaComment className="text-customPurple text-sm" />
-      </div>
+          <div className="text-right text-sm">
+            <span className="pr-2 cursor-pointer" onClick={handleSaveClick}>
+              Save
+            </span>
+            <span className="cursor-pointer" onClick={handleCancelClick}>
+              Cancel
+            </span>
+          </div>
+        </div>
+      ) : (
+        <div className="my-2">
+          <p className="text-left text-base py-2 my-2">{comment.body}</p>
+          <div className="flex items-center gap-2">
+            <FaThumbsUp className="text-customPurple text-base cursor-pointer" />
+            <FaComment className="text-customPurple text-sm cursor-pointer" />
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default Comments
+export default Comments;

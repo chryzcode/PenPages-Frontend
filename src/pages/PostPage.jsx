@@ -168,6 +168,7 @@ const PostPage = () => {
     deletePost();
   };
 
+
   return (
     <div>
       <div className="container mx-auto my-8">
