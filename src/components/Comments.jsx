@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaThumbsUp, FaComment } from "react-icons/fa6";
 
-const Comments = ({ commentId, comment, onUpdate }) => {
+const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(comment.body);
 
@@ -25,6 +25,11 @@ const Comments = ({ commentId, comment, onUpdate }) => {
     onUpdate(commentId, editedComment);
     setIsEditing(false);
   };
+
+  const handleDeleteClick = () => {
+    onDelete(commentId)
+  }
+
 
   return (
     <div className="my-2">
