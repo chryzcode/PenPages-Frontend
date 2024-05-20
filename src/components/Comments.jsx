@@ -27,9 +27,8 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   };
 
   const handleDeleteClick = () => {
-    onDelete(commentId)
-  }
-
+    onDelete(commentId);
+  };
 
   return (
     <div className="my-2">
@@ -51,7 +50,9 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
               <span className="pr-2 cursor-pointer" onClick={handleEditClick}>
                 Edit
               </span>
-              <span className="cursor-pointer">Delete</span>
+              <span className="cursor-pointer" onClick={handleDeleteClick}>
+                Delete
+              </span>
             </>
           ) : null}
         </div>
