@@ -80,10 +80,12 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
       ) : (
         <p className="text-left text-sm py-2">{comment.body}</p>
       )}
-      <div className="flex items-center gap-2">
-        <FaThumbsUp className="text-customPurple text-base cursor-pointer" />
-        <FaComment className="text-customPurple text-sm cursor-pointer" />
-      </div>
+      {loggedInUser ? (
+        <div className="flex items-center gap-2">
+          <FaThumbsUp className="text-customPurple text-base cursor-pointer" />
+          <FaComment className="text-customPurple text-sm cursor-pointer" />
+        </div>
+      ) : null}
     </div>
   );
 };
