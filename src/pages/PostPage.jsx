@@ -182,6 +182,31 @@ const PostPage = () => {
     }
   };
 
+  const deleteComment = async commentId => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/${commentId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.error || "Comment deleted successfully");
+        setPost(prevPost => ({
+          ...prevPost,
+          comments: prevPost.comments.filter(comment => comment._id !== commentId),
+        }));
+      } else {
+        toast.error(data.error || "Failed to delete comment");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to delete comment");
+    }
+  };
+
   const onLikeClick = () => {
     if (liked) {
       unlikePost();
@@ -272,7 +297,13 @@ const PostPage = () => {
 
                 <div className={`${commentOpen ? "flex gap-2 w-10/12 mx-auto my-5  flex-col" : "hidden"} `}>
                   {post.comments.map(comment => (
-                    <Comments key={comment._id} commentId={comment._id} comment={comment} onUpdate={updateComment} />
+                    <Comments
+                      key={comment._id}
+                      commentId={comment._id}
+                      comment={comment}
+                      onUpdate={updateComment}
+                      onDelete={deleteComment}
+                    />
                   ))}
                 </div>
                 <PostComment postId={postId} />

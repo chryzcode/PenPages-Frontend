@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaThumbsUp, FaComment } from "react-icons/fa6";
 
-const Comments = ({ commentId, comment, onUpdate }) => {
+const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(comment.body);
 
@@ -26,6 +26,10 @@ const Comments = ({ commentId, comment, onUpdate }) => {
     setIsEditing(false);
   };
 
+  const handleDeleteClick = () => {
+    onDelete(commentId);
+  };
+
   return (
     <div className="my-2">
       <div className="flex items-center justify-between">
@@ -46,7 +50,9 @@ const Comments = ({ commentId, comment, onUpdate }) => {
               <span className="pr-2 cursor-pointer" onClick={handleEditClick}>
                 Edit
               </span>
-              <span className="cursor-pointer">Delete</span>
+              <span className="cursor-pointer" onClick={handleDeleteClick}>
+                Delete
+              </span>
             </>
           ) : null}
         </div>
