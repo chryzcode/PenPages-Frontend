@@ -5,6 +5,7 @@ import { FaThumbsUp, FaComment } from "react-icons/fa6";
 const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(comment.body);
+  const loggedInUser = JSON.parse(localStorage.getItem("userData"));
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -44,18 +45,20 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
             <p className="text-xs font-extralight text-left">{formatDate(comment.updatedAt || comment.createdAt)}</p>
           </span>
         </Link>
-        <div className="text-sm">
-          {!isEditing ? (
-            <>
-              <span className="pr-2 cursor-pointer" onClick={handleEditClick}>
-                Edit
-              </span>
-              <span className="cursor-pointer" onClick={handleDeleteClick}>
-                Delete
-              </span>
-            </>
-          ) : null}
-        </div>
+        {loggedInUser && loggedInUser._id == comment.user._id ? (
+          <div className="text-sm">
+            {!isEditing ? (
+              <>
+                <span className="pr-2 cursor-pointer" onClick={handleEditClick}>
+                  Edit
+                </span>
+                <span className="cursor-pointer" onClick={handleDeleteClick}>
+                  Delete
+                </span>
+              </>
+            ) : null}
+          </div>
+        ) : null}
       </div>
       {isEditing ? (
         <div>
@@ -77,10 +80,12 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
       ) : (
         <p className="text-left text-sm py-2">{comment.body}</p>
       )}
-      <div className="flex items-center gap-2">
-        <FaThumbsUp className="text-customPurple text-base cursor-pointer" />
-        <FaComment className="text-customPurple text-sm cursor-pointer" />
-      </div>
+      {loggedInUser ? (
+        <div className="flex items-center gap-2">
+          <FaThumbsUp className="text-customPurple text-base cursor-pointer" />
+          <FaComment className="text-customPurple text-sm cursor-pointer" />
+        </div>
+      ) : null}
     </div>
   );
 };
