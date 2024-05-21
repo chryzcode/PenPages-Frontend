@@ -4,8 +4,9 @@ import Auth from "./Auth";
 import Spinner from "./Spinner";
 import { toast } from "react-toastify";
 
-const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
+
 const PostComment = ({ postId }) => {
+  const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const token = Cookies.get("accessToken");
   const [commentBody, setCommentBody] = useState("");
   const [postCommentLoading, setPostCommentLoading] = useState(false);
