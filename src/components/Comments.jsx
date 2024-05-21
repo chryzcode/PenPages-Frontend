@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import Spinner from "./Spinner"; // Assuming Spinner is a component you use for loading state
 
 const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
+  const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(comment.body);
   const loggedInUser = JSON.parse(localStorage.getItem("userData"));
@@ -121,12 +122,11 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
             <FaComment className="text-customPurple text-sm cursor-pointer" />
           </div>
 
-          <div className="mx-10">
-            <p className="text-2xl text-customPurple font-semibold mx-auto text-center py-7">Reply comment</p>
+          <div className="text-left">
             <div>
               <form onSubmit={submitReplyForm}>
                 <div className="my-3">
-                  <label htmlFor="body" className="block mb-2 text-left">
+                  <label htmlFor="body" className="block mb-2 text-left text-sm">
                     Reply Comment
                   </label>
                   <input
@@ -141,9 +141,9 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
                   />
                 </div>
 
-                <div className="mx-auto w-32 my-8 text-center">
+                <div className="ml-auto w-32 my-2 text-right">
                   <button
-                    className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
+                    className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 text-sm rounded-full focus:outline-none focus:shadow-outline w-auto"
                     type="submit">
                     Reply
                     {isLoading && <Spinner size={10} />}
