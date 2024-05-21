@@ -58,13 +58,12 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     }
   };
 
-
   const submitReplyForm = async e => {
     e.preventDefault();
     const newReplyComment = {
       body: replyCommentBody,
     };
-    createComment(replyComment);
+    replyComment(newReplyComment);
   };
 
   return (
@@ -126,7 +125,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
           <div className="mx-10">
             <p className="text-2xl text-customPurple  font-semibold mx-auto text-center py-7">Reply comment</p>
             <div>
-              <form onSubmit="">
+              <form onSubmit={submitReplyForm}>
                 <div className="my-3">
                   <label htmlFor="body" className="block mb-2 text-left">
                     Reply Comment
