@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaThumbsUp, FaComment } from "react-icons/fa6";
+import { toast } from "react-toastify";
+import Spinner from "./Spinner"; // Assuming Spinner is a component you use for loading state
 
 const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -33,20 +35,21 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     onDelete(commentId);
   };
 
-  const replyComment = async (replyCommentId, replyComment) => {
+  const replyComment = async (replyCommentId, replyCommentBody) => {
     try {
       setIsLoading(true);
       const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${loggedInUser.token}`,
         },
-        body: JSON.stringify({ body: replyComment }),
+        body: JSON.stringify({ body: replyCommentBody }),
       });
       const data = await res.json();
       if (res.ok) {
         toast.success("Reply added successfully");
+        setReplyCommentBody(""); // Clear the input field
       } else {
         toast.error(data.error || "Failed to add reply");
       }
@@ -54,16 +57,13 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
       console.log("Error:", error);
       toast.error("Failed to add reply");
     } finally {
-      setIsEditing(false);
+      setIsLoading(false);
     }
   };
 
   const submitReplyForm = async e => {
     e.preventDefault();
-    const newReplyComment = {
-      body: replyCommentBody,
-    };
-    replyComment(newReplyComment);
+    replyComment(commentId, replyCommentBody);
   };
 
   return (
@@ -80,7 +80,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
             <p className="text-xs font-extralight text-left">{formatDate(comment.updatedAt || comment.createdAt)}</p>
           </span>
         </Link>
-        {loggedInUser && loggedInUser._id == comment.user._id ? (
+        {loggedInUser && loggedInUser._id === comment.user._id ? (
           <div className="text-sm">
             {!isEditing ? (
               <>
@@ -102,7 +102,6 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
             value={editedComment}
             onChange={e => setEditedComment(e.target.value)}
           />
-
           <div className="text-right text-sm">
             <span className="pr-2 cursor-pointer" onClick={handleSaveClick}>
               Save
@@ -123,7 +122,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
           </div>
 
           <div className="mx-10">
-            <p className="text-2xl text-customPurple  font-semibold mx-auto text-center py-7">Reply comment</p>
+            <p className="text-2xl text-customPurple font-semibold mx-auto text-center py-7">Reply comment</p>
             <div>
               <form onSubmit={submitReplyForm}>
                 <div className="my-3">
@@ -135,9 +134,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
                     id="body"
                     name="body"
                     value={replyCommentBody}
-                    onChange={e => {
-                      setReplyCommentBody(e.target.value);
-                    }}
+                    onChange={e => setReplyCommentBody(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
                     placeholder="Reply comment"
                     required
