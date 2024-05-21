@@ -11,6 +11,8 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const loggedInUser = JSON.parse(localStorage.getItem("userData"));
   const [isLoading, setIsLoading] = useState(false);
   const [replyCommentBody, setReplyCommentBody] = useState("");
+  const [isReplying, setIsReplying] = useState(false); // State variable to toggle reply form
+  const [commentReplies, setCommentReplies] = useState([])
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -51,6 +53,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
       if (res.ok) {
         toast.success("Reply added successfully");
         setReplyCommentBody(""); // Clear the input field
+        setIsReplying(false); // Hide the reply form after successful reply
       } else {
         toast.error(data.error || "Failed to add reply");
       }
@@ -61,6 +64,26 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
       setIsLoading(false);
     }
   };
+
+  const getCommentReplies = async (commentId) => {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${API_BASE_URL}comment/reply/${commentId}`)
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Reply added successfully");
+      } else {
+        toast.error(data.error || "Failed to add reply");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to add reply");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+
 
   const submitReplyForm = async e => {
     e.preventDefault();
@@ -119,39 +142,44 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         <div>
           <div className="flex items-center gap-2">
             <FaThumbsUp className="text-customPurple text-base cursor-pointer" />
-            <FaComment className="text-customPurple text-sm cursor-pointer" />
+            <FaComment
+              className="text-customPurple text-sm cursor-pointer"
+              onClick={() => setIsReplying(!isReplying)} // Toggle the reply form visibility
+            />
           </div>
 
-          <div className="text-left">
-            <div>
-              <form onSubmit={submitReplyForm}>
-                <div className="my-3">
-                  <label htmlFor="body" className="block mb-2 text-left text-sm">
-                    Reply Comment
-                  </label>
-                  <input
-                    type="text"
-                    id="body"
-                    name="body"
-                    value={replyCommentBody}
-                    onChange={e => setReplyCommentBody(e.target.value)}
-                    className="border rounded w-full py-2 px-3 mb-2"
-                    placeholder="Reply comment"
-                    required
-                  />
-                </div>
+          {isReplying && ( // Conditionally render the reply form
+            <div className="text-left">
+              <div>
+                <form onSubmit={submitReplyForm}>
+                  <div className="my-3">
+                    <label htmlFor="body" className="block mb-2 text-left text-sm">
+                      Reply Comment
+                    </label>
+                    <input
+                      type="text"
+                      id="body"
+                      name="body"
+                      value={replyCommentBody}
+                      onChange={e => setReplyCommentBody(e.target.value)}
+                      className="border rounded w-full py-2 px-3 mb-2"
+                      placeholder="Reply comment"
+                      required
+                    />
+                  </div>
 
-                <div className="ml-auto w-32 my-2 text-right">
-                  <button
-                    className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 text-sm rounded-full focus:outline-none focus:shadow-outline w-auto"
-                    type="submit">
-                    Reply
-                    {isLoading && <Spinner size={10} />}
-                  </button>
-                </div>
-              </form>
+                  <div className="ml-auto w-32 my-2 text-right">
+                    <button
+                      className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 text-sm rounded-full focus:outline-none focus:shadow-outline w-auto"
+                      type="submit">
+                      Reply
+                      {isLoading && <Spinner size={10} />}
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       ) : null}
     </div>
