@@ -6,6 +6,8 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(comment.body);
   const loggedInUser = JSON.parse(localStorage.getItem("userData"));
+  const [isLoading, setIsLoading] = useState(false);
+  const [replyCommentBody, setReplyCommentBody] = useState("");
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -29,6 +31,40 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
 
   const handleDeleteClick = () => {
     onDelete(commentId);
+  };
+
+  const replyComment = async (replyCommentId, replyComment) => {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ body: replyComment }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Reply added successfully");
+      } else {
+        toast.error(data.error || "Failed to add reply");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to add reply");
+    } finally {
+      setIsEditing(false);
+    }
+  };
+
+
+  const submitReplyForm = async e => {
+    e.preventDefault();
+    const newReplyComment = {
+      body: replyCommentBody,
+    };
+    createComment(replyComment);
   };
 
   return (
@@ -81,9 +117,45 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         <p className="text-left text-sm py-2">{comment.body}</p>
       )}
       {loggedInUser ? (
-        <div className="flex items-center gap-2">
-          <FaThumbsUp className="text-customPurple text-base cursor-pointer" />
-          <FaComment className="text-customPurple text-sm cursor-pointer" />
+        <div>
+          <div className="flex items-center gap-2">
+            <FaThumbsUp className="text-customPurple text-base cursor-pointer" />
+            <FaComment className="text-customPurple text-sm cursor-pointer" />
+          </div>
+
+          <div className="mx-10">
+            <p className="text-2xl text-customPurple  font-semibold mx-auto text-center py-7">Reply comment</p>
+            <div>
+              <form onSubmit="">
+                <div className="my-3">
+                  <label htmlFor="body" className="block mb-2 text-left">
+                    Reply Comment
+                  </label>
+                  <input
+                    type="text"
+                    id="body"
+                    name="body"
+                    value={replyCommentBody}
+                    onChange={e => {
+                      setReplyCommentBody(e.target.value);
+                    }}
+                    className="border rounded w-full py-2 px-3 mb-2"
+                    placeholder="Reply comment"
+                    required
+                  />
+                </div>
+
+                <div className="mx-auto w-32 my-8 text-center">
+                  <button
+                    className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
+                    type="submit">
+                    Reply
+                    {isLoading && <Spinner size={10} />}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       ) : null}
     </div>
