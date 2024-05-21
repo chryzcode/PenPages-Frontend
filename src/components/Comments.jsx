@@ -12,7 +12,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [replyCommentBody, setReplyCommentBody] = useState("");
   const [isReplying, setIsReplying] = useState(false); // State variable to toggle reply form
-  const [commentReplies, setCommentReplies] = useState([])
+  const [commentReplies, setCommentReplies] = useState([]);
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -65,13 +65,13 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     }
   };
 
-  const getCommentReplies = async (commentId) => {
+  const getCommentReplies = async commentId => {
     try {
       setIsLoading(true);
-      const res = await fetch(`${API_BASE_URL}comment/reply/${commentId}`)
+      const res = await fetch(`${API_BASE_URL}comment/reply/${commentId}`);
       const data = await res.json();
       if (res.ok) {
-        toast.success("Reply added successfully");
+        setCommentReplies(data.replycomments);
       } else {
         toast.error(data.error || "Failed to add reply");
       }
@@ -81,9 +81,25 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
-
+  const getCommentReplyLikes = async replyCommentId => {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${API_BASE_URL}comment/like/reply/${replyCommentId}`);
+      const data = await res.json();
+      if (res.ok) {
+        setCommentReplies(data.replycomments);
+      } else {
+        toast.error(data.error || "Failed to add reply");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to add reply");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const submitReplyForm = async e => {
     e.preventDefault();
@@ -140,12 +156,18 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
       )}
       {loggedInUser ? (
         <div>
-          <div className="flex items-center gap-2">
-            <FaThumbsUp className="text-customPurple text-base cursor-pointer" />
-            <FaComment
-              className="text-customPurple text-sm cursor-pointer"
-              onClick={() => setIsReplying(!isReplying)} // Toggle the reply form visibility
-            />
+          <div className="flex items-center gap-4">
+            <span className="flex  items-center gap-2">
+              <FaThumbsUp className="text-customPurple text-base cursor-pointer" />
+              <div className="text-sm ">{commentReplies.length} likes</div>
+            </span>
+            <span className="flex  items-center gap-2">
+              <FaComment
+                className="text-customPurple text-sm cursor-pointer"
+                onClick={() => setIsReplying(!isReplying)} // Toggle the reply form visibility
+              />
+              <div className="text-sm ">{commentReplies.length} reply</div>
+            </span>
           </div>
 
           {isReplying && ( // Conditionally render the reply form
