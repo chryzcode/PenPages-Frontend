@@ -12,6 +12,7 @@ const ReplyComment = ({ replyCommment }) => {
   const [commentReplyLikes, setCommentReplyLikes] = useState([]);
   const [isReplying, setIsReplying] = useState(false);
   const [editedReply, setEditedReply] = useState(replyCommment.body);
+  const [replyCommentBody, setReplyCommentBody] = useState("");
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -102,6 +103,38 @@ const ReplyComment = ({ replyCommment }) => {
     return date.toLocaleDateString("en-US", options);
   };
 
+  const replyComment = async (replyCommentId, replyCommentBody) => {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+        body: JSON.stringify({ body: replyCommentBody }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Reply added successfully");
+        setReplyCommentBody(""); // Clear the input field
+        setIsReplying(false); // Hide the reply form after successful reply
+      } else {
+        toast.error(data.error || "Failed to add reply");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to add reply");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const submitReplyForm = async e => {
+    e.preventDefault();
+    replyComment(replyComment._id, replyCommentBody);
+  };
+
   return (
     <div className="my-2 ml-10">
       <div className="flex items-center justify-between">
@@ -172,7 +205,7 @@ const ReplyComment = ({ replyCommment }) => {
           </span>
         </div>
 
-        {/* {isReplying && ( // Conditionally render the reply form
+        {isReplying && ( // Conditionally render the reply form
           <div className="text-left">
             <div>
               <form onSubmit={submitReplyForm}>
@@ -203,7 +236,7 @@ const ReplyComment = ({ replyCommment }) => {
               </form>
             </div>
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );
