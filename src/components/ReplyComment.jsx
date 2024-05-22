@@ -1,0 +1,125 @@
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { FaThumbsUp, FaComment } from "react-icons/fa6";
+import { toast } from "react-toastify";
+import Spinner from "./Spinner";
+
+const ReplyComment = ({ replyCommment }) => {
+  const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
+  const [isEditing, setIsEditing] = useState(false);
+  const loggedInUser = JSON.parse(localStorage.getItem("userData"));
+  const [isLoading, setIsLoading] = useState(false);
+
+  return (
+    <div className="my-2">
+      <div className="flex items-center justify-between">
+        <Link to={`/profile/${replyCommment.user.username}`} className="flex items-center">
+          <img
+            className="w-9 mr-1"
+            src={replyCommment.user.imageCloudinaryUrl}
+            alt={`${replyCommment.user.firstName} ${replyCommment.user.lastName}`}
+          />
+          <span className="text-sm font-semibold">
+            {`${replyCommment.user.firstName} ${replyCommment.user.lastName}`}
+            <p className="text-xs font-extralight text-left">
+              {formatDate(replyCommment.updatedAt || replyCommment.createdAt)}
+            </p>
+          </span>
+        </Link>
+        {loggedInUser && loggedInUser._id === replyCommment.user._id ? (
+          <div className="text-sm">
+            {!isEditing ? (
+              <>
+                <span className="pr-2 cursor-pointer" onClick={handleEditClick}>
+                  Edit
+                </span>
+                <span className="cursor-pointer" onClick={handleDeleteClick}>
+                  Delete
+                </span>
+              </>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+      {/* {isEditing ? (
+        <div>
+          <textarea
+            className="w-full border rounded p-2 my-2"
+            value={editedComment}
+            onChange={e => setEditedComment(e.target.value)}
+          />
+          <div className="text-right text-sm">
+            <span className="pr-2 cursor-pointer" onClick={handleSaveClick}>
+              Save
+            </span>
+            <span className="cursor-pointer" onClick={handleCancelClick}>
+              Cancel
+            </span>
+          </div>
+        </div>
+      ) : (
+        <p className="text-left text-sm py-2">{comment.body}</p>
+      )}
+
+      <div>
+        <div className="flex items-center gap-4">
+          <span className="flex  items-center gap-2">
+            {loggedInUser ? <FaThumbsUp className="text-customPurple text-base cursor-pointer" /> : null}
+
+            <div className="text-sm ">{commentLikes.length} likes</div>
+          </span>
+          <span className="flex  items-center gap-2">
+            {loggedInUser ? (
+              <FaComment
+                className="text-customPurple text-sm cursor-pointer"
+                onClick={() => setIsReplying(!isReplying)} // Toggle the reply form visibility
+              />
+            ) : null}
+
+            <div className="text-sm ">{commentReplies.length} reply</div>
+          </span>
+        </div>
+        <div>
+          {commentReplies.map(reply => (
+            <div>{reply._id}</div>
+          ))}
+        </div>
+
+        {isReplying && ( // Conditionally render the reply form
+          <div className="text-left">
+            <div>
+              <form onSubmit={submitReplyForm}>
+                <div className="my-3">
+                  <label htmlFor="body" className="block mb-2 text-left text-sm">
+                    Reply Comment
+                  </label>
+                  <input
+                    type="text"
+                    id="body"
+                    name="body"
+                    value={replyCommentBody}
+                    onChange={e => setReplyCommentBody(e.target.value)}
+                    className="border rounded w-full py-2 px-3 mb-2"
+                    placeholder="Reply comment"
+                    required
+                  />
+                </div>
+
+                <div className="ml-auto w-32 my-2 text-right">
+                  <button
+                    className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 text-sm rounded-full focus:outline-none focus:shadow-outline w-auto"
+                    type="submit">
+                    Reply
+                    {isLoading && <Spinner size={10} />}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div> */}
+    </div>
+  );
+};
+
+export default RepylComment;

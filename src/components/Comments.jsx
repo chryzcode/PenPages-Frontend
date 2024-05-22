@@ -66,24 +66,6 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     }
   };
 
-  const getCommentReplies = async commentId => {
-    try {
-      setIsLoading(true);
-      const res = await fetch(`${API_BASE_URL}comment/reply/${commentId}`);
-      const data = await res.json();
-      if (res.ok) {
-        setCommentReplies(data.replycomments);
-      } else {
-        toast.error(data.error || "Failed to add reply");
-      }
-    } catch (error) {
-      console.log("Error:", error);
-      toast.error("Failed to add reply");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const getCommentReplyLikes = async replyCommentId => {
     try {
       setIsLoading(true);
@@ -120,6 +102,26 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         setIsLoading(false);
       }
     };
+
+    const getCommentReplies = async commentId => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`${API_BASE_URL}comment/reply/${commentId}`);
+        const data = await res.json();
+        if (res.ok) {
+          setCommentReplies(data.replycomments);
+        } else {
+          toast.error(data.error || "Failed to add reply");
+        }
+      } catch (error) {
+        console.log("Error:", error);
+        toast.error("Failed to add reply");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getCommentReplies(commentId);
     getCommentLikes(commentId);
   }, []);
 
@@ -194,6 +196,11 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
 
             <div className="text-sm ">{commentReplies.length} reply</div>
           </span>
+        </div>
+        <div>
+          {commentReplies.map(reply => (
+            <div>{reply._id}</div>
+          ))}
         </div>
 
         {isReplying && ( // Conditionally render the reply form
