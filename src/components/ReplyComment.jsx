@@ -11,6 +11,68 @@ const ReplyComment = ({ replyCommment }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [commentReplyLikes, setCommentReplyLikes] = useState([]);
   const [isReplying, setIsReplying] = useState(false);
+  const [editedReply, setEditedReply] = useState(replyCommment.body);
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const deleteReplyComment = async replyCommentId => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.success || "Reply deleted successfully");
+      } else {
+        toast.error(data.error || "Failed to delete reply");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to delete reply");
+    }
+  };
+
+  const updateComment = async (commentId, updatedBody) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/reply/${commentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ body: updatedBody }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Reply updated successfully");
+      } else {
+        toast.error(data.error || "Failed to update reply");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to update reply");
+    }
+  };
+
+  const handleDeleteClick = () => {
+    deleteReplyComment(replyCommment._id);
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+    setEditedComment(replyCommment.body);
+  };
+
+  const handleSaveClick = () => {
+    updateComment(replyCommment._id, editedReply);
+    setIsEditing(false);
+  };
 
   useEffect(() => {
     const getCommentReplyLikes = async replyCommentId => {
@@ -75,8 +137,8 @@ const ReplyComment = ({ replyCommment }) => {
         <div>
           <textarea
             className="w-full border rounded p-2 my-2"
-            value={editedComment}
-            onChange={e => setEditedComment(e.target.value)}
+            value={editedReply}
+            onChange={e => setEditedReply(e.target.value)}
           />
           <div className="text-right text-sm">
             <span className="pr-2 cursor-pointer" onClick={handleSaveClick}>

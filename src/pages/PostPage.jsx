@@ -193,7 +193,7 @@ const PostPage = () => {
       });
       const data = await res.json();
       if (res.ok) {
-        toast.success(data.error || "Comment deleted successfully");
+        toast.success(data.success || "Comment deleted successfully");
         setPost(prevPost => ({
           ...prevPost,
           comments: prevPost.comments.filter(comment => comment._id !== commentId),
