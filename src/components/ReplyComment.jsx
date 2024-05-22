@@ -9,6 +9,8 @@ const ReplyComment = ({ replyCommment }) => {
   const [isEditing, setIsEditing] = useState(false);
   const loggedInUser = JSON.parse(localStorage.getItem("userData"));
   const [isLoading, setIsLoading] = useState(false);
+  const [commentReplyLikes, setCommentReplyLikes] = useState([]);
+  const [isReplying, setIsReplying] = useState(false);
 
   useEffect(() => {
     const getCommentReplyLikes = async replyCommentId => {
@@ -17,18 +19,20 @@ const ReplyComment = ({ replyCommment }) => {
         const res = await fetch(`${API_BASE_URL}comment/like/reply/${replyCommentId}`);
         const data = await res.json();
         if (res.ok) {
-          setCommentReplies(data.replycomments);
+          setCommentReplyLikes(data.replyCommentLikes);
         } else {
-          toast.error(data.error || "Failed to add reply");
+          toast.error(data.error || "Failed to get reply likes");
         }
       } catch (error) {
         console.log("Error:", error);
-        toast.error("Failed to add reply");
+        toast.error("Failed to get reply likes");
       } finally {
         setIsLoading(false);
       }
     };
-  }, [])
+
+    getCommentReplyLikes(replyCommment._id);
+  }, []);
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -86,13 +90,13 @@ const ReplyComment = ({ replyCommment }) => {
       ) : (
         <p className="text-left text-sm py-2">{replyCommment.body}</p>
       )}
-      {/*
+
       <div>
         <div className="flex items-center gap-4">
           <span className="flex  items-center gap-2">
             {loggedInUser ? <FaThumbsUp className="text-customPurple text-base cursor-pointer" /> : null}
 
-            <div className="text-sm ">{commentLikes.length} likes</div>
+            <div className="text-sm ">{commentReplyLikes.length} likes</div>
           </span>
           <span className="flex  items-center gap-2">
             {loggedInUser ? (
@@ -102,16 +106,11 @@ const ReplyComment = ({ replyCommment }) => {
               />
             ) : null}
 
-            <div className="text-sm ">{commentReplies.length} reply</div>
+            <div className="text-sm ">0 reply</div>
           </span>
         </div>
-        <div>
-          {commentReplies.map(reply => (
-            <div>{reply._id}</div>
-          ))}
-        </div>
 
-        {isReplying && ( // Conditionally render the reply form
+        {/* {isReplying && ( // Conditionally render the reply form
           <div className="text-left">
             <div>
               <form onSubmit={submitReplyForm}>
@@ -142,8 +141,8 @@ const ReplyComment = ({ replyCommment }) => {
               </form>
             </div>
           </div>
-        )}
-      </div> */}
+        )} */}
+      </div>
     </div>
   );
 };

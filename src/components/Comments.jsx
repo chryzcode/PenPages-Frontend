@@ -12,9 +12,9 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const loggedInUser = JSON.parse(localStorage.getItem("userData"));
   const [isLoading, setIsLoading] = useState(false);
   const [replyCommentBody, setReplyCommentBody] = useState("");
-  const [isReplying, setIsReplying] = useState(false); // State variable to toggle reply form
+  const [isReplying, setIsReplying] = useState(false);
   const [commentReplies, setCommentReplies] = useState([]);
-  const [replyCommentLikes, setReplyCommentLikes] = useState([]);
+  const [commentLikes, setCommentLikes] = useState([]);
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -75,7 +75,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         const res = await fetch(`${API_BASE_URL}comment/like/${commentId}`);
         const data = await res.json();
         if (res.ok) {
-          setReplyCommentLikes(data.replyCommentLikes);
+          setCommentLikes(data.commentLikes);
         } else {
           toast.error(data.error || "Failed to get comment likes");
         }
