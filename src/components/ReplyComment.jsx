@@ -10,8 +10,34 @@ const ReplyComment = ({ replyCommment }) => {
   const loggedInUser = JSON.parse(localStorage.getItem("userData"));
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    const getCommentReplyLikes = async replyCommentId => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`${API_BASE_URL}comment/like/reply/${replyCommentId}`);
+        const data = await res.json();
+        if (res.ok) {
+          setCommentReplies(data.replycomments);
+        } else {
+          toast.error(data.error || "Failed to add reply");
+        }
+      } catch (error) {
+        console.log("Error:", error);
+        toast.error("Failed to add reply");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  }, [])
+
+  const formatDate = dateString => {
+    const options = { year: "numeric", month: "short", day: "2-digit" };
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", options);
+  };
+
   return (
-    <div className="my-2">
+    <div className="my-2 ml-10">
       <div className="flex items-center justify-between">
         <Link to={`/profile/${replyCommment.user.username}`} className="flex items-center">
           <img
@@ -41,7 +67,7 @@ const ReplyComment = ({ replyCommment }) => {
           </div>
         ) : null}
       </div>
-      {/* {isEditing ? (
+      {isEditing ? (
         <div>
           <textarea
             className="w-full border rounded p-2 my-2"
@@ -58,9 +84,9 @@ const ReplyComment = ({ replyCommment }) => {
           </div>
         </div>
       ) : (
-        <p className="text-left text-sm py-2">{comment.body}</p>
+        <p className="text-left text-sm py-2">{replyCommment.body}</p>
       )}
-
+      {/*
       <div>
         <div className="flex items-center gap-4">
           <span className="flex  items-center gap-2">
@@ -122,4 +148,4 @@ const ReplyComment = ({ replyCommment }) => {
   );
 };
 
-export default RepylComment;
+export default ReplyComment;

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaThumbsUp, FaComment } from "react-icons/fa6";
 import { toast } from "react-toastify";
-import Spinner from "./Spinner"; // Assuming Spinner is a component you use for loading state
+import Spinner from "./Spinner";
+import ReplyComment from "./ReplyComment";
 
 const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -13,7 +14,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [replyCommentBody, setReplyCommentBody] = useState("");
   const [isReplying, setIsReplying] = useState(false); // State variable to toggle reply form
   const [commentReplies, setCommentReplies] = useState([]);
-  const [commentLikes, setCommentLikes] = useState([]);
+  const [replyCommentLikes, setReplyCommentLikes] = useState([]);
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -66,23 +67,6 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     }
   };
 
-  const getCommentReplyLikes = async replyCommentId => {
-    try {
-      setIsLoading(true);
-      const res = await fetch(`${API_BASE_URL}comment/like/reply/${replyCommentId}`);
-      const data = await res.json();
-      if (res.ok) {
-        setCommentReplies(data.replycomments);
-      } else {
-        toast.error(data.error || "Failed to add reply");
-      }
-    } catch (error) {
-      console.log("Error:", error);
-      toast.error("Failed to add reply");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => {
     const getCommentLikes = async commentId => {
@@ -91,7 +75,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         const res = await fetch(`${API_BASE_URL}comment/like/${commentId}`);
         const data = await res.json();
         if (res.ok) {
-          setCommentLikes(data.commentLikes);
+          setReplyCommentLikes(data.replyCommentLikes);
         } else {
           toast.error(data.error || "Failed to get comment likes");
         }
@@ -199,7 +183,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         </div>
         <div>
           {commentReplies.map(reply => (
-            <div>{reply._id}</div>
+            <ReplyComment key={reply._id} replyCommment={reply} />
           ))}
         </div>
 
