@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaThumbsUp, FaComment } from "react-icons/fa6";
+import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import ReplyComment from "./ReplyComment";
@@ -15,6 +15,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [isReplying, setIsReplying] = useState(false);
   const [commentReplies, setCommentReplies] = useState([]);
   const [commentLikes, setCommentLikes] = useState([]);
+  const [liked, setLiked] = useState(false);
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -67,7 +68,6 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     }
   };
 
-
   useEffect(() => {
     const getCommentLikes = async commentId => {
       try {
@@ -108,6 +108,58 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     getCommentReplies(commentId);
     getCommentLikes(commentId);
   }, []);
+
+  const likeComment = async commentId => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/like/${commentId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Comment liked");
+        setLiked(true);
+      } else {
+        toast.error(data.error || "Failed to like comment");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to like comment");
+    }
+  };
+
+  const unlikeComment = async commentId => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/unlike/${commentId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Comment unliked");
+        setLiked(false);
+      } else {
+        toast.error(data.error || "Failed to unlike comment");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to unlike comment");
+    }
+  };
+
+  const onLikeClick = () => {
+    if (liked) {
+      unlikeComment(commentId);
+    } else {
+      likeComment(commentId);
+    }
+  };
 
   const submitReplyForm = async e => {
     e.preventDefault();
@@ -166,7 +218,15 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
       <div>
         <div className="flex items-center gap-4">
           <span className="flex  items-center gap-2">
-            {loggedInUser ? <FaThumbsUp className="text-customPurple text-base cursor-pointer" /> : null}
+            {loggedInUser ? (
+              <Link onClick={onLikeClick}>
+                {liked ? (
+                  <FaThumbsDown className="text-customPurple text-lg" />
+                ) : (
+                  <FaThumbsUp className="text-customPurple text-lg" />
+                )}
+              </Link>
+            ) : null}
 
             <div className="text-sm ">{commentLikes.length} likes</div>
           </span>

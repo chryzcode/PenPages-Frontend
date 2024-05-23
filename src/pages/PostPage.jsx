@@ -30,6 +30,7 @@ const PostPage = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const [likeOpen, setLikeOpen] = useState(false);
   const [commentOpen, setCommentOpen] = useState(false);
+  const loggedInUser = JSON.parse(localStorage.getItem("userData"));
   const navigate = useNavigate();
 
   const toggleLikes = () => {
@@ -96,7 +97,7 @@ const PostPage = () => {
       const data = await res.json();
       if (res.ok) {
         toast.success("Post liked");
-        setLikes(prevLikes => [...prevLikes, { user: { _id: "currentUserId" } }]); // Dummy user data
+        setLikes(prevLikes => [...prevLikes, { user: { _id: loggedInUser._id } }]);
         setLikesCount(prevCount => prevCount + 1);
         setLiked(true);
       } else {
@@ -120,7 +121,7 @@ const PostPage = () => {
       const data = await res.json();
       if (res.ok) {
         toast.success("Post unliked");
-        setLikes(prevLikes => prevLikes.filter(like => like.user._id !== "currentUserId")); // Dummy user data
+        setLikes(prevLikes => prevLikes.filter(like => like.user._id !== loggedInUser._id)); 
         setLikesCount(prevCount => prevCount - 1);
         setLiked(false);
       } else {
@@ -137,7 +138,7 @@ const PostPage = () => {
       const res = await fetch(`${API_BASE_URL}post/${postId}`, {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json", // Correcting header name
+          "Content-Type": "application/json", 
           Authorization: `Bearer ${token}`,
         },
       });
@@ -146,7 +147,7 @@ const PostPage = () => {
         toast.success("Post deleted successfully");
         navigate("/posts");
       } else {
-        toast.error(data.error || "Failed to delete post"); // Display server error message if available
+        toast.error(data.error || "Failed to delete post");
       }
     } catch (error) {
       console.log("Error:", error);

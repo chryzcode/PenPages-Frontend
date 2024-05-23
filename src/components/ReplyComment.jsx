@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaThumbsUp, FaComment } from "react-icons/fa6";
+import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 
@@ -13,6 +13,8 @@ const ReplyComment = ({ replyCommment }) => {
   const [isReplying, setIsReplying] = useState(false);
   const [editedReply, setEditedReply] = useState(replyCommment.body);
   const [replyCommentBody, setReplyCommentBody] = useState("");
+  const [commentReplies, setCommentReplies] = useState([]);
+  const [liked, setLiked] = useState(false);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -24,7 +26,7 @@ const ReplyComment = ({ replyCommment }) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${loggedInUser.token}`,
         },
       });
       const data = await res.json();
@@ -45,7 +47,7 @@ const ReplyComment = ({ replyCommment }) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${loggedInUser.token}`,
         },
         body: JSON.stringify({ body: updatedBody }),
       });
@@ -67,7 +69,7 @@ const ReplyComment = ({ replyCommment }) => {
 
   const handleCancelClick = () => {
     setIsEditing(false);
-    setEditedComment(replyCommment.body);
+    setEditedReply(replyCommment.body);
   };
 
   const handleSaveClick = () => {
@@ -94,6 +96,25 @@ const ReplyComment = ({ replyCommment }) => {
       }
     };
 
+    const getCommentReplies = async replyCommentId => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`);
+        const data = await res.json();
+        if (res.ok) {
+          setCommentReplies(data.replycomments);
+        } else {
+          toast.error(data.error || "Failed to get reply likes");
+        }
+      } catch (error) {
+        console.log("Error:", error);
+        toast.error("Failed to get reply likes");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getCommentReplies(replyCommment._id);
     getCommentReplyLikes(replyCommment._id);
   }, []);
 
@@ -133,6 +154,58 @@ const ReplyComment = ({ replyCommment }) => {
   const submitReplyForm = async e => {
     e.preventDefault();
     replyComment(replyComment._id, replyCommentBody);
+  };
+
+  const likeReply = async replyCommentId => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/like/reply/${replyCommentId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Reply liked");
+        setLiked(true);
+      } else {
+        toast.error(data.error || "Failed to like reply");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to like reply");
+    }
+  };
+
+  const unlikeReply = async replyCommentId => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/unlike/reply/${replyCommentId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Reply unliked");
+        setLiked(false);
+      } else {
+        toast.error(data.error || "Failed to unlike reply");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to unlike reply");
+    }
+  };
+
+  const onLikeClick = () => {
+    if (liked) {
+      unlikeReply(replyCommment._id);
+    } else {
+      likeReply(replyCommment._id);
+    }
   };
 
   return (
@@ -189,7 +262,15 @@ const ReplyComment = ({ replyCommment }) => {
       <div>
         <div className="flex items-center gap-4">
           <span className="flex  items-center gap-2">
-            {loggedInUser ? <FaThumbsUp className="text-customPurple text-base cursor-pointer" /> : null}
+            {loggedInUser ? (
+              <Link onClick={onLikeClick}>
+                {liked ? (
+                  <FaThumbsDown className="text-customPurple text-lg" />
+                ) : (
+                  <FaThumbsUp className="text-customPurple text-lg" />
+                )}
+              </Link>
+            ) : null}
 
             <div className="text-sm ">{commentReplyLikes.length} likes</div>
           </span>
@@ -201,7 +282,7 @@ const ReplyComment = ({ replyCommment }) => {
               />
             ) : null}
 
-            <div className="text-sm ">0 reply</div>
+            <div className="text-sm ">{commentReplies.length} reply</div>
           </span>
         </div>
 
