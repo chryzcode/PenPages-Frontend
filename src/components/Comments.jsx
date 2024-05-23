@@ -15,6 +15,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [isReplying, setIsReplying] = useState(false);
   const [commentReplies, setCommentReplies] = useState([]);
   const [commentLikes, setCommentLikes] = useState([]);
+  const [liked, setLiked] = useState(false);
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -108,6 +109,58 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     getCommentReplies(commentId);
     getCommentLikes(commentId);
   }, []);
+
+  const likeComment = async commentId => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/like/${commentId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer $${loggedInUser.token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Comment liked");
+        setLiked(true);
+      } else {
+        toast.error(data.error || "Failed to like comment");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to like comment");
+    }
+  };
+
+  const unlikeComment = async (commentId) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/unlike/${commentId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Commenr unliked");
+        setLiked(false);
+      } else {
+        toast.error(data.error || "Failed to unlike comment");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to unlike comment");
+    }
+  };
+
+   const onLikeClick = () => {
+     if (liked) {
+       unlikeComment(commentId);
+     } else {
+       likeComment(commentId);
+     }
+   };
 
   const submitReplyForm = async e => {
     e.preventDefault();

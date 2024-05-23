@@ -25,7 +25,7 @@ const ReplyComment = ({ replyCommment }) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${loggedInUser.token}`,
         },
       });
       const data = await res.json();
@@ -46,7 +46,7 @@ const ReplyComment = ({ replyCommment }) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${loggedInUser.token}`,
         },
         body: JSON.stringify({ body: updatedBody }),
       });
@@ -68,7 +68,7 @@ const ReplyComment = ({ replyCommment }) => {
 
   const handleCancelClick = () => {
     setIsEditing(false);
-    setEditedComment(replyCommment.body);
+    setEditedReply(replyCommment.body);
   };
 
   const handleSaveClick = () => {
