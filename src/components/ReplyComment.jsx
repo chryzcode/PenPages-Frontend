@@ -13,6 +13,7 @@ const ReplyComment = ({ replyCommment }) => {
   const [isReplying, setIsReplying] = useState(false);
   const [editedReply, setEditedReply] = useState(replyCommment.body);
   const [replyCommentBody, setReplyCommentBody] = useState("");
+  const [commentReplies, setCommentReplies] = useState([]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -94,6 +95,25 @@ const ReplyComment = ({ replyCommment }) => {
       }
     };
 
+    const getCommentReplies = async replyCommentId => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`);
+        const data = await res.json();
+        if (res.ok) {
+          setCommentReplies(data.replycomments);
+        } else {
+          toast.error(data.error || "Failed to get reply likes");
+        }
+      } catch (error) {
+        console.log("Error:", error);
+        toast.error("Failed to get reply likes");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getCommentReplies(replyCommment._id);
     getCommentReplyLikes(replyCommment._id);
   }, []);
 
@@ -201,7 +221,7 @@ const ReplyComment = ({ replyCommment }) => {
               />
             ) : null}
 
-            <div className="text-sm ">0 reply</div>
+            <div className="text-sm ">{commentReplies.length} reply</div>
           </span>
         </div>
 
