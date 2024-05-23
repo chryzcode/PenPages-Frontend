@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaThumbsUp, FaComment } from "react-icons/fa6";
+import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 
@@ -14,6 +14,7 @@ const ReplyComment = ({ replyCommment }) => {
   const [editedReply, setEditedReply] = useState(replyCommment.body);
   const [replyCommentBody, setReplyCommentBody] = useState("");
   const [commentReplies, setCommentReplies] = useState([]);
+  const [liked, setLiked] = useState(false);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -155,7 +156,6 @@ const ReplyComment = ({ replyCommment }) => {
     replyComment(replyComment._id, replyCommentBody);
   };
 
-
   const likeReply = async replyCommentId => {
     try {
       const res = await fetch(`${API_BASE_URL}comment/like/reply/${replyCommentId}`, {
@@ -167,14 +167,14 @@ const ReplyComment = ({ replyCommment }) => {
       });
       const data = await res.json();
       if (res.ok) {
-        toast.success("Comment liked");
+        toast.success("Reply liked");
         setLiked(true);
       } else {
-        toast.error(data.error || "Failed to like comment");
+        toast.error(data.error || "Failed to like reply");
       }
     } catch (error) {
       console.log("Error:", error);
-      toast.error("Failed to like comment");
+      toast.error("Failed to like reply");
     }
   };
 
@@ -189,14 +189,14 @@ const ReplyComment = ({ replyCommment }) => {
       });
       const data = await res.json();
       if (res.ok) {
-        toast.success("Comment unliked");
+        toast.success("Reply unliked");
         setLiked(false);
       } else {
-        toast.error(data.error || "Failed to unlike comment");
+        toast.error(data.error || "Failed to unlike reply");
       }
     } catch (error) {
       console.log("Error:", error);
-      toast.error("Failed to unlike comment");
+      toast.error("Failed to unlike reply");
     }
   };
 
@@ -262,7 +262,15 @@ const ReplyComment = ({ replyCommment }) => {
       <div>
         <div className="flex items-center gap-4">
           <span className="flex  items-center gap-2">
-            {loggedInUser ? <FaThumbsUp className="text-customPurple text-base cursor-pointer" /> : null}
+            {loggedInUser ? (
+              <Link onClick={onLikeClick}>
+                {liked ? (
+                  <FaThumbsDown className="text-customPurple text-lg" />
+                ) : (
+                  <FaThumbsUp className="text-customPurple text-lg" />
+                )}
+              </Link>
+            ) : null}
 
             <div className="text-sm ">{commentReplyLikes.length} likes</div>
           </span>
