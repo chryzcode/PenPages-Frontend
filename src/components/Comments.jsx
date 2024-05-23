@@ -68,7 +68,6 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     }
   };
 
-
   useEffect(() => {
     const getCommentLikes = async commentId => {
       try {
@@ -132,7 +131,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     }
   };
 
-  const unlikeComment = async (commentId) => {
+  const unlikeComment = async commentId => {
     try {
       const res = await fetch(`${API_BASE_URL}comment/unlike/${commentId}`, {
         method: "POST",
@@ -143,7 +142,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
       });
       const data = await res.json();
       if (res.ok) {
-        toast.success("Commenr unliked");
+        toast.success("Comment unliked");
         setLiked(false);
       } else {
         toast.error(data.error || "Failed to unlike comment");
@@ -154,13 +153,13 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     }
   };
 
-   const onLikeClick = () => {
-     if (liked) {
-       unlikeComment(commentId);
-     } else {
-       likeComment(commentId);
-     }
-   };
+  const onLikeClick = () => {
+    if (liked) {
+      unlikeComment(commentId);
+    } else {
+      likeComment(commentId);
+    }
+  };
 
   const submitReplyForm = async e => {
     e.preventDefault();
@@ -219,7 +218,15 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
       <div>
         <div className="flex items-center gap-4">
           <span className="flex  items-center gap-2">
-            {loggedInUser ? <FaThumbsUp className="text-customPurple text-base cursor-pointer" /> : null}
+            {loggedInUser ? (
+              <Link onClick={onLikeClick}>
+                {liked ? (
+                  <FaThumbsDown className="text-customPurple text-lg" />
+                ) : (
+                  <FaThumbsUp className="text-customPurple text-lg" />
+                )}
+              </Link>
+            ) : null}
 
             <div className="text-sm ">{commentLikes.length} likes</div>
           </span>
