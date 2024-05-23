@@ -155,6 +155,59 @@ const ReplyComment = ({ replyCommment }) => {
     replyComment(replyComment._id, replyCommentBody);
   };
 
+
+  const likeReply = async replyCommentId => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/like/reply/${replyCommentId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Comment liked");
+        setLiked(true);
+      } else {
+        toast.error(data.error || "Failed to like comment");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to like comment");
+    }
+  };
+
+  const unlikeReply = async replyCommentId => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/unlike/reply/${replyCommentId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Comment unliked");
+        setLiked(false);
+      } else {
+        toast.error(data.error || "Failed to unlike comment");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to unlike comment");
+    }
+  };
+
+  const onLikeClick = () => {
+    if (liked) {
+      unlikeReply(replyCommment._id);
+    } else {
+      likeReply(replyCommment._id);
+    }
+  };
+
   return (
     <div className="my-2 ml-10">
       <div className="flex items-center justify-between">
