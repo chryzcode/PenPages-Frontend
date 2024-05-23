@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaThumbsUp, FaComment } from "react-icons/fa6";
+import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import ReplyComment from "./ReplyComment";
@@ -115,7 +115,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer $${loggedInUser.token}`,
+          Authorization: `Bearer ${loggedInUser.token}`,
         },
       });
       const data = await res.json();
@@ -137,7 +137,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${loggedInUser.token}`,
         },
       });
       const data = await res.json();
