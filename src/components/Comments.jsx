@@ -96,11 +96,11 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         if (res.ok) {
           setCommentReplies(data.replycomments);
         } else {
-          toast.error(data.error || "Failed to add reply");
+          toast.error(data.error || "Failed to get replies");
         }
       } catch (error) {
         console.log("Error:", error);
-        toast.error("Failed to add reply");
+        toast.error("Failed to get replies");
       } finally {
         setIsLoading(false);
       }
@@ -108,6 +108,12 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
 
     getCommentReplies(commentId);
     getCommentLikes(commentId);
+
+    // Restore liked state from localStorage
+    const likedComments = JSON.parse(localStorage.getItem("likedComments")) || [];
+    if (likedComments.includes(commentId)) {
+      setLiked(true);
+    }
   }, [commentId]);
 
   const likeComment = async commentId => {
@@ -124,6 +130,10 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         toast.success("Comment liked");
         setLiked(true);
         setCommentLikes(prevLikes => [...prevLikes, loggedInUser]); // Update the likes state
+        // Save liked state to localStorage
+        const likedComments = JSON.parse(localStorage.getItem("likedComments")) || [];
+        likedComments.push(commentId);
+        localStorage.setItem("likedComments", JSON.stringify(likedComments));
       } else {
         toast.error(data.error || "Failed to like comment");
       }
@@ -147,6 +157,10 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         toast.success("Comment unliked");
         setLiked(false);
         setCommentLikes(prevLikes => prevLikes.filter(like => like._id !== loggedInUser._id)); // Update the likes state
+        // Remove liked state from localStorage
+        const likedComments = JSON.parse(localStorage.getItem("likedComments")) || [];
+        const updatedLikedComments = likedComments.filter(id => id !== commentId);
+        localStorage.setItem("likedComments", JSON.stringify(updatedLikedComments));
       } else {
         toast.error(data.error || "Failed to unlike comment");
       }
