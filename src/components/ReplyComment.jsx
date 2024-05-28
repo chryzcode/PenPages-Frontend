@@ -104,11 +104,11 @@ const ReplyComment = ({ replyCommment }) => {
         if (res.ok) {
           setCommentReplies(data.replycomments);
         } else {
-          toast.error(data.error || "Failed to get reply likes");
+          toast.error(data.error || "Failed to get replies");
         }
       } catch (error) {
         console.log("Error:", error);
-        toast.error("Failed to get reply likes");
+        toast.error("Failed to get replies");
       } finally {
         setIsLoading(false);
       }
@@ -116,7 +116,13 @@ const ReplyComment = ({ replyCommment }) => {
 
     getCommentReplies(replyCommment._id);
     getCommentReplyLikes(replyCommment._id);
-  }, []);
+
+    // Restore liked state from localStorage
+    const likedReplies = JSON.parse(localStorage.getItem("likedReplies")) || [];
+    if (likedReplies.includes(replyCommment._id)) {
+      setLiked(true);
+    }
+  }, [replyCommment._id]);
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -140,6 +146,11 @@ const ReplyComment = ({ replyCommment }) => {
         toast.success("Reply added successfully");
         setReplyCommentBody(""); // Clear the input field
         setIsReplying(false); // Hide the reply form after successful reply
+        setCommentReplies(prevReplies => [...prevReplies, data.reply]); // Update the replies state
+        // Save comment replies to localStorage
+        const storedReplies = JSON.parse(localStorage.getItem("replies")) || {};
+        storedReplies[replyCommment._id] = [...(storedReplies[replyCommment._id] || []), data.reply];
+        localStorage.setItem("replies", JSON.stringify(storedReplies));
       } else {
         toast.error(data.error || "Failed to add reply");
       }
@@ -153,7 +164,7 @@ const ReplyComment = ({ replyCommment }) => {
 
   const submitReplyForm = async e => {
     e.preventDefault();
-    replyComment(replyComment._id, replyCommentBody);
+    replyComment(replyCommment._id, replyCommentBody);
   };
 
   const likeReply = async replyCommentId => {
@@ -169,6 +180,11 @@ const ReplyComment = ({ replyCommment }) => {
       if (res.ok) {
         toast.success("Reply liked");
         setLiked(true);
+        setCommentReplyLikes(prevLikes => [...prevLikes, loggedInUser]); // Update the likes state
+        // Save liked state to localStorage
+        const likedReplies = JSON.parse(localStorage.getItem("likedReplies")) || [];
+        likedReplies.push(replyCommentId);
+        localStorage.setItem("likedReplies", JSON.stringify(likedReplies));
       } else {
         toast.error(data.error || "Failed to like reply");
       }
@@ -191,6 +207,11 @@ const ReplyComment = ({ replyCommment }) => {
       if (res.ok) {
         toast.success("Reply unliked");
         setLiked(false);
+        setCommentReplyLikes(prevLikes => prevLikes.filter(like => like._id !== loggedInUser._id)); // Update the likes state
+        // Remove liked state from localStorage
+        const likedReplies = JSON.parse(localStorage.getItem("likedReplies")) || [];
+        const updatedLikedReplies = likedReplies.filter(id => id !== replyCommentId);
+        localStorage.setItem("likedReplies", JSON.stringify(updatedLikedReplies));
       } else {
         toast.error(data.error || "Failed to unlike reply");
       }
