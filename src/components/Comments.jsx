@@ -28,6 +28,30 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     setIsEditing(true);
   };
 
+  const deleteReplyComment = async replyCommentId => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.success || "Reply deleted successfully");
+
+        // Remove the deleted reply from the list of replies
+        setCommentReplies(prevReplies => prevReplies.filter(reply => reply._id !== replyCommentId));
+      } else {
+        toast.error(data.error || "Failed to delete reply");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to delete reply");
+    }
+  };
+
   const handleCancelClick = () => {
     setIsEditing(false);
     setEditedComment(comment.body);
@@ -268,8 +292,13 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
           </span>
         </div>
         <div>
-          {replies.map(reply => (
-            <ReplyComment key={reply._id} replyCommment={reply} onUpdateReply={handleUpdateReply} />
+          {commentReplies.map(reply => (
+            <ReplyComment
+              key={reply._id}
+              replyCommment={reply}
+              onUpdateReply={handleUpdateReply}
+              onDeleteReply={deleteReplyComment}
+            />
           ))}
         </div>
 

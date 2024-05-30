@@ -4,7 +4,7 @@ import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 
-const ReplyComment = ({ replyCommment, onUpdateReply }) => {
+const ReplyComment = ({ replyCommment, onUpdateReply, onDeleteReply }) => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const [isEditing, setIsEditing] = useState(false);
   const loggedInUser = JSON.parse(localStorage.getItem("userData"));
@@ -18,27 +18,6 @@ const ReplyComment = ({ replyCommment, onUpdateReply }) => {
 
   const handleEditClick = () => {
     setIsEditing(true);
-  };
-
-  const deleteReplyComment = async replyCommentId => {
-    try {
-      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${loggedInUser.token}`,
-        },
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(data.success || "Reply deleted successfully");
-      } else {
-        toast.error(data.error || "Failed to delete reply");
-      }
-    } catch (error) {
-      console.log("Error:", error);
-      toast.error("Failed to delete reply");
-    }
   };
 
   const updateComment = async (commentId, updatedBody) => {
@@ -65,7 +44,7 @@ const ReplyComment = ({ replyCommment, onUpdateReply }) => {
   };
 
   const handleDeleteClick = () => {
-    deleteReplyComment(replyCommment._id);
+    onDeleteReply(replyCommment._id);
   };
 
   const handleCancelClick = () => {
