@@ -4,7 +4,7 @@ import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 
-const ReplyComment = ({ replyCommment }) => {
+const ReplyComment = ({ replyCommment, onUpdateReply }) => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const [isEditing, setIsEditing] = useState(false);
   const loggedInUser = JSON.parse(localStorage.getItem("userData"));
@@ -54,6 +54,7 @@ const ReplyComment = ({ replyCommment }) => {
       const data = await res.json();
       if (res.ok) {
         toast.success("Reply updated successfully");
+        onUpdateReply(commentId, updatedBody);
       } else {
         toast.error(data.error || "Failed to update reply");
       }

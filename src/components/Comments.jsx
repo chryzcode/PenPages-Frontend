@@ -16,6 +16,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [commentReplies, setCommentReplies] = useState([]);
   const [commentLikes, setCommentLikes] = useState([]);
   const [liked, setLiked] = useState(false);
+  const [replies, setReplies] = useState([]);
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -41,10 +42,16 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     onDelete(commentId);
   };
 
-  const replyComment = async (replyCommentId, replyCommentBody) => {
+  const handleUpdateReply = (replyId, updatedBody) => {
+    setReplies(prevReplies =>
+      prevReplies.map(reply => (reply._id === replyId ? { ...reply, body: updatedBody } : reply))
+    );
+  };
+
+  const replyComment = async (commentId, replyCommentBody) => {
     try {
       setIsLoading(true);
-      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
+      const res = await fetch(`${API_BASE_URL}comment/reply/${commentId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,6 +65,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         setReplyCommentBody(""); // Clear the input field
         setIsReplying(false); // Hide the reply form after successful reply
         setCommentReplies(prevReplies => [...prevReplies, data.reply]); // Update the replies state
+        setReplies(prevReplies => [...prevReplies, data.reply]); // Update the replies state
       } else {
         toast.error(data.error || "Failed to add reply");
       }
@@ -95,6 +103,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         const data = await res.json();
         if (res.ok) {
           setCommentReplies(data.replycomments);
+          setReplies(data.replycomments); // Update the replies state
         } else {
           toast.error(data.error || "Failed to get replies");
         }
@@ -259,8 +268,8 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
           </span>
         </div>
         <div>
-          {commentReplies.map(reply => (
-            <ReplyComment key={reply._id} replyCommment={reply} />
+          {replies.map(reply => (
+            <ReplyComment key={reply._id} replyCommment={reply} onUpdateReply={handleUpdateReply} />
           ))}
         </div>
 
