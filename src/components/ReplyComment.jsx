@@ -11,7 +11,7 @@ const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyC
   const [isLoading, setIsLoading] = useState(false);
   const [commentReplyLikes, setCommentReplyLikes] = useState([]);
   const [isReplying, setIsReplying] = useState(false);
-  const [editedReply, setEditedReply] = useState(replyComment.body);
+  const [editedReply, setEditedReply] = useState(replyComment.body || "");
   const [replyCommentBody, setReplyCommentBody] = useState("");
   const [commentReplies, setCommentReplies] = useState([]);
   const [liked, setLiked] = useState(false);
@@ -177,20 +177,20 @@ const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyC
     }
   };
 
+  
+
   return (
     <div className="my-2 ml-10">
       <div className="flex items-center justify-between">
         <Link to={`/profile/${replyComment.user.username}`} className="flex items-center">
-          <img
-            className="w-9 mr-1"
-            src={replyComment.user.imageCloudinaryUrl}
-            alt={`${replyComment.user.firstName} ${replyComment.user.lastName}`}
-          />
+          {replyComment.user.imageCloudinaryUrl && (
+            <img className="w-9 mr-1" src={replyComment.user.imageCloudinaryUrl} />
+          )}
           <span className="text-sm font-semibold">
-            {`${replyComment.user.firstName} ${replyComment.user.lastName}`}
-            <p className="text-xs font-extralight text-left">
-              {formatDate(replyComment.updatedAt || replyComment.createdAt)}
-            </p>
+            {replyComment.user.firstName} {replyComment.user.lastName}
+            {replyComment.commentDate && (
+              <p className="text-xs font-extralight text-left">{formatDate(replyComment.commentDate)}</p>
+            )}
           </span>
         </Link>
         {loggedInUser && loggedInUser._id === replyComment.user._id ? (
