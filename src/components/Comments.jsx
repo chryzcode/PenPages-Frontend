@@ -16,7 +16,6 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [commentReplies, setCommentReplies] = useState([]);
   const [commentLikes, setCommentLikes] = useState([]);
   const [liked, setLiked] = useState(false);
-  const [replies, setReplies] = useState([]);
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -67,7 +66,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   };
 
   const handleUpdateReply = (replyId, updatedBody) => {
-    setReplies(prevReplies =>
+    setCommentReplies(prevReplies =>
       prevReplies.map(reply => (reply._id === replyId ? { ...reply, body: updatedBody } : reply))
     );
   };
@@ -88,8 +87,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         toast.success("Reply added successfully");
         setReplyCommentBody(""); // Clear the input field
         setIsReplying(false); // Hide the reply form after successful reply
-        setCommentReplies(prevReplies => [...prevReplies, data.reply]); // Update the replies state
-        setReplies(prevReplies => [...prevReplies, data.reply]); // Update the replies state
+        setCommentReplies(prevReplies => [...prevReplies, data.aComment]); // Update the replies state
       } else {
         toast.error(data.error || "Failed to add reply");
       }
@@ -127,7 +125,6 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         const data = await res.json();
         if (res.ok) {
           setCommentReplies(data.replycomments);
-          setReplies(data.replycomments); // Update the replies state
         } else {
           toast.error(data.error || "Failed to get replies");
         }
@@ -216,6 +213,38 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     replyComment(commentId, replyCommentBody);
   };
 
+  const createReplyComment = async (replyCommentId, replyCommentBody) => {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+        body: JSON.stringify({ body: replyCommentBody }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Reply added successfully");
+        setReplyCommentBody(""); // Clear the input field
+        setIsReplying(false); // Hide the reply form after successful reply
+        setCommentReplies(prevReplies => [...prevReplies, data.aComment]); // Update the replies state
+        // Save comment replies to localStorage
+        const storedReplies = JSON.parse(localStorage.getItem("replies")) || {};
+        storedReplies[replyComment._id] = [...(storedReplies[replyComment._id] || []), data.aComment];
+        localStorage.setItem("replies", JSON.stringify(storedReplies));
+      } else {
+        toast.error(data.error || "Failed to add reply");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to add reply");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="my-2">
       <div className="flex items-center justify-between">
@@ -292,14 +321,20 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
           </span>
         </div>
         <div>
-          {commentReplies.map(reply => (
-            <ReplyComment
-              key={reply._id}
-              replyCommment={reply}
-              onUpdateReply={handleUpdateReply}
-              onDeleteReply={deleteReplyComment}
-            />
-          ))}
+          {commentReplies.map(
+            reply =>
+              // Add a conditional check to ensure 'reply' is defined and has '_id' property
+              reply &&
+              reply._id && (
+                <ReplyComment
+                  key={reply._id}
+                  replyComment={reply}
+                  onUpdateReply={handleUpdateReply}
+                  onDeleteReply={deleteReplyComment}
+                  createReplyComment={createReplyComment}
+                />
+              )
+          )}
         </div>
 
         {isReplying && ( // Conditionally render the reply form
