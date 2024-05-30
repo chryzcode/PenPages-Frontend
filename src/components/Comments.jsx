@@ -8,7 +8,7 @@ import ReplyComment from "./ReplyComment";
 const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const [isEditing, setIsEditing] = useState(false);
-  const [editedComment, setEditedComment] = useState(comment.body);
+  const [editedComment, setEditedComment] = useState(comment.body || "");
   const loggedInUser = JSON.parse(localStorage.getItem("userData"));
   const [isLoading, setIsLoading] = useState(false);
   const [replyCommentBody, setReplyCommentBody] = useState("");
@@ -210,53 +210,21 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
 
   const submitReplyForm = async e => {
     e.preventDefault();
-    replyComment(commentId, replyCommentBody);
+    await replyComment(commentId, replyCommentBody);
   };
 
-  const createReplyComment = async (replyCommentId, replyCommentBody) => {
-    try {
-      setIsLoading(true);
-      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${loggedInUser.token}`,
-        },
-        body: JSON.stringify({ body: replyCommentBody }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast.success("Reply added successfully");
-        setReplyCommentBody(""); // Clear the input field
-        setIsReplying(false); // Hide the reply form after successful reply
-        setCommentReplies(prevReplies => [...prevReplies, data.aComment]); // Update the replies state
-        // Save comment replies to localStorage
-        const storedReplies = JSON.parse(localStorage.getItem("replies")) || {};
-        storedReplies[replyComment._id] = [...(storedReplies[replyComment._id] || []), data.aComment];
-        localStorage.setItem("replies", JSON.stringify(storedReplies));
-      } else {
-        toast.error(data.error || "Failed to add reply");
-      }
-    } catch (error) {
-      console.log("Error:", error);
-      toast.error("Failed to add reply");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+ 
 
   return (
     <div className="my-2">
       <div className="flex items-center justify-between">
         <Link to={`/profile/${comment.user.username}`} className="flex items-center">
-          <img
-            className="w-9 mr-1"
-            src={comment.user.imageCloudinaryUrl}
-            alt={`${comment.user.firstName} ${comment.user.lastName}`}
-          />
+          {comment.user.imageCloudinaryUrl && <img className="w-9 mr-1" src={comment.user.imageCloudinaryUrl} />}
           <span className="text-sm font-semibold">
-            {`${comment.user.firstName} ${comment.user.lastName}`}
-            <p className="text-xs font-extralight text-left">{formatDate(comment.updatedAt || comment.createdAt)}</p>
+            {comment.user.firstName} ${comment.user.lastName}
+            {comment.commentDate && (
+              <p className="text-xs font-extralight text-left">{formatDate(comment.commentDate)}</p>
+            )}
           </span>
         </Link>
         {loggedInUser && loggedInUser._id === comment.user._id ? (
@@ -266,7 +234,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
                 <span className="pr-2 cursor-pointer" onClick={handleEditClick}>
                   Edit
                 </span>
-                <span className="cursor-pointer" onClick={handleDeleteClick}>
+                <span className="pr-2 cursor-pointer" onClick={handleDeleteClick}>
                   Delete
                 </span>
               </>
@@ -275,9 +243,9 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         ) : null}
       </div>
       {isEditing ? (
-        <div>
+        <div className="my-2">
           <textarea
-            className="w-full border rounded p-2 my-2"
+            className="border rounded w-full py-2 px-3 mb-2"
             value={editedComment}
             onChange={e => setEditedComment(e.target.value)}
           />
@@ -296,7 +264,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
 
       <div>
         <div className="flex items-center gap-4">
-          <span className="flex  items-center gap-2">
+          <span className="flex items-center gap-2">
             {loggedInUser ? (
               <Link onClick={onLikeClick}>
                 {liked ? (
@@ -309,11 +277,11 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
 
             <div className="text-sm ">{commentLikes.length} likes</div>
           </span>
-          <span className="flex  items-center gap-2">
+          <span className="flex items-center gap-2">
             {loggedInUser ? (
               <FaComment
                 className="text-customPurple text-sm cursor-pointer"
-                onClick={() => setIsReplying(!isReplying)} // Toggle the reply form visibility
+                onClick={() => setIsReplying(!isReplying)}
               />
             ) : null}
 
@@ -323,7 +291,6 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         <div>
           {commentReplies.map(
             reply =>
-              // Add a conditional check to ensure 'reply' is defined and has '_id' property
               reply &&
               reply._id && (
                 <ReplyComment
@@ -331,13 +298,13 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
                   replyComment={reply}
                   onUpdateReply={handleUpdateReply}
                   onDeleteReply={deleteReplyComment}
-                  createReplyComment={createReplyComment}
+                  createReplyComment={replyComment}
                 />
               )
           )}
         </div>
 
-        {isReplying && ( // Conditionally render the reply form
+        {isReplying && (
           <div className="text-left">
             <div>
               <form onSubmit={submitReplyForm}>
