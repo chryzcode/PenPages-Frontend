@@ -4,41 +4,20 @@ import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 
-const ReplyComment = ({ replyCommment }) => {
+const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyComment }) => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const [isEditing, setIsEditing] = useState(false);
   const loggedInUser = JSON.parse(localStorage.getItem("userData"));
   const [isLoading, setIsLoading] = useState(false);
   const [commentReplyLikes, setCommentReplyLikes] = useState([]);
   const [isReplying, setIsReplying] = useState(false);
-  const [editedReply, setEditedReply] = useState(replyCommment.body);
+  const [editedReply, setEditedReply] = useState(replyComment.body);
   const [replyCommentBody, setReplyCommentBody] = useState("");
   const [commentReplies, setCommentReplies] = useState([]);
   const [liked, setLiked] = useState(false);
 
   const handleEditClick = () => {
     setIsEditing(true);
-  };
-
-  const deleteReplyComment = async replyCommentId => {
-    try {
-      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${loggedInUser.token}`,
-        },
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(data.success || "Reply deleted successfully");
-      } else {
-        toast.error(data.error || "Failed to delete reply");
-      }
-    } catch (error) {
-      console.log("Error:", error);
-      toast.error("Failed to delete reply");
-    }
   };
 
   const updateComment = async (commentId, updatedBody) => {
@@ -54,6 +33,7 @@ const ReplyComment = ({ replyCommment }) => {
       const data = await res.json();
       if (res.ok) {
         toast.success("Reply updated successfully");
+        onUpdateReply(commentId, updatedBody);
       } else {
         toast.error(data.error || "Failed to update reply");
       }
@@ -64,16 +44,16 @@ const ReplyComment = ({ replyCommment }) => {
   };
 
   const handleDeleteClick = () => {
-    deleteReplyComment(replyCommment._id);
+    onDeleteReply(replyComment._id);
   };
 
   const handleCancelClick = () => {
     setIsEditing(false);
-    setEditedReply(replyCommment.body);
+    setEditedReply(replyComment.body);
   };
 
   const handleSaveClick = () => {
-    updateComment(replyCommment._id, editedReply);
+    updateComment(replyComment._id, editedReply);
     setIsEditing(false);
   };
 
@@ -114,15 +94,15 @@ const ReplyComment = ({ replyCommment }) => {
       }
     };
 
-    getCommentReplies(replyCommment._id);
-    getCommentReplyLikes(replyCommment._id);
+    getCommentReplies(replyComment._id);
+    getCommentReplyLikes(replyComment._id);
 
     // Restore liked state from localStorage
     const likedReplies = JSON.parse(localStorage.getItem("likedReplies")) || [];
-    if (likedReplies.includes(replyCommment._id)) {
+    if (likedReplies.includes(replyComment._id)) {
       setLiked(true);
     }
-  }, [replyCommment._id]);
+  }, [replyComment._id]);
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -130,41 +110,9 @@ const ReplyComment = ({ replyCommment }) => {
     return date.toLocaleDateString("en-US", options);
   };
 
-  const replyComment = async (replyCommentId, replyCommentBody) => {
-    try {
-      setIsLoading(true);
-      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${loggedInUser.token}`,
-        },
-        body: JSON.stringify({ body: replyCommentBody }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast.success("Reply added successfully");
-        setReplyCommentBody(""); // Clear the input field
-        setIsReplying(false); // Hide the reply form after successful reply
-        setCommentReplies(prevReplies => [...prevReplies, data.reply]); // Update the replies state
-        // Save comment replies to localStorage
-        const storedReplies = JSON.parse(localStorage.getItem("replies")) || {};
-        storedReplies[replyCommment._id] = [...(storedReplies[replyCommment._id] || []), data.reply];
-        localStorage.setItem("replies", JSON.stringify(storedReplies));
-      } else {
-        toast.error(data.error || "Failed to add reply");
-      }
-    } catch (error) {
-      console.log("Error:", error);
-      toast.error("Failed to add reply");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const submitReplyForm = async e => {
     e.preventDefault();
-    replyComment(replyCommment._id, replyCommentBody);
+    createReplyComment(replyComment._id, replyCommentBody);
   };
 
   const likeReply = async replyCommentId => {
@@ -223,29 +171,29 @@ const ReplyComment = ({ replyCommment }) => {
 
   const onLikeClick = () => {
     if (liked) {
-      unlikeReply(replyCommment._id);
+      unlikeReply(replyComment._id);
     } else {
-      likeReply(replyCommment._id);
+      likeReply(replyComment._id);
     }
   };
 
   return (
     <div className="my-2 ml-10">
       <div className="flex items-center justify-between">
-        <Link to={`/profile/${replyCommment.user.username}`} className="flex items-center">
+        <Link to={`/profile/${replyComment.user.username}`} className="flex items-center">
           <img
             className="w-9 mr-1"
-            src={replyCommment.user.imageCloudinaryUrl}
-            alt={`${replyCommment.user.firstName} ${replyCommment.user.lastName}`}
+            src={replyComment.user.imageCloudinaryUrl}
+            alt={`${replyComment.user.firstName} ${replyComment.user.lastName}`}
           />
           <span className="text-sm font-semibold">
-            {`${replyCommment.user.firstName} ${replyCommment.user.lastName}`}
+            {`${replyComment.user.firstName} ${replyComment.user.lastName}`}
             <p className="text-xs font-extralight text-left">
-              {formatDate(replyCommment.updatedAt || replyCommment.createdAt)}
+              {formatDate(replyComment.updatedAt || replyComment.createdAt)}
             </p>
           </span>
         </Link>
-        {loggedInUser && loggedInUser._id === replyCommment.user._id ? (
+        {loggedInUser && loggedInUser._id === replyComment.user._id ? (
           <div className="text-sm">
             {!isEditing ? (
               <>
@@ -277,7 +225,7 @@ const ReplyComment = ({ replyCommment }) => {
           </div>
         </div>
       ) : (
-        <p className="text-left text-sm py-2">{replyCommment.body}</p>
+        <p className="text-left text-sm py-2">{replyComment.body}</p>
       )}
 
       <div>

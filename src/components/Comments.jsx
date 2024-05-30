@@ -27,6 +27,30 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     setIsEditing(true);
   };
 
+  const deleteReplyComment = async replyCommentId => {
+    try {
+      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.success || "Reply deleted successfully");
+
+        // Remove the deleted reply from the list of replies
+        setCommentReplies(prevReplies => prevReplies.filter(reply => reply._id !== replyCommentId));
+      } else {
+        toast.error(data.error || "Failed to delete reply");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to delete reply");
+    }
+  };
+
   const handleCancelClick = () => {
     setIsEditing(false);
     setEditedComment(comment.body);
@@ -41,10 +65,16 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     onDelete(commentId);
   };
 
-  const replyComment = async (replyCommentId, replyCommentBody) => {
+  const handleUpdateReply = (replyId, updatedBody) => {
+    setCommentReplies(prevReplies =>
+      prevReplies.map(reply => (reply._id === replyId ? { ...reply, body: updatedBody } : reply))
+    );
+  };
+
+  const replyComment = async (commentId, replyCommentBody) => {
     try {
       setIsLoading(true);
-      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
+      const res = await fetch(`${API_BASE_URL}comment/reply/${commentId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +87,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         toast.success("Reply added successfully");
         setReplyCommentBody(""); // Clear the input field
         setIsReplying(false); // Hide the reply form after successful reply
-        setCommentReplies(prevReplies => [...prevReplies, data.reply]); // Update the replies state
+        setCommentReplies(prevReplies => [...prevReplies, data.aComment]); // Update the replies state
       } else {
         toast.error(data.error || "Failed to add reply");
       }
@@ -183,6 +213,38 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     replyComment(commentId, replyCommentBody);
   };
 
+  const createReplyComment = async (replyCommentId, replyCommentBody) => {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+        body: JSON.stringify({ body: replyCommentBody }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Reply added successfully");
+        setReplyCommentBody(""); // Clear the input field
+        setIsReplying(false); // Hide the reply form after successful reply
+        setCommentReplies(prevReplies => [...prevReplies, data.aComment]); // Update the replies state
+        // Save comment replies to localStorage
+        const storedReplies = JSON.parse(localStorage.getItem("replies")) || {};
+        storedReplies[replyComment._id] = [...(storedReplies[replyComment._id] || []), data.aComment];
+        localStorage.setItem("replies", JSON.stringify(storedReplies));
+      } else {
+        toast.error(data.error || "Failed to add reply");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to add reply");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="my-2">
       <div className="flex items-center justify-between">
@@ -259,9 +321,20 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
           </span>
         </div>
         <div>
-          {commentReplies.map(reply => (
-            <ReplyComment key={reply._id} replyCommment={reply} />
-          ))}
+          {commentReplies.map(
+            reply =>
+              // Add a conditional check to ensure 'reply' is defined and has '_id' property
+              reply &&
+              reply._id && (
+                <ReplyComment
+                  key={reply._id}
+                  replyComment={reply}
+                  onUpdateReply={handleUpdateReply}
+                  onDeleteReply={deleteReplyComment}
+                  createReplyComment={createReplyComment}
+                />
+              )
+          )}
         </div>
 
         {isReplying && ( // Conditionally render the reply form
