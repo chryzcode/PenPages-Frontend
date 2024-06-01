@@ -16,6 +16,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [commentReplies, setCommentReplies] = useState([]);
   const [commentLikes, setCommentLikes] = useState([]);
   const [liked, setLiked] = useState(false);
+  const [showReplies, setShowReplies] = useState(false);
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -213,7 +214,9 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     await replyComment(commentId, replyCommentBody);
   };
 
- 
+  const toggleRepliesVisibility = () => {
+    setShowReplies(!showReplies);
+  };
 
   return (
     <div className="my-2">
@@ -285,25 +288,28 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
               />
             ) : null}
 
-            <div className="text-sm ">{commentReplies.length} reply</div>
+            <Link onClick={toggleRepliesVisibility} className="text-sm ">
+              {commentReplies.length} reply
+            </Link>
           </span>
         </div>
-        <div>
-          {commentReplies.map(
-            reply =>
-              reply &&
-              reply._id && (
-                <ReplyComment
-                  key={reply._id}
-                  replyComment={reply}
-                  onUpdateReply={handleUpdateReply}
-                  onDeleteReply={deleteReplyComment}
-                  createReplyComment={replyComment}
-                />
-              )
-          )}
-        </div>
-
+        {showReplies && (
+          <div>
+            {commentReplies.map(
+              reply =>
+                reply &&
+                reply._id && (
+                  <ReplyComment
+                    key={reply._id}
+                    replyComment={reply}
+                    onUpdateReply={handleUpdateReply}
+                    onDeleteReply={deleteReplyComment}
+                    createReplyComment={replyComment}
+                  />
+                )
+            )}
+          </div>
+        )}
         {isReplying && (
           <div className="text-left">
             <div>
