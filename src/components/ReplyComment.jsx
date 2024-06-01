@@ -10,10 +10,7 @@ const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyC
   const loggedInUser = JSON.parse(localStorage.getItem("userData"));
   const [isLoading, setIsLoading] = useState(false);
   const [commentReplyLikes, setCommentReplyLikes] = useState([]);
-  const [isReplying, setIsReplying] = useState(false);
   const [editedReply, setEditedReply] = useState(replyComment.body || "");
-  const [replyCommentBody, setReplyCommentBody] = useState("");
-  const [commentReplies, setCommentReplies] = useState([]);
   const [liked, setLiked] = useState(false);
 
   const handleEditClick = () => {
@@ -76,25 +73,6 @@ const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyC
       }
     };
 
-    const getCommentReplies = async replyCommentId => {
-      try {
-        setIsLoading(true);
-        const res = await fetch(`${API_BASE_URL}comment/reply/${replyCommentId}`);
-        const data = await res.json();
-        if (res.ok) {
-          setCommentReplies(data.replycomments);
-        } else {
-          toast.error(data.error || "Failed to get replies");
-        }
-      } catch (error) {
-        console.log("Error:", error);
-        toast.error("Failed to get replies");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    getCommentReplies(replyComment._id);
     getCommentReplyLikes(replyComment._id);
 
     // Restore liked state from localStorage
@@ -108,11 +86,6 @@ const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyC
     const options = { year: "numeric", month: "short", day: "2-digit" };
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", options);
-  };
-
-  const submitReplyForm = async e => {
-    e.preventDefault();
-    createReplyComment(replyComment._id, replyCommentBody);
   };
 
   const likeReply = async replyCommentId => {
@@ -177,10 +150,8 @@ const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyC
     }
   };
 
-  
-
   return (
-    <div className="my-2 ml-10">
+    <div className="my-7 ml-10">
       <div className="flex items-center justify-between">
         <Link to={`/profile/${replyComment.user.username}`} className="flex items-center">
           {replyComment.user.imageCloudinaryUrl && (
@@ -228,7 +199,7 @@ const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyC
         <p className="text-left text-sm py-2">{replyComment.body}</p>
       )}
 
-      <div>
+      <div className="my-2">
         <div className="flex items-center gap-4">
           <span className="flex  items-center gap-2">
             {loggedInUser ? (
@@ -240,53 +211,9 @@ const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyC
                 )}
               </Link>
             ) : null}
-
             <div className="text-sm ">{commentReplyLikes.length} likes</div>
           </span>
-          <span className="flex  items-center gap-2">
-            {loggedInUser ? (
-              <FaComment
-                className="text-customPurple text-sm cursor-pointer"
-                onClick={() => setIsReplying(!isReplying)} // Toggle the reply form visibility
-              />
-            ) : null}
-
-            <div className="text-sm ">{commentReplies.length} reply</div>
-          </span>
         </div>
-
-        {isReplying && ( // Conditionally render the reply form
-          <div className="text-left">
-            <div>
-              <form onSubmit={submitReplyForm}>
-                <div className="my-3">
-                  <label htmlFor="body" className="block mb-2 text-left text-sm">
-                    Reply Comment
-                  </label>
-                  <input
-                    type="text"
-                    id="body"
-                    name="body"
-                    value={replyCommentBody}
-                    onChange={e => setReplyCommentBody(e.target.value)}
-                    className="border rounded w-full py-2 px-3 mb-2"
-                    placeholder="Reply comment"
-                    required
-                  />
-                </div>
-
-                <div className="ml-auto w-32 my-2 text-right">
-                  <button
-                    className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 text-sm rounded-full focus:outline-none focus:shadow-outline w-auto"
-                    type="submit">
-                    Reply
-                    {isLoading && <Spinner size={10} />}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
   const [commentReplies, setCommentReplies] = useState([]);
   const [commentLikes, setCommentLikes] = useState([]);
   const [liked, setLiked] = useState(false);
+  const [showReplies, setShowReplies] = useState(false);
 
   const formatDate = dateString => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -213,7 +214,9 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
     await replyComment(commentId, replyCommentBody);
   };
 
- 
+  const toggleRepliesVisibility = () => {
+    setShowReplies(!showReplies);
+  };
 
   return (
     <div className="my-2">
@@ -221,7 +224,7 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
         <Link to={`/profile/${comment.user.username}`} className="flex items-center">
           {comment.user.imageCloudinaryUrl && <img className="w-9 mr-1" src={comment.user.imageCloudinaryUrl} />}
           <span className="text-sm font-semibold">
-            {comment.user.firstName} ${comment.user.lastName}
+            {comment.user.firstName} {comment.user.lastName}
             {comment.commentDate && (
               <p className="text-xs font-extralight text-left">{formatDate(comment.commentDate)}</p>
             )}
@@ -242,27 +245,29 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
           </div>
         ) : null}
       </div>
-      {isEditing ? (
-        <div className="my-2">
-          <textarea
-            className="border rounded w-full py-2 px-3 mb-2"
-            value={editedComment}
-            onChange={e => setEditedComment(e.target.value)}
-          />
-          <div className="text-right text-sm">
-            <span className="pr-2 cursor-pointer" onClick={handleSaveClick}>
-              Save
-            </span>
-            <span className="cursor-pointer" onClick={handleCancelClick}>
-              Cancel
-            </span>
+      <div className="my-2">
+        {isEditing ? (
+          <div>
+            <textarea
+              className="border rounded w-full py-2 px-3 mb-2"
+              value={editedComment}
+              onChange={e => setEditedComment(e.target.value)}
+            />
+            <div className="text-right text-sm">
+              <span className="pr-2 cursor-pointer" onClick={handleSaveClick}>
+                Save
+              </span>
+              <span className="cursor-pointer" onClick={handleCancelClick}>
+                Cancel
+              </span>
+            </div>
           </div>
-        </div>
-      ) : (
-        <p className="text-left text-sm py-2">{comment.body}</p>
-      )}
+        ) : (
+          <p className="text-left text-sm py-2">{comment.body}</p>
+        )}
+      </div>
 
-      <div>
+      <div className="my-3">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-2">
             {loggedInUser ? (
@@ -285,25 +290,28 @@ const Comments = ({ commentId, comment, onUpdate, onDelete }) => {
               />
             ) : null}
 
-            <div className="text-sm ">{commentReplies.length} reply</div>
+            <Link onClick={toggleRepliesVisibility} className="text-sm ">
+              {commentReplies.length} reply
+            </Link>
           </span>
         </div>
-        <div>
-          {commentReplies.map(
-            reply =>
-              reply &&
-              reply._id && (
-                <ReplyComment
-                  key={reply._id}
-                  replyComment={reply}
-                  onUpdateReply={handleUpdateReply}
-                  onDeleteReply={deleteReplyComment}
-                  createReplyComment={replyComment}
-                />
-              )
-          )}
-        </div>
-
+        {showReplies && (
+          <div>
+            {commentReplies.map(
+              reply =>
+                reply &&
+                reply._id && (
+                  <ReplyComment
+                    key={reply._id}
+                    replyComment={reply}
+                    onUpdateReply={handleUpdateReply}
+                    onDeleteReply={deleteReplyComment}
+                    createReplyComment={replyComment}
+                  />
+                )
+            )}
+          </div>
+        )}
         {isReplying && (
           <div className="text-left">
             <div>
