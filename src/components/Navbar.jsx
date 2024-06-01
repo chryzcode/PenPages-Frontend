@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { IoMdArrowDropdown } from "react-icons/io";
+import { IoMdArrowDropdown, IoIosNotifications } from "react-icons/io";
 
 const Navbar = ({ isAuthenticated, userData }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,13 +17,17 @@ const Navbar = ({ isAuthenticated, userData }) => {
         <NavLink to="/posts" className=" hover:text-customPurple">
           Feeds
         </NavLink>
-    
+
         <NavLink className=" hover:text-customPurple">Explore</NavLink>
       </span>
 
       <span>
         {isAuthenticated ? (
           <>
+            <NavLink>
+              <IoIosNotifications className="inline mr-2 text-xl text-customPurple" />
+            </NavLink>
+
             <span onClick={toggleDropdown} className="cursor-pointer relative">
               {userData.firstName}
               <IoMdArrowDropdown className="inline-flex" />
