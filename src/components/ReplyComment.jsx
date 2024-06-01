@@ -151,7 +151,7 @@ const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyC
   };
 
   return (
-    <div className="my-2 ml-10">
+    <div className="my-7 ml-10">
       <div className="flex items-center justify-between">
         <Link to={`/profile/${replyComment.user.username}`} className="flex items-center">
           {replyComment.user.imageCloudinaryUrl && (
@@ -199,7 +199,7 @@ const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyC
         <p className="text-left text-sm py-2">{replyComment.body}</p>
       )}
 
-      <div>
+      <div className="my-2">
         <div className="flex items-center gap-4">
           <span className="flex  items-center gap-2">
             {loggedInUser ? (
