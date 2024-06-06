@@ -25,20 +25,30 @@ const Notifications = () => {
         }
       } catch (error) {
         console.log("Error:", error);
-        toast.error("Failed to get get notifications");
+        toast.error("Failed to get notifications");
       } finally {
         setIsLoading(false);
       }
     };
 
-    getAllNotifications()
-  }, []);
+    getAllNotifications();
+  }, [loggedInUser.token]);
 
-
-  return <div className="absolute">
- 
-
-  </div>;
+  return (
+    <div className="bg-white p-4 rounded-lg shadow-lg">
+      {isLoading ? (
+        <Spinner size={100} color={"#6c63ff"} display={"block"} />
+      ) : (
+        <div>
+          {allNotifications.map(notification => (
+            <div key={notification._id} className="p-2 border-b border-gray-200">
+              {notification.info}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Notifications;
