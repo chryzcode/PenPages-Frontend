@@ -84,7 +84,18 @@ const Notifications = () => {
                   </span>
                 </Link>
               </div>
-              <Link to={`/${notification.url}`} className="text-sm">{notification.info}</Link>
+
+              <Link
+                to={
+                  notification.type === "post"
+                    ? `/post/${notification.info_id}`
+                    : notification.type === "profile"
+                    ? `/profile/${notification.info_id}`
+                    : "#"
+                }
+                className="text-sm">
+                {notification.info}
+              </Link>
             </div>
           ))}
         </div>
