@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { IoMdArrowDropdown, IoIosNotifications } from "react-icons/io";
+import Notifications from "./Notifications";
 
 const Navbar = ({ isAuthenticated, userData }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
+  };
+
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
   };
 
   return (
@@ -14,26 +20,36 @@ const Navbar = ({ isAuthenticated, userData }) => {
       <NavLink to="/">PenPages</NavLink>
 
       <span className="hidden sm:block space-x-4">
-        <NavLink to="/posts" className=" hover:text-customPurple">
+        <NavLink to="/posts" className="hover:text-customPurple">
           Feeds
         </NavLink>
 
-        <NavLink className=" hover:text-customPurple">Explore</NavLink>
+        <NavLink to="/explore" className="hover:text-customPurple">
+          Explore
+        </NavLink>
       </span>
 
-      <span>
+      <span className="flex">
         {isAuthenticated ? (
           <>
-            <NavLink>
-              <IoIosNotifications className="inline mr-2 text-xl text-customPurple" />
-            </NavLink>
+            <div className="relative">
+              <IoIosNotifications
+                className="inline mr-2 text-xl text-customPurple cursor-pointer"
+                onClick={toggleNotifications}
+              />
+              {showNotifications && (
+                <div className="absolute right-0 top-8 w-72 bg-white shadow-lg rounded-lg z-10">
+                  <Notifications />
+                </div>
+              )}
+            </div>
 
             <span onClick={toggleDropdown} className="cursor-pointer relative">
               {userData.firstName}
               <IoMdArrowDropdown className="inline-flex" />
             </span>
 
-            <ul className={`absolute ${isOpen ? "block" : "hidden"} py-2 mt-2 rounded-lg p-5`}>
+            <ul className={`absolute ${isOpen ? "block" : "hidden"} py-2 mt-2 rounded-lg p-5 bg-white shadow-lg`}>
               <li className="hover:text-customPurple">
                 <a href={`/profile/${userData.username}`}>Profile</a>
               </li>
