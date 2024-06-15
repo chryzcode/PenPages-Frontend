@@ -176,7 +176,7 @@ const ProfilePage = () => {
                   </h1>
                   <div className="my-1">{user.bio}</div>
                   <p className="text-sm mt-4">
-                    <Link to={`/${username}/followers`} className="pr-3">
+                    <Link to={`/${username}/followings`} className="pr-3">
                       <span className="font-semibold"> {followersCount}</span>{" "}
                       {followersCount > 1 ? "followers" : "follower"}
                     </Link>
