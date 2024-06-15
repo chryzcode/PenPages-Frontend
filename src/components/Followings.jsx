@@ -39,7 +39,7 @@ const Followings = ({ userId }) => {
         </h2>
       ) : (
         <div className="container mx-auto grid grid-cols-1 gap-6">
-          <p className="text-base"> Following {followings ? `(${followings.length})` : 0}</p>
+          <p className="text-base"> Following {followings ? `(${followings.length})` : `(0)`}</p>
 
           {followings &&
             followings.map(follower => (
