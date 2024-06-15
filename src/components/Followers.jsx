@@ -39,7 +39,9 @@ const Followers = ({ userId }) => {
         </h2>
       ) : (
         <div className="container mx-auto grid grid-cols-1 gap-6">
-          <p className="text-base">Followers ({followers.length})</p>
+          <p className="text-base">
+            Followers {followers ? `(${followers.length})` : `(0)`}
+          </p>
 
           {followers.map(follower => (
             <Link to={`/profile/${follower.username}`} className="flex py-4 px-4 bg-gray-200 rounded-lg text-left">
@@ -48,8 +50,10 @@ const Followers = ({ userId }) => {
                 <p className="text-sm font-semibold">
                   {" "}
                   {follower.firstName} {follower.lastName}
-                </p >
-                <p className="text-xs py-1">{follower.bio && follower.bio.length > 20 ? `${follower.bio.substring(0, 20)}...` : follower.bio}</p>
+                </p>
+                <p className="text-xs py-1">
+                  {follower.bio && follower.bio.length > 20 ? `${follower.bio.substring(0, 20)}...` : follower.bio}
+                </p>
               </div>
             </Link>
           ))}
