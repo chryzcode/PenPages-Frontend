@@ -16,50 +16,61 @@ const Navbar = ({ isAuthenticated, userData }) => {
   };
 
   return (
-    <nav className="main-nav">
-      <NavLink to="/">PenPages</NavLink>
+    <nav className="main-nav flex justify-between items-center p-4 bg-white shadow-md">
+      <NavLink to="/" className="text-xl font-bold text-customPurple">
+        PenPages
+      </NavLink>
 
-      <span className="hidden sm:block space-x-4">
+      <div className="hidden sm:flex space-x-4">
         <NavLink to="/posts" className="hover:text-customPurple">
           Feeds
         </NavLink>
-
         <NavLink to="/explore" className="hover:text-customPurple">
           Explore
         </NavLink>
-      </span>
+      </div>
 
-      <span className="flex">
+      <div className="flex items-center space-x-4">
         {isAuthenticated ? (
           <>
             <div className="relative">
               <IoIosNotifications
-                className="inline mr-2 text-xl text-customPurple cursor-pointer"
+                className="inline mr-2 text-2xl text-customPurple cursor-pointer"
                 onClick={toggleNotifications}
               />
               {showNotifications && (
-                <div className="absolute right-0 top-8 w-72 bg-white shadow-lg rounded-lg z-10">
+                <div className="absolute right-0 top-8 w-80 bg-white shadow-lg rounded-lg z-10 p-4">
                   <Notifications />
                 </div>
               )}
             </div>
 
-            <span onClick={toggleDropdown} className="cursor-pointer relative">
-              {userData.firstName}
-              <IoMdArrowDropdown className="inline-flex" />
-            </span>
+            <div className="relative">
+              <span onClick={toggleDropdown} className="cursor-pointer flex items-center space-x-2">
+                <span className="text-sm font-medium">{userData.firstName}</span>
+                <IoMdArrowDropdown className="text-xl" />
+              </span>
 
-            <ul className={`absolute ${isOpen ? "block" : "hidden"} py-2 mt-2 rounded-lg p-5 bg-white shadow-lg`}>
-              <li className="hover:text-customPurple">
-                <a href={`/profile/${userData.username}`}>Profile</a>
-              </li>
-              <li className="hover:text-customPurple">
-                <a href="/settings">Settings</a>
-              </li>
-              <li className="hover:text-customPurple">
-                <a href="/sign-out">Logout</a>
-              </li>
-            </ul>
+              {isOpen && (
+                <ul className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 z-10">
+                  <li className="hover:bg-gray-100 px-4 py-2">
+                    <NavLink to={`/profile/${userData.username}`} className="block text-sm">
+                      Profile
+                    </NavLink>
+                  </li>
+                  <li className="hover:bg-gray-100 px-4 py-2">
+                    <NavLink to="/settings" className="block text-sm">
+                      Settings
+                    </NavLink>
+                  </li>
+                  <li className="hover:bg-gray-100 px-4 py-2">
+                    <NavLink to="/sign-out" className="block text-sm">
+                      Logout
+                    </NavLink>
+                  </li>
+                </ul>
+              )}
+            </div>
           </>
         ) : (
           <>
@@ -74,7 +85,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
             </NavLink>
           </>
         )}
-      </span>
+      </div>
     </nav>
   );
 };

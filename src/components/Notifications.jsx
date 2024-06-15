@@ -59,45 +59,50 @@ const Notifications = () => {
 
     getAllNotifications();
   }, [loggedInUser.token]);
+
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg">
+    <div >
       {isLoading ? (
         <Spinner size={100} color={"#6c63ff"} display={"block"} />
       ) : (
         <div>
-          {allNotifications.map(notification => (
-            <div key={notification._id} className="p-3 border-b border-gray-200">
-              <div>
-                <Link to={`/profile/${notification.fromUser.username}`} className="flex items-center pb-3">
-                  {notification.fromUser.imageCloudinaryUrl && (
-                    <img className="w-8 mr-1" src={notification.fromUser.imageCloudinaryUrl} />
-                  )}
-                  <span className="text-xs font-semibold">
-                    {notification.fromUser.firstName} {notification.fromUser.lastName}
-                    <span className="text-xs">
-                      {notification.createdAt && (
-                        <p className="text-xs font-extralight text-left">
-                          {formatRelativeDate(notification.createdAt)}
-                        </p>
-                      )}
+          {allNotifications.length > 0 ? (
+            allNotifications.map(notification => (
+              <div key={notification._id} className="p-3 border-b border-gray-200">
+                <div>
+                  <Link to={`/profile/${notification.fromUser.username}`} className="flex items-center pb-3">
+                    {notification.fromUser.imageCloudinaryUrl && (
+                      <img className="w-8 mr-1" src={notification.fromUser.imageCloudinaryUrl} alt="User" />
+                    )}
+                    <span className="text-xs font-semibold">
+                      {notification.fromUser.firstName} {notification.fromUser.lastName}
+                      <span className="text-xs">
+                        {notification.createdAt && (
+                          <p className="text-xs font-extralight text-left">
+                            {formatRelativeDate(notification.createdAt)}
+                          </p>
+                        )}
+                      </span>
                     </span>
-                  </span>
+                  </Link>
+                </div>
+
+                <Link
+                  to={
+                    notification.type === "post"
+                      ? `/post/${notification.info_id}`
+                      : notification.type === "profile"
+                      ? `/profile/${notification.info_id}`
+                      : "#"
+                  }
+                  className="text-sm">
+                  {notification.info}
                 </Link>
               </div>
-
-              <Link
-                to={
-                  notification.type === "post"
-                    ? `/post/${notification.info_id}`
-                    : notification.type === "profile"
-                    ? `/profile/${notification.info_id}`
-                    : "#"
-                }
-                className="text-sm">
-                {notification.info}
-              </Link>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div className="text-center text-gray-500">No notifications</div>
+          )}
         </div>
       )}
     </div>
