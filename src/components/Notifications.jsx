@@ -9,29 +9,10 @@ const Notifications = () => {
   const [isLoading, setIsLoading] = useState(false);
   const loggedInUser = JSON.parse(localStorage.getItem("userData"));
 
-  const formatRelativeDate = dateString => {
+  const formatDate = dateString => {
+    const options = { year: "numeric", month: "short", day: "2-digit" };
     const date = new Date(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now - date) / 1000);
-
-    const intervals = [
-      { label: "year", seconds: 31536000 },
-      { label: "month", seconds: 2592000 },
-      { label: "week", seconds: 604800 },
-      { label: "day", seconds: 86400 },
-      { label: "hour", seconds: 3600 },
-      { label: "minute", seconds: 60 },
-      { label: "second", seconds: 1 },
-    ];
-
-    for (const interval of intervals) {
-      const intervalValue = Math.floor(diffInSeconds / interval.seconds);
-      if (intervalValue >= 1) {
-        return `${intervalValue} ${interval.label}${intervalValue !== 1 ? "s" : ""} ago`;
-      }
-    }
-
-    return "just now";
+    return date.toLocaleDateString("en-US", options);
   };
 
   useEffect(() => {
@@ -61,29 +42,19 @@ const Notifications = () => {
   }, [loggedInUser.token]);
 
   return (
-    <div >
+    <div>
       {isLoading ? (
         <Spinner size={100} color={"#6c63ff"} display={"block"} />
       ) : (
         <div>
           {allNotifications.length > 0 ? (
             allNotifications.map(notification => (
-              <div key={notification._id} className="p-3 border-b border-gray-200">
+              <div key={notification._id}>
                 <div>
-                  <Link to={`/profile/${notification.fromUser.username}`} className="flex items-center pb-3">
+                  <Link to={`/profile/${notification.fromUser.username}`} className="flex items-center pb-1">
                     {notification.fromUser.imageCloudinaryUrl && (
-                      <img className="w-8 mr-1" src={notification.fromUser.imageCloudinaryUrl} alt="User" />
+                      <img className="w-7 mr-1" src={notification.fromUser.imageCloudinaryUrl} alt="User" />
                     )}
-                    <span className="text-xs font-semibold">
-                      {notification.fromUser.firstName} {notification.fromUser.lastName}
-                      <span className="text-xs">
-                        {notification.createdAt && (
-                          <p className="text-xs font-extralight text-left">
-                            {formatRelativeDate(notification.createdAt)}
-                          </p>
-                        )}
-                      </span>
-                    </span>
                   </Link>
                 </div>
 
@@ -96,7 +67,13 @@ const Notifications = () => {
                       : "#"
                   }
                   className="text-sm">
-                  {notification.info}
+                  <div className="py-2 text-base">{notification.info}</div>
+
+                  <span className="text-xs">
+                    {notification.createdAt && (
+                      <p className="text-xs font-extralight text-left">{formatDate(notification.createdAt)}</p>
+                    )}
+                  </span>
                 </Link>
               </div>
             ))
