@@ -92,6 +92,8 @@ const EditPostPage = () => {
     } catch (error) {
       console.log("Error updating post:", error);
       toast.error("Failed to update post");
+    } finally {
+      setIsLoading(false);
     }
   };
 
