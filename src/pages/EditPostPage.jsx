@@ -16,14 +16,8 @@ const EditPostPage = () => {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
   const [body, setBody] = useState("");
-  const [tag, setTag] = useState([]);
+  const [tags, setTags] = useState([]);
   const [type, setType] = useState("");
-
-  // Function to handle file input change
-  const handleImageChange = e => {
-    const selectedImage = e.target.value; // Get the selected image file
-    setImage(selectedImage); // Set the selected image file to state
-  };
 
   useEffect(() => {
     const getTags = async () => {
@@ -32,7 +26,7 @@ const EditPostPage = () => {
         const data = await res.json();
         setAllTags(data["tags"]);
       } catch (error) {
-        console.log("Errorr....", error);
+        console.log("Error....", error);
         toast.error("Failed to get data");
       }
     };
@@ -50,7 +44,7 @@ const EditPostPage = () => {
           setImage(image);
           setBody(body);
           setType(type);
-          setTag(tag.map(tag => tag.name));
+          setTags(tag.map(tag => tag._id));
           setPost(data.post);
         }
       } catch (error) {
@@ -61,42 +55,44 @@ const EditPostPage = () => {
       }
     };
     getPost();
-  }, []);
+  }, [postId]);
 
   const editPost = async updatePost => {
     try {
       const res = await fetch(`${API_BASE_URL}post/${postId}`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updatePost),
+        body: updatePost,
       });
       const data = await res.json();
       if (data.error) {
         toast.error(data.error);
       } else if (data.post) {
-        toast.success("Post updated published");
+        toast.success("Post updated successfully");
         setIsLoading(true);
         navigate(`/post/${data.post._id}`);
       }
     } catch (error) {
-      console.log("Errorrr....", error);
-      toast.error("Failed to publish post");
+      console.log("Error....", error);
+      toast.error("Failed to update post");
     }
   };
 
   const submitForm = async e => {
     e.preventDefault();
-    const updatePost = {
-      title,
-      image,
-      body,
-      tag,
-      type,
-    };
-    editPost(updatePost);
+
+    const formData = new FormData();
+    formData.append("title", title);
+    if (image instanceof File) {
+      formData.append("image", image);
+    }
+    formData.append("body", body);
+    tags.forEach(tag => formData.append("tag[]", tag));
+    formData.append("type", type);
+
+    editPost(formData);
   };
 
   return (
@@ -135,10 +131,9 @@ const EditPostPage = () => {
                 type="file"
                 id="image"
                 name="image"
-                accept="image/*" // Accept only image files
-                onChange={handleImageChange} // Call function on file input change
+                accept="image/*"
+                onChange={e => setImage(e.target.files[0])}
                 className="border rounded w-full py-2 px-3 mb-2"
-                required
               />
             </div>
 
@@ -152,10 +147,10 @@ const EditPostPage = () => {
                 name="tag"
                 className="border rounded w-full py-2 px-3 mb-2"
                 required
-                value={tag}
-                onChange={e => setTag(Array.from(e.target.selectedOptions, option => option.value))}>
+                value={tags}
+                onChange={e => setTags(Array.from(e.target.selectedOptions, option => option.value))}>
                 {allTags.map(tag => (
-                  <option value={tag.name} key={tag._id}>
+                  <option value={tag._id} key={tag._id}>
                     {tag.name}
                   </option>
                 ))}

@@ -11,9 +11,9 @@ const AddPostPage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const [allTags, setAllTags] = useState([]);
   const [title, setTitle] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
   const [body, setBody] = useState("");
-  const [tag, setTag] = useState([]);
+  const [tags, setTags] = useState([]);
   const [type, setType] = useState("article");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,10 +26,8 @@ const AddPostPage = () => {
       try {
         const res = await fetch(`${API_BASE_URL}tag`);
         const data = await res.json();
-        console.log(data);
         setAllTags(data["tags"]);
       } catch (error) {
-        console.log("Errorr....", error);
         toast.error("Failed to get data");
       }
     };
@@ -42,40 +40,39 @@ const AddPostPage = () => {
       const res = await fetch(`${API_BASE_URL}post`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(newPost),
+        body: newPost,
       });
       const data = await res.json();
       if (data.error) {
-        toast.error(data.error);
+        toast.error("Failed to publish post");
       } else if (data.post) {
         toast.success("Post successfully published");
         setIsLoading(true);
         navigate(`/post/${data.post._id}`);
       }
     } catch (error) {
-      console.log("Errorrr....", error);
       toast.error("Failed to publish post");
     }
   };
 
   const submitForm = async e => {
     e.preventDefault();
-    const newPost = {
-      title,
-      image,
-      body,
-      tag,
-      type,
-    };
-    addPost(newPost);
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("image", image);
+    formData.append("body", body);
+    tags.forEach(tag => formData.append("tag[]", tag));
+    formData.append("type", type);
+
+    addPost(formData);
   };
 
   return (
     <div className="mx-10">
-      <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Create Post</p>
+      <p className="text-4xl text-customPurple font-semibold mx-auto text-center py-7">Create Post</p>
       <div>
         <form onSubmit={submitForm}>
           <div className="my-3">
@@ -87,9 +84,7 @@ const AddPostPage = () => {
               id="title"
               name="title"
               value={title}
-              onChange={e => {
-                setTitle(e.target.value);
-              }}
+              onChange={e => setTitle(e.target.value)}
               className="border rounded w-full py-2 px-3 mb-2"
               placeholder="Introduction to Node.js"
               required
@@ -104,10 +99,8 @@ const AddPostPage = () => {
               type="file"
               id="image"
               name="image"
-              accept="image/*" // Accept only image files
-              onChange={e => {
-                setImage(e.target.value);
-              }}
+              accept="image/*"
+              onChange={e => setImage(e.target.files[0])}
               className="border rounded w-full py-2 px-3 mb-2"
               required
             />
@@ -123,10 +116,10 @@ const AddPostPage = () => {
               name="tag"
               className="border rounded w-full py-2 px-3 mb-2"
               required
-              value={tag}
-              onChange={e => setTag(Array.from(e.target.selectedOptions, option => option.value))}>
+              value={tags}
+              onChange={e => setTags(Array.from(e.target.selectedOptions, option => option.value))}>
               {allTags.map(tag => (
-                <option value={tag.name} key={tag._id}>
+                <option value={tag._id} key={tag._id}>
                   {tag.name}
                 </option>
               ))}
@@ -162,9 +155,7 @@ const AddPostPage = () => {
               id="body"
               cols="30"
               rows="10"
-              onChange={e => {
-                setBody(e.target.value);
-              }}
+              onChange={e => setBody(e.target.value)}
               placeholder="....."
               required></textarea>
           </div>
