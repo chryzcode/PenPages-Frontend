@@ -233,7 +233,7 @@ const PostPage = () => {
           <div className="w-9/12 mx-auto text-center">
             {post ? (
               <div>
-                <img className="w-60 h-60 object-contain mx-auto" src={post.imageCloudinaryUrl} alt="" />
+                <img className="w-60 h-60 object-contain mx-auto" src={post.image} alt="" />
                 <h2 className="text-4xl font-bold py-3">{post.title}</h2>
                 <div className="flex sm:flex-2 items-center justify-center gap-10 py-5 align-center ">
                   <Link to={`/profile/${post.author.username}`} className="flex items-center">

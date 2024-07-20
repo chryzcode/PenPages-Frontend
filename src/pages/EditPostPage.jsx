@@ -16,13 +16,12 @@ const EditPostPage = () => {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
   const [body, setBody] = useState("");
-  const [tag, setTag] = useState([]);
+  const [tags, setTags] = useState([]);
   const [type, setType] = useState("");
 
-  // Function to handle file input change
   const handleImageChange = e => {
-    const selectedImage = e.target.value; // Get the selected image file
-    setImage(selectedImage); // Set the selected image file to state
+    const selectedImage = e.target.files[0];
+    setImage(selectedImage);
   };
 
   useEffect(() => {
@@ -30,14 +29,12 @@ const EditPostPage = () => {
       try {
         const res = await fetch(`${API_BASE_URL}tag`);
         const data = await res.json();
-        setAllTags(data["tags"]);
+        setAllTags(data.tags);
       } catch (error) {
-        console.log("Errorr....", error);
-        toast.error("Failed to get data");
+        toast.error("Failed to get tags");
       }
     };
 
-    getTags();
     const getPost = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}post/${postId}`);
@@ -45,69 +42,81 @@ const EditPostPage = () => {
         if (data.error) {
           toast.error("Post does not exist");
         } else if (data.post) {
-          const { title, image, body, tag, type } = data.post;
+          const { title, body, tag, type } = data.post;
           setTitle(title);
-          setImage(image);
           setBody(body);
           setType(type);
-          setTag(tag.map(tag => tag.name));
+          setTags(tag.map(t => t._id)); // Ensure tags are set as ObjectIds
           setPost(data.post);
         }
       } catch (error) {
-        console.log("Error in fetching data:", error);
-        toast.error("Failed to get data");
+        console.log("Error fetching post:", error);
+        toast.error("Failed to get post");
       } finally {
         setIsLoading(false);
       }
     };
-    getPost();
-  }, []);
 
-  const editPost = async updatePost => {
+    getTags();
+    getPost();
+  }, [postId]);
+
+  const editPost = async updatedPost => {
+    const formData = new FormData();
+    formData.append("title", updatedPost.title);
+    formData.append("body", updatedPost.body);
+    formData.append("type", updatedPost.type);
+
+    // Append tags as an array
+    updatedPost.tags.forEach(tag => formData.append("tag[]", tag));
+
+    if (updatedPost.image) {
+      formData.append("image", updatedPost.image);
+    }
+
     try {
       const res = await fetch(`${API_BASE_URL}post/${postId}`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updatePost),
+        body: formData,
       });
       const data = await res.json();
       if (data.error) {
         toast.error(data.error);
       } else if (data.post) {
-        toast.success("Post updated published");
-        setIsLoading(true);
+        toast.success("Post updated successfully");
         navigate(`/post/${data.post._id}`);
       }
     } catch (error) {
-      console.log("Errorrr....", error);
-      toast.error("Failed to publish post");
+      console.log("Error updating post:", error);
+      toast.error("Failed to update post");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const submitForm = async e => {
     e.preventDefault();
-    const updatePost = {
+    setIsLoading(true);
+    const updatedPost = {
       title,
-      image,
       body,
-      tag,
+      tags,
       type,
+      image: image, // If no image is selected, this will be `null`
     };
-    editPost(updatePost);
+    editPost(updatedPost);
   };
 
   return (
     <div className="mx-10">
       {isLoading ? (
-        <div>
-          <Spinner size={100} color={"#6c63ff"} display={"block"} />
-        </div>
+        <Spinner size={100} color={"#6c63ff"} display={"block"} />
       ) : (
         <div>
-          <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Edit Post</p>
+          <p className="text-4xl text-customPurple font-semibold mx-auto text-center py-7">Edit Post</p>
           <form onSubmit={submitForm}>
             <div className="my-3">
               <label htmlFor="title" className="block mb-2">
@@ -118,9 +127,7 @@ const EditPostPage = () => {
                 id="title"
                 name="title"
                 value={title}
-                onChange={e => {
-                  setTitle(e.target.value);
-                }}
+                onChange={e => setTitle(e.target.value)}
                 className="border rounded w-full py-2 px-3 mb-2"
                 placeholder="Introduction to Node.js"
                 required
@@ -135,11 +142,11 @@ const EditPostPage = () => {
                 type="file"
                 id="image"
                 name="image"
-                accept="image/*" // Accept only image files
-                onChange={handleImageChange} // Call function on file input change
+                accept="image/*"
+                onChange={handleImageChange}
                 className="border rounded w-full py-2 px-3 mb-2"
-                required
               />
+              {post?.image && <p>Current image exists</p>}
             </div>
 
             <div className="mb-4">
@@ -152,10 +159,10 @@ const EditPostPage = () => {
                 name="tag"
                 className="border rounded w-full py-2 px-3 mb-2"
                 required
-                value={tag}
-                onChange={e => setTag(Array.from(e.target.selectedOptions, option => option.value))}>
+                value={tags}
+                onChange={e => setTags(Array.from(e.target.selectedOptions, option => option.value))}>
                 {allTags.map(tag => (
-                  <option value={tag.name} key={tag._id}>
+                  <option value={tag._id} key={tag._id}>
                     {tag.name}
                   </option>
                 ))}
@@ -191,9 +198,7 @@ const EditPostPage = () => {
                 id="body"
                 cols="30"
                 rows="10"
-                onChange={e => {
-                  setBody(e.target.value);
-                }}
+                onChange={e => setBody(e.target.value)}
                 placeholder="....."
                 required></textarea>
             </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import { Link } from "react-router-dom";
+import "../notifications.css"; // Import the CSS file for custom styles
 
 const Notifications = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -49,32 +50,41 @@ const Notifications = () => {
         <div>
           {allNotifications.length > 0 ? (
             allNotifications.map(notification => (
-              <div key={notification._id}>
-                <div>
-                  <Link to={`/profile/${notification.fromUser.username}`} className="flex items-center pb-1">
-                    {notification.fromUser.imageCloudinaryUrl && (
-                      <img className="w-7 mr-1" src={notification.fromUser.imageCloudinaryUrl} alt="User" />
-                    )}
+              <div
+                key={notification._id}
+                className={`relative p-2 mb-2 border-b ${notification.read ? "bg-white" : "bg-gray-100"}`}>
+                {!notification.read && <div className="absolute inset-0 bg-blue-500 opacity-20"></div>}
+                <div className="relative z-10">
+                  <div>
+                    <Link to={`/profile/${notification.fromUser.username}`} className="flex items-center pb-1">
+                      {notification.fromUser.imageCloudinaryUrl && (
+                        <img
+                          className="w-7 h-7 rounded-full mr-1"
+                          src={notification.fromUser.imageCloudinaryUrl}
+                          alt="User"
+                        />
+                      )}
+                    </Link>
+                  </div>
+
+                  <Link
+                    to={
+                      notification.type === "post"
+                        ? `/post/${notification.info_id}`
+                        : notification.type === "profile"
+                        ? `/profile/${notification.info_id}`
+                        : "#"
+                    }
+                    className="text-sm">
+                    <div className="py-2 text-base">{notification.info}</div>
+
+                    <span className="text-xs">
+                      {notification.createdAt && (
+                        <p className="text-xs font-extralight text-left">{formatDate(notification.createdAt)}</p>
+                      )}
+                    </span>
                   </Link>
                 </div>
-
-                <Link
-                  to={
-                    notification.type === "post"
-                      ? `/post/${notification.info_id}`
-                      : notification.type === "profile"
-                      ? `/profile/${notification.info_id}`
-                      : "#"
-                  }
-                  className="text-sm">
-                  <div className="py-2 text-base">{notification.info}</div>
-
-                  <span className="text-xs">
-                    {notification.createdAt && (
-                      <p className="text-xs font-extralight text-left">{formatDate(notification.createdAt)}</p>
-                    )}
-                  </span>
-                </Link>
               </div>
             ))
           ) : (

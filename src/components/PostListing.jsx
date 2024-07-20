@@ -29,7 +29,7 @@ const PostListing = ({ post }) => {
           <div className="text-sm">{post.body}</div>
         </div>
         <div className="flex justify-center items-center h-32 w-32">
-          <img className="rounded-xl object-contain  w-full" src={post.imageCloudinaryUrl} alt="" />
+          <img className="rounded-xl object-contain  w-full" src={post.image} alt="" />
         </div>
       </Link>
 
