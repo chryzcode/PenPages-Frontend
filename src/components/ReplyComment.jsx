@@ -154,8 +154,8 @@ const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyC
     <div className="my-7 ml-10">
       <div className="flex items-center justify-between">
         <Link to={`/profile/${replyComment.user.username}`} className="flex items-center">
-          {replyComment.user.imageCloudinaryUrl && (
-            <img className="w-9 mr-1" src={replyComment.user.imageCloudinaryUrl} />
+          {replyComment.user.image && (
+            <img className="w-9 mr-1" src={replyComment.user.image} />
           )}
           <span className="text-sm font-semibold">
             {replyComment.user.firstName} {replyComment.user.lastName}

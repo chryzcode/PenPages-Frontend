@@ -169,7 +169,7 @@ const ProfilePage = () => {
           {user && (
             <div className="flex justify-between align-middle items-center mb-5 w-11/12 mx-auto">
               <div className="flex align-middle items-center">
-                <img className="w-36 h-36 object-contain mx-auto" src={user.imageCloudinaryUrl} alt="" />
+                <img className="w-36 h-36 object-contain mx-auto" src={user.image} alt="" />
                 <div className="pl-10">
                   <h1 className="text-2xl font-bold align-middle">
                     {user.firstName} {user.lastName}

@@ -57,10 +57,10 @@ const Notifications = () => {
                 <div className="relative z-10">
                   <div>
                     <Link to={`/profile/${notification.fromUser.username}`} className="flex items-center pb-1">
-                      {notification.fromUser.imageCloudinaryUrl && (
+                      {notification.fromUser.image && (
                         <img
                           className="w-7 h-7 rounded-full mr-1"
-                          src={notification.fromUser.imageCloudinaryUrl}
+                          src={notification.fromUser.image}
                           alt="User"
                         />
                       )}

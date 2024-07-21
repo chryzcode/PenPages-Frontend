@@ -7,7 +7,7 @@ const Likes = ({like}) => {
     <Link
       className="flex items-center justify-center gap-2 align-center"
       to={`/profile/${like.user.username}`}>
-      <img className="w-8" src={like.user.imageCloudinaryUrl} alt="" />
+      <img className="w-8" src={like.user.image} alt="" />
       <p>
         {like.user.firstName} {like.user.lastName}
       </p>
