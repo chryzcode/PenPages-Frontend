@@ -42,6 +42,29 @@ const Notifications = () => {
     getAllNotifications();
   }, [loggedInUser.token]);
 
+  const markAllNotificationsAsRead = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}notification`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setAllNotifications(prevNotifications =>
+          prevNotifications.map(notification => ({ ...notification, read: true }))
+        );
+        toast.success("All notifications marked as read");
+      } else {
+        toast.error("Failed to mark all notifications as read");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to mark all notifications as read");
+    }
+  };
+
   return (
     <div>
       {isLoading ? (
@@ -50,43 +73,38 @@ const Notifications = () => {
         <div>
           {allNotifications.length > 0 ? (
             allNotifications.map(notification => (
-              <div
-                key={notification._id}
-                className={`relative p-2 mb-2 border-b ${notification.read ? "bg-white" : "bg-gray-100"}`}>
+              <div key={notification._id} className={`notification-item ${notification.read ? "read" : "unread"}`}>
                 {!notification.read && <div className="absolute inset-0 bg-blue-500 opacity-20"></div>}
                 <div className="relative z-10">
-                  <div>
-                    <Link to={`/profile/${notification.fromUser.username}`} className="flex items-center pb-1">
-                      {notification.fromUser.image && (
-                        <img className="w-7 h-7 rounded-full mr-1" src={notification.fromUser.image} alt="User" />
-                      )}
-                      <span className="text-base">{notification.fromUser.username}</span>
+                  <div className="flex items-center">
+                    {notification.fromUser.image && (
+                      <img className="notification-user-image" src={notification.fromUser.image} alt="User" />
+                    )}
+                    <Link
+                      to={
+                        notification.type === "post"
+                          ? `/post/${notification.info_id}`
+                          : notification.type === "profile"
+                          ? `/profile/${notification.info_id}`
+                          : "#"
+                      }
+                      className="notification-content">
+                      <div className="notification-text">{notification.info}</div>
+                      <span className="notification-date">
+                        {notification.createdAt && formatDate(notification.createdAt)}
+                      </span>
                     </Link>
                   </div>
-
-                  <Link
-                    to={
-                      notification.type === "post"
-                        ? `/post/${notification.info_id}`
-                        : notification.type === "profile"
-                        ? `/profile/${notification.info_id}`
-                        : "#"
-                    }
-                    className="text-sm">
-                    <div className="py-2 text-sm">{notification.info}</div>
-
-                    <span className="text-xs">
-                      {notification.createdAt && (
-                        <p className="text-xs font-extralight text-left">{formatDate(notification.createdAt)}</p>
-                      )}
-                    </span>
-                  </Link>
                 </div>
               </div>
             ))
           ) : (
             <div className="text-center text-gray-500">No notifications</div>
           )}
+          <div className="text-right mt-4 cursor-pointer text-customPurple" onClick={markAllNotificationsAsRead}>
+           Mark
+            All as Read
+          </div>
         </div>
       )}
     </div>
