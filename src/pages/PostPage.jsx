@@ -235,9 +235,9 @@ const PostPage = () => {
               <div>
                 <img className="w-60 h-60 object-contain mx-auto" src={post.image} alt="" />
                 <h2 className="text-4xl font-bold py-3">{post.title}</h2>
-                <div className="flex sm:flex-2 items-center justify-center gap-10 py-5 align-center ">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 py-5">
                   <Link to={`/profile/${post.author.username}`} className="flex items-center">
-                    <img className="w-8 mr-3" src={post.author.image} alt="" />
+                    <img className="w-10 h-10 rounded-full mr-3" src={post.author.image} alt="" />
                     <p>
                       {post.author.firstName} {post.author.lastName}
                     </p>
