@@ -65,6 +65,29 @@ const Notifications = () => {
     }
   };
 
+  const markNotificationAsRead = async notificationId => {
+    try {
+      const res = await fetch(`${API_BASE_URL}notification/mark/${notificationId}/read`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${loggedInUser.token}`,
+        },
+      });
+      if (res.ok) {
+        setAllNotifications(prevNotifications =>
+          prevNotifications.map(notification =>
+            notification._id === notificationId ? { ...notification, read: true } : notification
+          )
+        );
+      } else {
+        toast.error("Failed to mark notification as read");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error("Failed to mark notification as read");
+    }
+  };
+
   return (
     <div>
       {isLoading ? (
@@ -88,7 +111,8 @@ const Notifications = () => {
                           ? `/profile/${notification.info_id}`
                           : "#"
                       }
-                      className="notification-content">
+                      className="notification-content"
+                      onClick={() => markNotificationAsRead(notification._id)}>
                       <div className="notification-text">{notification.info}</div>
                       <span className="notification-date">
                         {notification.createdAt && formatDate(notification.createdAt)}
@@ -102,8 +126,7 @@ const Notifications = () => {
             <div className="text-center text-gray-500">No notifications</div>
           )}
           <div className="text-right mt-4 cursor-pointer text-customPurple" onClick={markAllNotificationsAsRead}>
-           Mark
-            All as Read
+            Mark All as Read
           </div>
         </div>
       )}
