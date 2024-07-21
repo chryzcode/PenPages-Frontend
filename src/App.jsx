@@ -1,5 +1,5 @@
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
-import "./index.css";
+import "../src/styles/index.css";
 import MainLayout from "./layout/MainLayout";
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";

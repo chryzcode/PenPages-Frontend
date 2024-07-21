@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import { Link } from "react-router-dom";
-import "../notifications.css"; // Import the CSS file for custom styles
+import "../styles/notifications.css"; // Import the CSS file for custom styles
 
 const Notifications = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -58,12 +58,9 @@ const Notifications = () => {
                   <div>
                     <Link to={`/profile/${notification.fromUser.username}`} className="flex items-center pb-1">
                       {notification.fromUser.image && (
-                        <img
-                          className="w-7 h-7 rounded-full mr-1"
-                          src={notification.fromUser.image}
-                          alt="User"
-                        />
+                        <img className="w-7 h-7 rounded-full mr-1" src={notification.fromUser.image} alt="User" />
                       )}
+                      <span className="text-base">{notification.fromUser.username}</span>
                     </Link>
                   </div>
 
@@ -76,7 +73,7 @@ const Notifications = () => {
                         : "#"
                     }
                     className="text-sm">
-                    <div className="py-2 text-base">{notification.info}</div>
+                    <div className="py-2 text-sm">{notification.info}</div>
 
                     <span className="text-xs">
                       {notification.createdAt && (
