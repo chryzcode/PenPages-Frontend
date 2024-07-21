@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Auth from "../components/Auth";
 import Cookies from "js-cookie";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const ProfileSettingsPage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -11,15 +9,14 @@ const ProfileSettingsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(""); // Handle image separately
   const [bio, setBio] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [updateIsLoading, setUpdateIsLoading] = useState(false);
   const [username, setUsername] = useState("");
-  const token = Cookies.get("accessToken");
   const [updatePasswordIsLoading, setUpdatePasswordIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const token = Cookies.get("accessToken");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -72,7 +69,8 @@ const ProfileSettingsPage = () => {
       } else if (data.success) {
         toast.success(data.success);
         setUserData(data.user);
-        navigate(`/profile/${data.user.username}`); // Redirect to the updated profile page
+        // Remove or comment out the redirection code
+        // navigate(`/profile/${data.user.username}`);
       }
     } catch (error) {
       console.log("Errorrr....", error);
@@ -123,7 +121,8 @@ const ProfileSettingsPage = () => {
         toast.error(data.error);
       } else if (data.success) {
         toast.success(data.success);
-        navigate("/");
+        // Navigate away after deactivation, if needed
+        // navigate("/");
       }
     } catch (error) {
       console.log("error......", error);
@@ -142,7 +141,7 @@ const ProfileSettingsPage = () => {
     const updatedUser = {
       firstName,
       lastName,
-      image, // Image should be handled separately, e.g., by uploading it and setting the URL
+      image, // Handle image separately if necessary
       bio,
       username,
       currentPassword,
