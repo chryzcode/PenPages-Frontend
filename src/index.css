@@ -55,4 +55,9 @@ form input:focus {
   .custom-list {
     width: 100%;
   }
+
+  .main-nav {
+  padding: 30px 15px;
+  
+}
 }
