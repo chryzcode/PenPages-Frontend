@@ -22,7 +22,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
   };
 
   return (
-    <nav className="main-nav flex justify-between items-center p-4 bg-white shadow-md relative">
+    <nav className="main-nav flex justify-between items-center sm:p-4 p-2 bg-white shadow-md relative">
       <NavLink to="/" className="text-xl font-bold text-customPurple">
         PenPages
       </NavLink>
@@ -80,10 +80,6 @@ const Navbar = ({ isAuthenticated, userData }) => {
           </>
         ) : (
           <>
-            {/* <NavLink to="/sign-in" className="pr-6 hover:text-customPurple">
-              login
-            </NavLink> */}
-
             <NavLink
               to="/sign-up"
               className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
@@ -93,14 +89,26 @@ const Navbar = ({ isAuthenticated, userData }) => {
         )}
       </div>
 
-      <div className="sm:hidden flex items-center">
+      <div className="sm:hidden flex items-center space-x-4">
+        <div className="relative">
+          <IoIosNotifications
+            className="inline text-2xl text-customPurple cursor-pointer"
+            onClick={toggleNotifications}
+          />
+          {showNotifications && (
+            <div className="absolute right-0 top-8 w-80 bg-white shadow-lg rounded-lg z-10 p-4">
+              <Notifications />
+            </div>
+          )}
+        </div>
+
         <button onClick={toggleMobileMenu} className="text-2xl text-customPurple focus:outline-none">
           {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
 
       {isMobileMenuOpen && (
-        <div className="absolute top-16 left-0 w-full bg-white shadow-lg rounded-lg z-10 p-4 pl-10 sm:hidden">
+        <div className="absolute top-16 left-0 w-full bg-white shadow-lg rounded-lg z-10 p-4 sm:hidden">
           <NavLink to="/posts" className="block py-2 hover:text-customPurple">
             Feeds
           </NavLink>
@@ -108,55 +116,36 @@ const Navbar = ({ isAuthenticated, userData }) => {
             Explore
           </NavLink>
           {isAuthenticated ? (
-            <>
-              <div className="relative py-2">
-                <IoIosNotifications
-                  className="inline mr-2 text-2xl text-customPurple cursor-pointer"
-                  onClick={toggleNotifications}
-                />
-                {showNotifications && (
-                  <div className="absolute right-0 top-8 w-80 bg-white shadow-lg rounded-lg z-10 p-4">
-                    <Notifications />
-                  </div>
-                )}
-              </div>
+            <div className="relative">
+              <span onClick={toggleDropdown} className="cursor-pointer flex items-center space-x-2 justify-end">
+                <span className="text-sm font-medium">{userData.firstName}</span>
+                <IoMdArrowDropdown className="text-xl" />
+              </span>
 
-              <div className="relative py-2">
-                <span onClick={toggleDropdown} className="cursor-pointer flex items-center space-x-2">
-                  <span className="text-sm font-medium">{userData.firstName}</span>
-                  <IoMdArrowDropdown className="text-xl" />
-                </span>
-
-                {isOpen && (
-                  <ul className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 z-10">
-                    <li className="hover:bg-gray-100 px-4 py-2">
-                      <NavLink to={`/profile/${userData.username}`} className="block text-sm">
-                        Profile
-                      </NavLink>
-                    </li>
-                    <li className="hover:bg-gray-100 px-4 py-2">
-                      <NavLink to="/settings" className="block text-sm">
-                        Settings
-                      </NavLink>
-                    </li>
-                    <li className="hover:bg-gray-100 px-4 py-2">
-                      <NavLink to="/sign-out" className="block text-sm">
-                        Logout
-                      </NavLink>
-                    </li>
-                  </ul>
-                )}
-              </div>
-            </>
+              {isOpen && (
+                <ul className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 z-10">
+                  <li className="hover:bg-gray-100 px-4 py-2">
+                    <NavLink to={`/profile/${userData.username}`} className="block text-sm">
+                      Profile
+                    </NavLink>
+                  </li>
+                  <li className="hover:bg-gray-100 px-4 py-2">
+                    <NavLink to="/settings" className="block text-sm">
+                      Settings
+                    </NavLink>
+                  </li>
+                  <li className="hover:bg-gray-100 px-4 py-2">
+                    <NavLink to="/sign-out" className="block text-sm">
+                      Logout
+                    </NavLink>
+                  </li>
+                </ul>
+              )}
+            </div>
           ) : (
-            <>
-              {/* <NavLink to="/sign-in" className="block py-2 hover:text-customPurple">
-                login
-              </NavLink> */}
-              <NavLink to="/sign-up" className="block py-2 hover:text-customPurple">
-                sign up
-              </NavLink>
-            </>
+            <NavLink to="/sign-up" className="block py-2 hover:text-customPurple">
+              sign up
+            </NavLink>
           )}
         </div>
       )}
