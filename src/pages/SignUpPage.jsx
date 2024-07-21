@@ -159,6 +159,8 @@ const SignUpPage = () => {
               </button>
             </div>
           </form>
+
+          <p className="text-center">Already have an account? <a href="/sign-in" className="text-customPurple hover:underline">Sign in</a></p>
         </div>
 
         <div>

@@ -104,8 +104,15 @@ const SignInPage = () => {
             </div>
           </form>
 
-          <div className="text-customPurple text-center">
-            <Link to=" ">Forgot password</Link>
+          <p className="text-center">
+            Do not have an account?{" "}
+            <a href="/sign-up" className="text-customPurple hover:underline">
+              Sign up
+            </a>
+          </p>
+
+          <div className="text-customPurple text-center py-5">
+            <Link to=" ">Forgot password?</Link>
           </div>
         </div>
         <div>
