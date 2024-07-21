@@ -237,7 +237,7 @@ const PostPage = () => {
                 <h2 className="text-4xl font-bold py-3">{post.title}</h2>
                 <div className="flex sm:flex-2 items-center justify-center gap-10 py-5 align-center ">
                   <Link to={`/profile/${post.author.username}`} className="flex items-center">
-                    <img className="w-8 mr-3" src={post.author.imageCloudinaryUrl} alt="" />
+                    <img className="w-8 mr-3" src={post.author.image} alt="" />
                     <p>
                       {post.author.firstName} {post.author.lastName}
                     </p>
@@ -260,7 +260,7 @@ const PostPage = () => {
                 <div className="flex items-center justify-center flex-col">
                   {likes.map(like => (
                     <p className="flex items-center py-3" key={like._id}>
-                      <img className="w-8 mr-3" src={like.user.imageCloudinaryUrl} alt="" />
+                      <img className="w-8 mr-3" src={like.user.image} alt="" />
                       {like.user.firstName} {like.user.lastName}
                     </p>
                   ))}
