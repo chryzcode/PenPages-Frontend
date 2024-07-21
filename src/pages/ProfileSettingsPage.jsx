@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Auth from "../components/Auth";
 import Cookies from "js-cookie";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const ProfileSettingsPage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -11,15 +9,14 @@ const ProfileSettingsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(""); // Handle image separately
   const [bio, setBio] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [updateIsLoading, setUpdateIsLoading] = useState(false);
   const [username, setUsername] = useState("");
-  const token = Cookies.get("accessToken");
   const [updatePasswordIsLoading, setUpdatePasswordIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const token = Cookies.get("accessToken");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -33,13 +30,17 @@ const ProfileSettingsPage = () => {
         });
 
         const data = await res.json();
-        setUserData(data["user"]);
-        const { firstName, lastName, image, bio, username } = data.user;
-        setFirstName(firstName);
-        setLastName(lastName);
-        setImage(image);
-        setBio(bio);
-        setUsername(username);
+        if (data.user) {
+          setUserData(data.user);
+          const { firstName, lastName, image, bio, username } = data.user;
+          setFirstName(firstName);
+          setLastName(lastName);
+          setImage(image);
+          setBio(bio);
+          setUsername(username);
+        } else {
+          toast.error("Failed to load user data");
+        }
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
@@ -49,7 +50,7 @@ const ProfileSettingsPage = () => {
     };
 
     fetchUserData();
-  }, []); // Run only once when component mounts
+  }, [token]);
 
   const updateUser = async updatedUser => {
     try {
@@ -68,6 +69,8 @@ const ProfileSettingsPage = () => {
       } else if (data.success) {
         toast.success(data.success);
         setUserData(data.user);
+        // Remove or comment out the redirection code
+        // navigate(`/profile/${data.user.username}`);
       }
     } catch (error) {
       console.log("Errorrr....", error);
@@ -98,7 +101,7 @@ const ProfileSettingsPage = () => {
       }
     } catch (error) {
       console.log("Errorrr....", error);
-      toast.error("Failed to update profile");
+      toast.error("Failed to update password");
     } finally {
       setUpdatePasswordIsLoading(false);
     }
@@ -109,7 +112,7 @@ const ProfileSettingsPage = () => {
       const res = await fetch(`${API_BASE_URL}user/delete`, {
         method: "DELETE",
         headers: {
-          "Type-Content": "application/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
@@ -118,7 +121,8 @@ const ProfileSettingsPage = () => {
         toast.error(data.error);
       } else if (data.success) {
         toast.success(data.success);
-        navigate("/");
+        // Navigate away after deactivation, if needed
+        // navigate("/");
       }
     } catch (error) {
       console.log("error......", error);
@@ -137,7 +141,7 @@ const ProfileSettingsPage = () => {
     const updatedUser = {
       firstName,
       lastName,
-      // image,
+      image, // Handle image separately if necessary
       bio,
       username,
       currentPassword,
@@ -164,7 +168,7 @@ const ProfileSettingsPage = () => {
       ) : (
         <div className="container mx-auto my-8">
           <div className="mx-10">
-            <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Edit Profile</p>
+            <p className="text-4xl text-customPurple font-semibold mx-auto text-center py-7">Edit Profile</p>
             <div>
               <form onSubmit={submitForm}>
                 <div className="my-3">
@@ -176,9 +180,7 @@ const ProfileSettingsPage = () => {
                     id="firstName"
                     name="firstName"
                     value={firstName}
-                    onChange={e => {
-                      setFirstName(e.target.value);
-                    }}
+                    onChange={e => setFirstName(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
                     placeholder="John"
                     required
@@ -192,11 +194,9 @@ const ProfileSettingsPage = () => {
                   <input
                     type="text"
                     id="lastName"
-                    name="firstName"
+                    name="lastName"
                     value={lastName}
-                    onChange={e => {
-                      setLastName(e.target.value);
-                    }}
+                    onChange={e => setLastName(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
                     placeholder="Doe"
                     required
@@ -212,11 +212,9 @@ const ProfileSettingsPage = () => {
                     id="username"
                     name="username"
                     value={username}
-                    onChange={e => {
-                      setUsername(e.target.value);
-                    }}
+                    onChange={e => setUsername(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
-                    placeholder="Doe"
+                    placeholder="username"
                     required
                   />
                 </div>
@@ -230,10 +228,7 @@ const ProfileSettingsPage = () => {
                     id="image"
                     name="image"
                     // accept="image/*" // Accept only image files
-                    // value={image}
-                    onChange={e => {
-                      setImage(e.target.value);
-                    }}
+                    onChange={e => setImage(e.target.files[0])}
                     className="border rounded w-full py-2 px-3 mb-2"
                   />
                 </div>
@@ -244,16 +239,13 @@ const ProfileSettingsPage = () => {
                   </label>
                   <textarea
                     className="border rounded w-full py-2 px-3 mb-2"
-                    type="text"
                     name="bio"
                     value={bio}
                     id="bio"
                     cols="30"
                     rows="10"
-                    onChange={e => {
-                      setBio(e.target.value);
-                    }}
-                    placeholder="....."></textarea>
+                    onChange={e => setBio(e.target.value)}
+                    placeholder="Your bio..."></textarea>
                 </div>
 
                 <div className="mx-auto w-32 my-8 text-center">
@@ -267,22 +259,21 @@ const ProfileSettingsPage = () => {
             </div>
 
             <div>
-              <p className="text-3xl text-customPurple  font-semibold mx-auto text-center py-7">Update Password</p>
+              <p className="text-3xl text-customPurple font-semibold mx-auto text-center py-7">Update Password</p>
               <form onSubmit={submitPasswordForm}>
                 <div className="my-3">
                   <label htmlFor="currentPassword" className="block mb-2">
                     Current Password
                   </label>
                   <input
-                    type="text"
+                    type="password"
                     id="currentPassword"
                     name="currentPassword"
                     value={currentPassword}
-                    onChange={e => {
-                      setCurrentPassword(e.target.value);
-                    }}
+                    onChange={e => setCurrentPassword(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
-                    placeholder="********"
+                    placeholder="Current password"
+                    required
                   />
                 </div>
 
@@ -291,32 +282,36 @@ const ProfileSettingsPage = () => {
                     New Password
                   </label>
                   <input
-                    type="text"
+                    type="password"
                     id="newPassword"
                     name="newPassword"
                     value={newPassword}
-                    onChange={e => {
-                      setNewPassword(e.target.value);
-                    }}
+                    onChange={e => setNewPassword(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
-                    placeholder="********"
+                    placeholder="New password"
+                    required
                   />
                 </div>
+
                 <div className="mx-auto w-32 my-8 text-center">
                   <button
                     className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                     type="submit">
-                    Update {updatePasswordIsLoading && <Spinner size={10} />}
+                    Update Password {updatePasswordIsLoading && <Spinner size={10} />}
                   </button>
                 </div>
               </form>
             </div>
 
-            <button
-              onClick={onClickDeactivate}
-              className=" bg-red-500 hover:bg-red-600 text-sm  text-white py-2 px-4 focus:outline-none focus:shadow-outline block ml-auto">
-              Deactivate account
-            </button>
+            <div className="my-8">
+              <div className="text-center">
+                <button
+                  onClick={onClickDeactivate}
+                  className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">
+                  Deactivate Account
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -324,4 +319,4 @@ const ProfileSettingsPage = () => {
   );
 };
 
-export default Auth(ProfileSettingsPage);
+export default ProfileSettingsPage;

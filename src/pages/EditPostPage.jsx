@@ -146,7 +146,7 @@ const EditPostPage = () => {
                 onChange={handleImageChange}
                 className="border rounded w-full py-2 px-3 mb-2"
               />
-              {post?.image && <p>Current image exists</p>}
+              {post?.image && <small className="text-gray-600">Post image exists</small>}
             </div>
 
             <div className="mb-4">
