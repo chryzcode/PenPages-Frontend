@@ -111,7 +111,7 @@ const SignInPage = () => {
             </a>
           </p>
 
-          <div className="text-customPurple text-center py-5">
+          <div className="text-customPurple text-center py-5 hover:underline">
             <Link to=" ">Forgot password?</Link>
           </div>
         </div>

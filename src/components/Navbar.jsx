@@ -100,7 +100,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="absolute top-16 left-0 w-full bg-white shadow-lg rounded-lg z-10 p-4 sm:hidden">
+        <div className="absolute top-16 left-0 w-full bg-white shadow-lg rounded-lg z-10 p-4 pl-10 sm:hidden">
           <NavLink to="/posts" className="block py-2 hover:text-customPurple">
             Feeds
           </NavLink>
