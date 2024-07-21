@@ -11,7 +11,7 @@ const ProfileSettingsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null); // Store image file
   const [bio, setBio] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -49,18 +49,26 @@ const ProfileSettingsPage = () => {
     };
 
     fetchUserData();
-  }, []); // Run only once when component mounts
+  }, [token]); // Run only once when component mounts
 
   const updateUser = async updatedUser => {
     try {
       setUpdateIsLoading(true);
+      const formData = new FormData();
+
+      // Append form data
+      formData.append("firstName", updatedUser.firstName);
+      formData.append("lastName", updatedUser.lastName);
+      formData.append("bio", updatedUser.bio);
+      formData.append("username", updatedUser.username);
+      if (image) formData.append("image", image); // Append the image file
+
       const res = await fetch(`${API_BASE_URL}user/update`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updatedUser),
+        body: formData,
       });
       const data = await res.json();
       if (data.error) {
@@ -109,7 +117,7 @@ const ProfileSettingsPage = () => {
       const res = await fetch(`${API_BASE_URL}user/delete`, {
         method: "DELETE",
         headers: {
-          "Type-Content": "application/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
@@ -132,16 +140,18 @@ const ProfileSettingsPage = () => {
     deactivateUser();
   };
 
+  const handleImageChange = e => {
+    const file = e.target.files[0];
+    setImage(file);
+  };
+
   const submitForm = async e => {
     e.preventDefault();
     const updatedUser = {
       firstName,
       lastName,
-      // image,
       bio,
       username,
-      currentPassword,
-      newPassword,
     };
     updateUser(updatedUser);
   };
@@ -164,7 +174,7 @@ const ProfileSettingsPage = () => {
       ) : (
         <div className="container mx-auto my-8">
           <div className="mx-10">
-            <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Edit Profile</p>
+            <p className="text-4xl text-customPurple font-semibold mx-auto text-center py-7">Edit Profile</p>
             <div>
               <form onSubmit={submitForm}>
                 <div className="my-3">
@@ -176,9 +186,7 @@ const ProfileSettingsPage = () => {
                     id="firstName"
                     name="firstName"
                     value={firstName}
-                    onChange={e => {
-                      setFirstName(e.target.value);
-                    }}
+                    onChange={e => setFirstName(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
                     placeholder="John"
                     required
@@ -192,11 +200,9 @@ const ProfileSettingsPage = () => {
                   <input
                     type="text"
                     id="lastName"
-                    name="firstName"
+                    name="lastName"
                     value={lastName}
-                    onChange={e => {
-                      setLastName(e.target.value);
-                    }}
+                    onChange={e => setLastName(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
                     placeholder="Doe"
                     required
@@ -212,9 +218,7 @@ const ProfileSettingsPage = () => {
                     id="username"
                     name="username"
                     value={username}
-                    onChange={e => {
-                      setUsername(e.target.value);
-                    }}
+                    onChange={e => setUsername(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
                     placeholder="Doe"
                     required
@@ -229,13 +233,11 @@ const ProfileSettingsPage = () => {
                     type="file"
                     id="image"
                     name="image"
-                    // accept="image/*" // Accept only image files
-                    // value={image}
-                    onChange={e => {
-                      setImage(e.target.value);
-                    }}
+                    accept="image/*"
+                    onChange={handleImageChange}
                     className="border rounded w-full py-2 px-3 mb-2"
                   />
+                  {userData?.image && <small className="text-gray-600">User image exists</small>}
                 </div>
 
                 <div className="my-3">
@@ -244,15 +246,12 @@ const ProfileSettingsPage = () => {
                   </label>
                   <textarea
                     className="border rounded w-full py-2 px-3 mb-2"
-                    type="text"
                     name="bio"
                     value={bio}
                     id="bio"
                     cols="30"
                     rows="10"
-                    onChange={e => {
-                      setBio(e.target.value);
-                    }}
+                    onChange={e => setBio(e.target.value)}
                     placeholder="....."></textarea>
                 </div>
 
@@ -267,20 +266,18 @@ const ProfileSettingsPage = () => {
             </div>
 
             <div>
-              <p className="text-3xl text-customPurple  font-semibold mx-auto text-center py-7">Update Password</p>
+              <p className="text-3xl text-customPurple font-semibold mx-auto text-center py-7">Update Password</p>
               <form onSubmit={submitPasswordForm}>
                 <div className="my-3">
                   <label htmlFor="currentPassword" className="block mb-2">
                     Current Password
                   </label>
                   <input
-                    type="text"
+                    type="password"
                     id="currentPassword"
                     name="currentPassword"
                     value={currentPassword}
-                    onChange={e => {
-                      setCurrentPassword(e.target.value);
-                    }}
+                    onChange={e => setCurrentPassword(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
                     placeholder="********"
                   />
@@ -291,13 +288,11 @@ const ProfileSettingsPage = () => {
                     New Password
                   </label>
                   <input
-                    type="text"
+                    type="password"
                     id="newPassword"
                     name="newPassword"
                     value={newPassword}
-                    onChange={e => {
-                      setNewPassword(e.target.value);
-                    }}
+                    onChange={e => setNewPassword(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
                     placeholder="********"
                   />
