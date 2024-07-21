@@ -155,7 +155,7 @@ const ReplyComment = ({ replyComment, onUpdateReply, onDeleteReply, createReplyC
       <div className="flex items-center justify-between">
         <Link to={`/profile/${replyComment.user.username}`} className="flex items-center">
           {replyComment.user.image && (
-            <img className="w-9 mr-1" src={replyComment.user.image} />
+            <img className="w-10 mr-3 rounded-full" src={replyComment.user.image} />
           )}
           <span className="text-sm font-semibold">
             {replyComment.user.firstName} {replyComment.user.lastName}

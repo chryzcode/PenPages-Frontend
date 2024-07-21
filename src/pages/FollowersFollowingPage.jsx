@@ -50,7 +50,7 @@ const FollowersFollowingPage = () => {
           <div className="py-4 px-6 rounded-md" style={{ boxShadow: "0px 0px 4px rgba(181, 176, 176, 0.5)" }}>
             {user && (
               <div className="">
-                <img className="w-24 h-24 object-contain" src={user.image} alt="" />
+                <img className="w-24 h-24 rounded-full object-contain" src={user.image} alt="" />
                 <Link to={`/profile/${user.username}`} className="text-lg font-bold align-middle my-3">
                   {user.firstName} {user.lastName}
                 </Link>

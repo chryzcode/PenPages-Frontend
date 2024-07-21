@@ -260,7 +260,7 @@ const PostPage = () => {
                 <div className="flex items-center justify-center flex-col">
                   {likes.map(like => (
                     <p className="flex items-center py-3" key={like._id}>
-                      <img className="w-8 mr-3" src={like.user.image} alt="" />
+                      <img className="w-10 mr-3 rounded-full" src={like.user.image} alt="" />
                       {like.user.firstName} {like.user.lastName}
                     </p>
                   ))}

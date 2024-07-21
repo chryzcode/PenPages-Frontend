@@ -4,10 +4,8 @@ import { FaThumbsUp, FaThumbsDown} from "react-icons/fa6";
 
 const Likes = ({like}) => {
   return (
-    <Link
-      className="flex items-center justify-center gap-2 align-center"
-      to={`/profile/${like.user.username}`}>
-      <img className="w-8" src={like.user.image} alt="" />
+    <Link className="flex items-center justify-center gap-2 align-center" to={`/profile/${like.user.username}`}>
+      <img className="w-10 rounded-full" src={like.user.image} alt="" />
       <p>
         {like.user.firstName} {like.user.lastName}
       </p>
