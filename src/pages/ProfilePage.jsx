@@ -149,7 +149,7 @@ const ProfilePage = () => {
       toast.error("Failed to get data");
     }
   };
-  console.log(followed);
+
   const onFollowClick = () => {
     if (followed) {
       unfollowUser();
@@ -165,23 +165,28 @@ const ProfilePage = () => {
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
         </h2>
       ) : (
-        <div className="container mx-auto my-8">
+        <div className="container mx-auto my-8 px-4 sm:px-6 lg:px-8">
           {user && (
-            <div className="flex justify-between align-middle items-center mb-5 w-11/12 mx-auto">
-              <div className="flex align-middle items-center">
-                <img className="w-36 h-36 object-contain mx-auto" src={user.image} alt="" />
-                <div className="pl-10">
-                  <h1 className="text-2xl font-bold align-middle">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-5 w-full mx-auto">
+              <div className="flex flex-col md:flex-row items-center">
+                <img
+                  className="w-36 h-36 object-cover rounded-full mx-auto"
+                  src={user.image}
+                  alt={`${user.firstName} ${user.lastName}`}
+                  style={{ objectPosition: "center top" }}
+                />
+                <div className="md:pl-10 text-center md:text-left mt-4 md:mt-0">
+                  <h1 className="text-2xl font-bold">
                     {user.firstName} {user.lastName}
                   </h1>
                   <div className="my-1">{user.bio}</div>
                   <p className="text-sm mt-4">
-                    <Link to={`/${username}/followings`} className="pr-3">
-                      <span className="font-semibold"> {followersCount}</span>{" "}
+                    <Link to={`/${username}/followers`} className="pr-3">
+                      <span className="font-semibold">{followersCount}</span>{" "}
                       {followersCount > 1 ? "followers" : "follower"}
                     </Link>
                     <Link to={`/${username}/followings`}>
-                      <span className="font-semibold"> {followingCount}</span>{" "}
+                      <span className="font-semibold">{followingCount}</span>{" "}
                       {followingCount > 1 ? "followings" : "following"}
                     </Link>
                   </p>
@@ -189,7 +194,7 @@ const ProfilePage = () => {
               </div>
 
               {authenticated && userData && (
-                <div>
+                <div className="mt-4 md:mt-0">
                   {userData.username === username ? (
                     <Link
                       to="/settings"
@@ -214,7 +219,7 @@ const ProfilePage = () => {
                 <Spinner size={100} color={"#6c63ff"} display={"block"} />
               </h2>
             ) : posts && posts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mx-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {posts.map(post => (
                   <PostListing key={post._id} post={post} />
                 ))}

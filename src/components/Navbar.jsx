@@ -22,7 +22,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
   };
 
   return (
-    <nav className="main-nav flex justify-between items-center sm:p-4 p-2 bg-white shadow-md relative">
+    <nav className="main-nav flex justify-between items-center bg-white shadow-md relative">
       <NavLink to="/" className="text-xl font-bold text-customPurple">
         PenPages
       </NavLink>

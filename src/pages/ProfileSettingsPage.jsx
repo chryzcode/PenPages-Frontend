@@ -11,7 +11,7 @@ const ProfileSettingsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [image, setImage] = useState(null); // Store image file
+  const [image, setImage] = useState("");
   const [bio, setBio] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -33,13 +33,17 @@ const ProfileSettingsPage = () => {
         });
 
         const data = await res.json();
-        setUserData(data["user"]);
-        const { firstName, lastName, image, bio, username } = data.user;
-        setFirstName(firstName);
-        setLastName(lastName);
-        setImage(image);
-        setBio(bio);
-        setUsername(username);
+        if (data.user) {
+          setUserData(data.user);
+          const { firstName, lastName, image, bio, username } = data.user;
+          setFirstName(firstName);
+          setLastName(lastName);
+          setImage(image);
+          setBio(bio);
+          setUsername(username);
+        } else {
+          toast.error("Failed to load user data");
+        }
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
@@ -49,26 +53,18 @@ const ProfileSettingsPage = () => {
     };
 
     fetchUserData();
-  }, [token]); // Run only once when component mounts
+  }, [token]);
 
   const updateUser = async updatedUser => {
     try {
       setUpdateIsLoading(true);
-      const formData = new FormData();
-
-      // Append form data
-      formData.append("firstName", updatedUser.firstName);
-      formData.append("lastName", updatedUser.lastName);
-      formData.append("bio", updatedUser.bio);
-      formData.append("username", updatedUser.username);
-      if (image) formData.append("image", image); // Append the image file
-
       const res = await fetch(`${API_BASE_URL}user/update`, {
         method: "PUT",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: formData,
+        body: JSON.stringify(updatedUser),
       });
       const data = await res.json();
       if (data.error) {
@@ -76,6 +72,7 @@ const ProfileSettingsPage = () => {
       } else if (data.success) {
         toast.success(data.success);
         setUserData(data.user);
+        navigate(`/profile/${data.user.username}`); // Redirect to the updated profile page
       }
     } catch (error) {
       console.log("Errorrr....", error);
@@ -106,7 +103,7 @@ const ProfileSettingsPage = () => {
       }
     } catch (error) {
       console.log("Errorrr....", error);
-      toast.error("Failed to update profile");
+      toast.error("Failed to update password");
     } finally {
       setUpdatePasswordIsLoading(false);
     }
@@ -140,18 +137,16 @@ const ProfileSettingsPage = () => {
     deactivateUser();
   };
 
-  const handleImageChange = e => {
-    const file = e.target.files[0];
-    setImage(file);
-  };
-
   const submitForm = async e => {
     e.preventDefault();
     const updatedUser = {
       firstName,
       lastName,
+      image, // Image should be handled separately, e.g., by uploading it and setting the URL
       bio,
       username,
+      currentPassword,
+      newPassword,
     };
     updateUser(updatedUser);
   };
@@ -220,7 +215,7 @@ const ProfileSettingsPage = () => {
                     value={username}
                     onChange={e => setUsername(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
-                    placeholder="Doe"
+                    placeholder="username"
                     required
                   />
                 </div>
@@ -233,11 +228,10 @@ const ProfileSettingsPage = () => {
                     type="file"
                     id="image"
                     name="image"
-                    accept="image/*"
-                    onChange={handleImageChange}
+                    // accept="image/*" // Accept only image files
+                    onChange={e => setImage(e.target.files[0])}
                     className="border rounded w-full py-2 px-3 mb-2"
                   />
-                  {userData?.image && <small className="text-gray-600">User image exists</small>}
                 </div>
 
                 <div className="my-3">
@@ -252,7 +246,7 @@ const ProfileSettingsPage = () => {
                     cols="30"
                     rows="10"
                     onChange={e => setBio(e.target.value)}
-                    placeholder="....."></textarea>
+                    placeholder="Your bio..."></textarea>
                 </div>
 
                 <div className="mx-auto w-32 my-8 text-center">
@@ -279,7 +273,8 @@ const ProfileSettingsPage = () => {
                     value={currentPassword}
                     onChange={e => setCurrentPassword(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
-                    placeholder="********"
+                    placeholder="Current password"
+                    required
                   />
                 </div>
 
@@ -294,24 +289,30 @@ const ProfileSettingsPage = () => {
                     value={newPassword}
                     onChange={e => setNewPassword(e.target.value)}
                     className="border rounded w-full py-2 px-3 mb-2"
-                    placeholder="********"
+                    placeholder="New password"
+                    required
                   />
                 </div>
+
                 <div className="mx-auto w-32 my-8 text-center">
                   <button
                     className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                     type="submit">
-                    Update {updatePasswordIsLoading && <Spinner size={10} />}
+                    Update Password {updatePasswordIsLoading && <Spinner size={10} />}
                   </button>
                 </div>
               </form>
             </div>
 
-            <button
-              onClick={onClickDeactivate}
-              className=" bg-red-500 hover:bg-red-600 text-sm  text-white py-2 px-4 focus:outline-none focus:shadow-outline block ml-auto">
-              Deactivate account
-            </button>
+            <div className="my-8">
+              <div className="text-center">
+                <button
+                  onClick={onClickDeactivate}
+                  className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">
+                  Deactivate Account
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -319,4 +320,4 @@ const ProfileSettingsPage = () => {
   );
 };
 
-export default Auth(ProfileSettingsPage);
+export default ProfileSettingsPage;
