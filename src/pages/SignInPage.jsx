@@ -60,7 +60,7 @@ const SignInPage = () => {
           <form onSubmit={submitForm}>
             <div className="my-3">
               <label htmlFor="email" className="block mb-2">
-                Email / Username
+                Email or Username
               </label>
               <input
                 type="text"
