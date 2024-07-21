@@ -223,96 +223,98 @@ const PostPage = () => {
   };
 
   return (
-    <div className="container mx-auto my-8 px-4 sm:px-6 lg:px-8">
-      {isLoading ? (
-        <h2>
-          <Spinner size={100} color={"#6c63ff"} display={"block"} />
-        </h2>
-      ) : (
-        <div className="max-w-3xl mx-auto text-center">
-          {post ? (
-            <div>
-              <img className="w-full h-60 object-contain mx-auto" src={post.image} alt="" />
-              <h2 className="text-3xl font-bold py-3">{post.title}</h2>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 py-5">
-                <Link to={`/profile/${post.author.username}`} className="flex items-center">
-                  <img className="w-10 h-10 rounded-full mr-3" src={post.author.image} alt="" />
-                  <p>
-                    {post.author.firstName} {post.author.lastName}
-                  </p>
-                </Link>
-                <p>{post.updatedAt ? formatDate(post.updatedAt) : formatDate(post.createdAt)}</p>
-                <p>{post.type}</p>
-              </div>
-
-              {isAuthor ? (
-                <div className="flex items-center justify-center gap-5">
-                  <Link to={`/post/${post._id}/edit`}>Edit</Link>
-                  <Link onClick={onDeleteClick}>Delete</Link>
-                </div>
-              ) : null}
-
-              <div className="text-left my-8">
-                <p>{post.body}</p>
-              </div>
-
-              <div className="flex flex-col items-center justify-center">
-                {likes.map(like => (
-                  <p className="flex items-center py-3" key={like._id}>
-                    <img className="w-10 h-10 mr-3 rounded-full" src={like.user.image} alt="" />
-                    {like.user.firstName} {like.user.lastName}
-                  </p>
-                ))}
-              </div>
-
-              <div className="flex items-center justify-center gap-4 py-5">
-                <div className="flex items-center gap-2">
-                  {authenticated ? (
-                    <>
-                      <Link onClick={onLikeClick}>
-                        {liked ? (
-                          <FaThumbsDown className="text-customPurple text-lg" />
-                        ) : (
-                          <FaThumbsUp className="text-customPurple text-lg" />
-                        )}
-                      </Link>
-                    </>
-                  ) : null}
-
-                  <span onClick={toggleLikes} className="cursor-pointer">
-                    {likesCount} Likes
-                  </span>
+    <div>
+      <div className="container mx-auto my-8">
+        {isLoading ? (
+          <h2>
+            <Spinner size={100} color={"#6c63ff"} display={"block"} />
+          </h2>
+        ) : (
+          <div className="w-9/12 mx-auto text-center">
+            {post ? (
+              <div>
+                <img className="w-60 h-60 object-contain mx-auto" src={post.image} alt="" />
+                <h2 className="text-4xl font-bold py-3">{post.title}</h2>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 py-5">
+                  <Link to={`/profile/${post.author.username}`} className="flex items-center">
+                    <img className="w-10 h-10 rounded-full mr-3" src={post.author.image} alt="" />
+                    <p>
+                      {post.author.firstName} {post.author.lastName}
+                    </p>
+                  </Link>
+                  <p>{post.updatedAt ? formatDate(post.updatedAt) : formatDate(post.createdAt)}</p>
+                  <p>{post.type}</p>
                 </div>
 
-                <p onClick={toggleComments} className="cursor-pointer">
-                  {post.comments.length} Comments
-                </p>
-              </div>
+                {isAuthor ? (
+                  <div className="flex items-center justify-center gap-5">
+                    <Link to={`/post/${post._id}/edit`}>Edit</Link>
+                    <Link onClick={onDeleteClick}>Delete</Link>
+                  </div>
+                ) : null}
 
-              <div className={`${likeOpen ? "block" : "hidden"} flex flex-col items-center`}>
-                {likes.map(like => (
-                  <Likes key={like._id} like={like} />
-                ))}
-              </div>
+                <div className="text-left my-8">
+                  <p>{post.body}</p>
+                </div>
 
-              <div className={`${commentOpen ? "block" : "hidden"} flex flex-col items-center w-full`}>
-                {post.comments.map(comment => (
-                  <Comments
-                    key={comment._id}
-                    commentId={comment._id}
-                    comment={comment}
-                    onUpdate={updateComment}
-                    onDelete={deleteComment}
-                  />
-                ))}
+                <div className="flex items-center justify-center flex-col">
+                  {likes.map(like => (
+                    <p className="flex items-center py-3" key={like._id}>
+                      <img className="w-10 mr-3 rounded-full" src={like.user.image} alt="" />
+                      {like.user.firstName} {like.user.lastName}
+                    </p>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-center gap-10 py-5 align-center">
+                  <div className="flex items-center justify-center gap-2 align-center">
+                    {authenticated ? (
+                      <>
+                        <Link onClick={onLikeClick}>
+                          {liked ? (
+                            <FaThumbsDown className="text-customPurple text-lg" />
+                          ) : (
+                            <FaThumbsUp className="text-customPurple text-lg" />
+                          )}
+                        </Link>
+                      </>
+                    ) : null}
+
+                    <span onClick={toggleLikes} className="cursor-pointer">
+                      {" "}
+                      {likesCount} Likes
+                    </span>
+                  </div>
+
+                  <p onClick={toggleComments} className="cursor-pointer">
+                    {post.comments.length} Comments
+                  </p>
+                </div>
+                <div className={`${likeOpen ? "block" : "hidden"}`}>
+                  {likes.map(like => (
+                    <Likes key={like._id} like={like} />
+                  ))}
+                </div>
+
+                <div className={`${commentOpen ? "flex gap-2 w-10/12 mx-auto my-5  flex-col" : "hidden"} `}>
+                  {post.comments.map(comment => (
+                    <Comments
+                      key={comment._id}
+                      commentId={comment._id}
+                      comment={comment}
+                      onUpdate={updateComment}
+                      onDelete={deleteComment}
+                    />
+                  ))}
+                </div>
                 <PostComment postId={postId} />
               </div>
-            </div>
-          ) : (
-            <NotFoundPage />
-          )}
-        </div>
-      )}
+            ) : (
+              <NotFoundPage url={"/posts"} />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
