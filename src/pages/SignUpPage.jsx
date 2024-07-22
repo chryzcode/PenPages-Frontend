@@ -58,6 +58,12 @@ const SignUpPage = () => {
   return (
     <div className="mx-10">
       <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Sign Up</p>
+      <p className="text-center">
+        Already have an account?{" "}
+        <a href="/sign-in" className="text-customPurple hover:underline">
+          Sign in
+        </a>
+      </p>
       <div className="flex-wrap-container py-5 align-middle px-10">
         <div>
           <form onSubmit={submitForm}>
@@ -159,8 +165,6 @@ const SignUpPage = () => {
               </button>
             </div>
           </form>
-
-          <p className="text-center">Already have an account? <a href="/sign-in" className="text-customPurple hover:underline">Sign in</a></p>
         </div>
 
         <div>
