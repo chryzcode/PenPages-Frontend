@@ -1,35 +1,36 @@
 import React, { useState } from "react";
 import Spinner from "../components/Spinner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const ForgotPasswordPage = () => {
+const ResetPasswordPage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
-  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { userId, token } = useParams();
 
-  const forgotPassword = async userEmail => {
+  const resetPassword = async userPassword => {
     setIsLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}user/send-forgot-password-link`, {
+      const res = await fetch(`${API_BASE_URL}user/auth/forgot-password/${userId}/${token}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userEmail),
+        body: JSON.stringify(userPassword),
       });
       const data = await res.json();
 
-      if (data.success) {
-        toast.success("Check your mail");
-        navigate("/");
+      if (data.user) {
+        toast.success("Password reset successfully");
+        navigate("/sign-in");
       } else {
-        toast.error("Failed to send mail");
+        toast.error(data.error || "Failed reset password");
       }
     } catch (error) {
-      console.log("Error in sending mail", error);
-      toast.error("Failed to send mail");
+      console.log("Error in reseting password", error);
+      toast.error("Failed to reset passwoord");
     } finally {
       setIsLoading(false);
     }
@@ -37,28 +38,28 @@ const ForgotPasswordPage = () => {
 
   const submitForm = e => {
     e.preventDefault();
-    const userEmail = { email };
-    forgotPassword(userEmail);
+    const userPassword = { password };
+    resetPassword(userPassword);
   };
 
   return (
     <div className="mx-10">
-      <p className="text-4xl text-customPurple font-semibold mx-auto text-center py-7">Forgot Password?</p>
+      <p className="text-4xl text-customPurple font-semibold mx-auto text-center py-7">Reset Password</p>
       <div className="flex-wrap-container py-5 align-middle px-10">
         <div>
           <form onSubmit={submitForm}>
             <div className="my-3">
               <label htmlFor="email" className="block mb-2">
-                Email
+                Password
               </label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
+                type="password"
+                id="password"
+                name="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
                 className="border rounded w-full py-2 px-3 mb-2"
-                placeholder="johndoe@gmail.com"
+                placeholder="*********"
                 required
               />
             </div>
@@ -77,4 +78,4 @@ const ForgotPasswordPage = () => {
   );
 };
 
-export default ForgotPasswordPage;
+export default ResetPasswordPage;
