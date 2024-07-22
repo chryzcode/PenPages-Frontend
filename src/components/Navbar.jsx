@@ -79,11 +79,16 @@ const Navbar = ({ isAuthenticated, userData }) => {
             </div>
           </>
         ) : (
-          <NavLink
-            to="/sign-up"
-            className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
-            Sign Up
-          </NavLink>
+          <>
+            <NavLink to="/sign-in" className="hover:text-customPurple px-4 py-2">
+              Sign In
+            </NavLink>
+            <NavLink
+              to="/sign-up"
+              className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto">
+              Sign Up
+            </NavLink>
+          </>
         )}
       </div>
 
@@ -145,9 +150,14 @@ const Navbar = ({ isAuthenticated, userData }) => {
               </div>
             </>
           ) : (
-            <NavLink to="/sign-up" className="block py-2 hover:text-customPurple">
-              Sign Up
-            </NavLink>
+            <>
+              <NavLink to="/sign-in" className="block py-2 hover:text-customPurple">
+                Sign In
+              </NavLink>
+              <NavLink to="/sign-up" className="block py-2 hover:text-customPurple">
+                Sign Up
+              </NavLink>
+            </>
           )}
         </div>
       )}

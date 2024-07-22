@@ -15,6 +15,7 @@ import PersonalisedPostListings from "./components/PersonalisedPostListings";
 import ProfileSettingsPage from "./pages/ProfileSettingsPage";
 import FollowersFollowingPage from "./pages/FollowersFollowingPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 function App() {
   const router = createBrowserRouter(
@@ -35,6 +36,7 @@ function App() {
           <Route path="/post/:postId/edit" element={<EditPostPage />} />
           <Route path="/:username/followings" element={<FollowersFollowingPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password/:userId/:token" element={<ResetPasswordPage />} />
           <Route path="*" element={<NotFoundPage url={"/"} />} />
         </Route>
       </Route>
