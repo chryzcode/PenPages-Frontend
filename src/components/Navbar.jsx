@@ -137,7 +137,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
           <NavLink to="/posts" className="block py-2 hover:text-customPurple" onClick={handleCloseMenu}>
             Feeds
           </NavLink>
-          <NavLink to="/explore" className="block py-2 hover:text-customPurple" onClick={handleCloseMenu}>
+          <NavLink to="/search" className="block py-2 hover:text-customPurple" onClick={handleCloseMenu}>
             Explore
           </NavLink>
           {isAuthenticated ? (
