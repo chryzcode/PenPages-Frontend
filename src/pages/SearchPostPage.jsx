@@ -88,7 +88,7 @@ const SearchPostPage = () => {
           onChange={handleInputChange}
           onKeyDown={handleSearch}
           placeholder="Search for posts"
-          className="border rounded w-full py-2 px-3 mb-2"
+          className="border rounded w-full py-2 px-3 mb-2 focus:outline-none focus:ring-0"
         />
         <div className="container mx-auto my-10">
           {isLoading ? (
