@@ -31,7 +31,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
         <NavLink to="/posts" className="hover:text-customPurple">
           Feeds
         </NavLink>
-        <NavLink to="/explore" className="hover:text-customPurple">
+        <NavLink to="/search" className="hover:text-customPurple">
           Explore
         </NavLink>
       </div>
