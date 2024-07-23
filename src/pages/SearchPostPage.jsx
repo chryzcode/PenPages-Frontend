@@ -80,31 +80,29 @@ const SearchPostPage = () => {
   };
 
   return (
-    <div className="mx-10">
-      <div className="py-5 align-middle px-10">
-        <input
-          type="text"
-          value={query}
-          onChange={handleInputChange}
-          onKeyDown={handleSearch}
-          placeholder="Search for posts"
-          className="border rounded w-full py-2 px-3 mb-2 focus:outline-none focus:ring-0"
-        />
-        <div className="container mx-auto my-10">
-          {isLoading ? (
-            <h2>
-              <Spinner size={100} color={"#6c63ff"} display={"block"} />
-            </h2>
-          ) : posts.length === 0 ? (
-            <p className="text-center text-customPurple text-4xl">No posts available</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mx-2">
-              {posts.map(post => (
-                <PostListing key={post._id} post={post} />
-              ))}
-            </div>
-          )}
-        </div>
+    <div className="container mx-auto my-10">
+      <input
+        type="text"
+        value={query}
+        onChange={handleInputChange}
+        onKeyDown={handleSearch}
+        placeholder="Search for posts"
+        className="border rounded w-full py-2 px-3 mb-2 focus:outline-none focus:ring-0"
+      />
+      <div className="container mx-auto my-10">
+        {isLoading ? (
+          <h2>
+            <Spinner size={100} color={"#6c63ff"} display={"block"} />
+          </h2>
+        ) : posts.length === 0 ? (
+          <p className="text-center text-customPurple text-4xl">No posts available</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mx-2">
+            {posts.map(post => (
+              <PostListing key={post._id} post={post} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
