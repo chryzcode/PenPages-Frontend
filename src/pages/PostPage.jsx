@@ -121,7 +121,7 @@ const PostPage = () => {
       const data = await res.json();
       if (res.ok) {
         toast.success("Post unliked");
-        setLikes(prevLikes => prevLikes.filter(like => like.user._id !== loggedInUser._id)); 
+        setLikes(prevLikes => prevLikes.filter(like => like.user._id !== loggedInUser._id));
         setLikesCount(prevCount => prevCount - 1);
         setLiked(false);
       } else {
@@ -138,7 +138,7 @@ const PostPage = () => {
       const res = await fetch(`${API_BASE_URL}post/${postId}`, {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json", 
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
@@ -307,7 +307,7 @@ const PostPage = () => {
                     />
                   ))}
                 </div>
-                <PostComment postId={postId} />
+                {authenticated ? <PostComment postId={postId} /> : null}
               </div>
             ) : (
               <NotFoundPage url={"/posts"} />
