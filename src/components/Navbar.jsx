@@ -25,6 +25,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
   const handleCloseMenu = () => {
     setIsMobileMenuOpen(false);
     setIsOpen(false);
+    setShowNotifications(false); // Close notifications dropdown
   };
 
   const handleClickOutside = event => {
@@ -65,7 +66,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
               />
               {showNotifications && (
                 <div className="absolute right-0 top-8 w-80 bg-white shadow-lg rounded-lg z-10 p-4">
-                  <Notifications />
+                  <Notifications closeDropdown={() => setShowNotifications(false)} />
                 </div>
               )}
             </div>
@@ -104,7 +105,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
             </NavLink>
             <NavLink
               to="/sign-up"
-              className="bg-customPurple hover:bg-indigo-600 text-sm font-semibold text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
+              className="bg-customPurple text-white rounded px-4 py-2 hover:bg-customPurpleDark"
               onClick={handleCloseMenu}>
               Sign Up
             </NavLink>
@@ -112,69 +113,63 @@ const Navbar = ({ isAuthenticated, userData }) => {
         )}
       </div>
 
-      <div className="sm:hidden flex items-center space-x-4">
-        {isAuthenticated && (
-          <div className="relative">
+      <div className="sm:hidden flex items-center">
+        <div className="relative mr-4">
+          {isAuthenticated && (
             <IoIosNotifications
               className="inline text-2xl text-customPurple cursor-pointer"
               onClick={toggleNotifications}
             />
-            {showNotifications && (
-              <div className="absolute right-0 top-8 w-80 bg-white shadow-lg rounded-lg z-10 p-4">
-                <Notifications />
-              </div>
-            )}
-          </div>
-        )}
+          )}
+          {showNotifications && (
+            <div className="absolute right-0 top-8 w-80 bg-white shadow-lg rounded-lg z-10 p-4">
+              <Notifications closeDropdown={() => setShowNotifications(false)} />
+            </div>
+          )}
+        </div>
 
-        <button onClick={toggleMobileMenu} className="text-2xl text-customPurple focus:outline-none">
+        <button onClick={toggleMobileMenu} className="text-2xl text-customPurple">
           {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
 
       {isMobileMenuOpen && (
-        <div ref={menuRef} className="absolute top-16 left-0 w-full bg-white shadow-lg rounded-lg z-10 p-4 sm:hidden">
-          <NavLink to="/posts" className="block py-2 hover:text-customPurple" onClick={handleCloseMenu}>
+        <div
+          ref={menuRef}
+          className="absolute top-0 left-0 w-full h-screen bg-white z-20 flex flex-col items-center p-4 overflow-y-auto">
+          <button onClick={toggleMobileMenu} className="self-end text-2xl text-customPurple mb-4">
+            <FaTimes />
+          </button>
+          <NavLink to="/posts" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
             Feeds
           </NavLink>
-          <NavLink to="/search" className="block py-2 hover:text-customPurple" onClick={handleCloseMenu}>
+          <NavLink to="/search" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
             Explore
           </NavLink>
           {isAuthenticated ? (
             <>
-              <div className="relative">
-                <span onClick={toggleDropdown} className="cursor-pointer flex items-center space-x-2 justify-end">
-                  <span className="text-sm font-medium">{userData.firstName}</span>
-                  <IoMdArrowDropdown className="text-xl" />
-                </span>
-
-                {isOpen && (
-                  <ul className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 z-10">
-                    <li className="hover:bg-gray-100 px-4 py-2">
-                      <NavLink to={`/profile/${userData.username}`} className="block text-sm" onClick={handleCloseMenu}>
-                        Profile
-                      </NavLink>
-                    </li>
-                    <li className="hover:bg-gray-100 px-4 py-2">
-                      <NavLink to="/settings" className="block text-sm" onClick={handleCloseMenu}>
-                        Settings
-                      </NavLink>
-                    </li>
-                    <li className="hover:bg-gray-100 px-4 py-2">
-                      <NavLink to="/sign-out" className="block text-sm" onClick={handleCloseMenu}>
-                        Logout
-                      </NavLink>
-                    </li>
-                  </ul>
-                )}
-              </div>
+              <NavLink
+                to={`/profile/${userData.username}`}
+                className="hover:text-customPurple mb-4"
+                onClick={handleCloseMenu}>
+                Profile
+              </NavLink>
+              <NavLink to="/settings" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
+                Settings
+              </NavLink>
+              <NavLink to="/sign-out" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
+                Logout
+              </NavLink>
             </>
           ) : (
             <>
-              <NavLink to="/sign-in" className="block py-2 hover:text-customPurple" onClick={handleCloseMenu}>
+              <NavLink to="/sign-in" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
                 Sign In
               </NavLink>
-              <NavLink to="/sign-up" className="block py-2 hover:text-customPurple" onClick={handleCloseMenu}>
+              <NavLink
+                to="/sign-up"
+                className="bg-customPurple text-white rounded px-4 py-2 hover:bg-customPurpleDark"
+                onClick={handleCloseMenu}>
                 Sign Up
               </NavLink>
             </>

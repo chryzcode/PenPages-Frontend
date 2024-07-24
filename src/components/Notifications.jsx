@@ -1,137 +1,180 @@
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import Spinner from "./Spinner";
-import { Link } from "react-router-dom";
-import "../styles/notifications.css"; // Import the CSS file for custom styles
+import React, { useState, useEffect, useRef } from "react";
+import { NavLink } from "react-router-dom";
+import { IoMdArrowDropdown, IoIosNotifications } from "react-icons/io";
+import { FaBars, FaTimes } from "react-icons/fa";
+import Notifications from "./Notifications";
 
-const Notifications = () => {
-  const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
-  const [allNotifications, setAllNotifications] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const loggedInUser = JSON.parse(localStorage.getItem("userData"));
+const Navbar = ({ isAuthenticated, userData }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const menuRef = useRef();
 
-  const formatDate = dateString => {
-    const options = { year: "numeric", month: "short", day: "2-digit" };
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", options);
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleCloseMenu = () => {
+    setIsMobileMenuOpen(false);
+    setIsOpen(false);
+    setShowNotifications(false); // Close notifications dropdown
+  };
+
+  const handleClickOutside = event => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      handleCloseMenu();
+    }
   };
 
   useEffect(() => {
-    const getAllNotifications = async () => {
-      try {
-        setIsLoading(true);
-        const res = await fetch(`${API_BASE_URL}notification`, {
-          headers: {
-            Authorization: `Bearer ${loggedInUser.token}`,
-          },
-        });
-        const data = await res.json();
-        if (res.ok) {
-          setAllNotifications(data.notifications);
-        } else {
-          toast.error(data.error || "Failed to get notifications");
-        }
-      } catch (error) {
-        console.log("Error:", error);
-        toast.error("Failed to get notifications");
-      } finally {
-        setIsLoading(false);
-      }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-
-    getAllNotifications();
-  }, [loggedInUser.token]);
-
-  const markAllNotificationsAsRead = async () => {
-    try {
-      const res = await fetch(`${API_BASE_URL}notification`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${loggedInUser.token}`,
-        },
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setAllNotifications(prevNotifications =>
-          prevNotifications.map(notification => ({ ...notification, read: true }))
-        );
-        toast.success("All notifications marked as read");
-      } else {
-        toast.error("Failed to mark all notifications as read");
-      }
-    } catch (error) {
-      console.log("Error:", error);
-      toast.error("Failed to mark all notifications as read");
-    }
-  };
-
-  const markNotificationAsRead = async notificationId => {
-    try {
-      const res = await fetch(`${API_BASE_URL}notification/mark/${notificationId}/read`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${loggedInUser.token}`,
-        },
-      });
-      if (res.ok) {
-        setAllNotifications(prevNotifications =>
-          prevNotifications.map(notification =>
-            notification._id === notificationId ? { ...notification, read: true } : notification
-          )
-        );
-      } else {
-        toast.error("Failed to mark notification as read");
-      }
-    } catch (error) {
-      console.log("Error:", error);
-      toast.error("Failed to mark notification as read");
-    }
-  };
+  }, []);
 
   return (
-    <div>
-      {isLoading ? (
-        <Spinner size={100} color={"#6c63ff"} display={"block"} />
-      ) : (
-        <div>
-          {allNotifications.length > 0 ? (
-            allNotifications.map(notification => (
-              <div key={notification._id} className={`notification-item ${notification.read ? "read" : "unread"}`}>
-                {!notification.read && <div className="absolute inset-0 bg-blue-500 opacity-20"></div>}
-                <div className="relative z-10">
-                  <div className="flex items-center">
-                    {notification.fromUser.image && (
-                      <img className="notification-user-image" src={notification.fromUser.image} alt="User" />
-                    )}
-                    <Link
-                      to={
-                        notification.type === "post"
-                          ? `/post/${notification.info_id}`
-                          : notification.type === "profile"
-                          ? `/profile/${notification.info_id}`
-                          : "#"
-                      }
-                      className="notification-content"
-                      onClick={() => markNotificationAsRead(notification._id)}>
-                      <div className="notification-text">{notification.info}</div>
-                      <span className="notification-date">
-                        {notification.createdAt && formatDate(notification.createdAt)}
-                      </span>
-                    </Link>
-                  </div>
+    <nav className="main-nav flex justify-between items-center bg-white shadow-md relative px-4 py-2">
+      <NavLink to="/" className="text-xl font-bold text-customPurple">
+        PenPages
+      </NavLink>
+
+      <div className="hidden sm:flex space-x-4">
+        <NavLink to="/posts" className="hover:text-customPurple">
+          Feeds
+        </NavLink>
+        <NavLink to="/search" className="hover:text-customPurple">
+          Explore
+        </NavLink>
+      </div>
+
+      <div className="hidden sm:flex items-center space-x-4">
+        {isAuthenticated ? (
+          <>
+            <div className="relative">
+              <IoIosNotifications
+                className="inline mr-2 text-2xl text-customPurple cursor-pointer"
+                onClick={toggleNotifications}
+              />
+              {showNotifications && (
+                <div className="absolute right-0 top-8 w-80 bg-white shadow-lg rounded-lg z-10 p-4">
+                  <Notifications closeDropdown={() => setShowNotifications(false)} />
                 </div>
+              )}
+            </div>
+
+            <div className="relative">
+              <span onClick={toggleDropdown} className="cursor-pointer flex items-center space-x-2">
+                <span className="text-sm font-medium">{userData.firstName}</span>
+                <IoMdArrowDropdown className="text-xl" />
+              </span>
+
+              {isOpen && (
+                <ul className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 z-10">
+                  <li className="hover:bg-gray-100 px-4 py-2">
+                    <NavLink to={`/profile/${userData.username}`} className="block text-sm" onClick={handleCloseMenu}>
+                      Profile
+                    </NavLink>
+                  </li>
+                  <li className="hover:bg-gray-100 px-4 py-2">
+                    <NavLink to="/settings" className="block text-sm" onClick={handleCloseMenu}>
+                      Settings
+                    </NavLink>
+                  </li>
+                  <li className="hover:bg-gray-100 px-4 py-2">
+                    <NavLink to="/sign-out" className="block text-sm" onClick={handleCloseMenu}>
+                      Logout
+                    </NavLink>
+                  </li>
+                </ul>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <NavLink to="/sign-in" className="hover:text-customPurple px-4 py-2" onClick={handleCloseMenu}>
+              Sign In
+            </NavLink>
+            <NavLink
+              to="/sign-up"
+              className="bg-customPurple text-white rounded px-4 py-2 hover:bg-customPurpleDark"
+              onClick={handleCloseMenu}>
+              Sign Up
+            </NavLink>
+          </>
+        )}
+      </div>
+
+      <div className="sm:hidden">
+        <button onClick={toggleMobileMenu} className="text-2xl text-customPurple">
+          {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+      </div>
+
+      {isMobileMenuOpen && (
+        <div
+          ref={menuRef}
+          className="absolute top-0 left-0 w-full h-screen bg-white z-20 flex flex-col items-center p-4 overflow-y-auto">
+          <button onClick={toggleMobileMenu} className="self-end text-2xl text-customPurple mb-4">
+            <FaTimes />
+          </button>
+          <NavLink to="/posts" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
+            Feeds
+          </NavLink>
+          <NavLink to="/search" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
+            Explore
+          </NavLink>
+          {isAuthenticated ? (
+            <>
+              <div className="relative mb-4">
+                <IoIosNotifications
+                  className="inline mr-2 text-2xl text-customPurple cursor-pointer"
+                  onClick={toggleNotifications}
+                />
+                {showNotifications && (
+                  <div className="absolute right-0 top-8 w-80 bg-white shadow-lg rounded-lg z-10 p-4">
+                    <Notifications closeDropdown={() => setShowNotifications(false)} />
+                  </div>
+                )}
               </div>
-            ))
+              <NavLink
+                to={`/profile/${userData.username}`}
+                className="hover:text-customPurple mb-4"
+                onClick={handleCloseMenu}>
+                Profile
+              </NavLink>
+              <NavLink to="/settings" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
+                Settings
+              </NavLink>
+              <NavLink to="/sign-out" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
+                Logout
+              </NavLink>
+            </>
           ) : (
-            <div className="text-center text-gray-500">No notifications</div>
+            <>
+              <NavLink to="/sign-in" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
+                Sign In
+              </NavLink>
+              <NavLink
+                to="/sign-up"
+                className="bg-customPurple text-white rounded px-4 py-2 hover:bg-customPurpleDark"
+                onClick={handleCloseMenu}>
+                Sign Up
+              </NavLink>
+            </>
           )}
-          <div className="text-right mt-4 cursor-pointer text-customPurple" onClick={markAllNotificationsAsRead}>
-            Mark All as Read
-          </div>
         </div>
       )}
-    </div>
+    </nav>
   );
 };
 
-export default Notifications;
+export default Navbar;

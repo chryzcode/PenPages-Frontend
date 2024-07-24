@@ -45,7 +45,7 @@ const Followers = ({ userId }) => {
 
           {followers.map(follower => (
             <Link to={`/profile/${follower.username}`} className="flex py-4 px-4 bg-gray-200 rounded-lg text-left">
-              <img className="w-8 mr-3" src={follower.imageCloudinaryUrl} alt="" />
+              <img className="w-10 rounded-full mr-3" src={follower.image} alt="" />
               <div>
                 <p className="text-sm font-semibold">
                   {" "}

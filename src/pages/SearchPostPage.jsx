@@ -2,12 +2,21 @@ import React, { useState, useEffect } from "react";
 import Spinner from "../components/Spinner";
 import PostListing from "../components/PostListing";
 import { toast } from "react-toastify";
+import MiniAuthNavBar from "../components/MiniAuthNavBar";
 
 const SearchPostPage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/post";
   const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [query, setQuery] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+
+  useEffect(() => {
+    // Fetch user data from localStorage on component mount
+    const storedIsAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    setIsAuthenticated(storedIsAuthenticated);
+  }, []);
 
   // Function to fetch all posts
   const fetchAllPosts = async () => {
@@ -80,8 +89,8 @@ const SearchPostPage = () => {
   };
 
   return (
-    <div className="container mx-auto my-10">
-      <div className="md:w-full w-11/12 mx-auto block p-5">
+    <div className="container mx-auto my-5">
+      <div className="md:w-full w-11/12 mx-auto block px-5">
         <input
           type="text"
           value={query}
@@ -91,7 +100,7 @@ const SearchPostPage = () => {
           className="border rounded py-2 px-3 w-full mb-2 focus:outline-none focus:ring-0"
         />
       </div>
-      <div className="container mx-auto my-10">
+      <div className="container mx-auto">
         {isLoading ? (
           <h2>
             <Spinner size={100} color={"#6c63ff"} display={"block"} />
@@ -99,11 +108,14 @@ const SearchPostPage = () => {
         ) : posts.length === 0 ? (
           <p className="text-center text-customPurple text-4xl">No posts available</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mx-2">
-            {posts.map(post => (
-              <PostListing key={post._id} post={post} />
-            ))}
-          </div>
+          <>
+            <MiniAuthNavBar isAuthenticated={isAuthenticated} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mx-2">
+              {posts.map(post => (
+                <PostListing key={post._id} post={post} />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
