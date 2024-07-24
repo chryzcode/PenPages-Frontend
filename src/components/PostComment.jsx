@@ -48,7 +48,6 @@ const PostComment = ({ postId }) => {
 
   return (
     <div>
-      <div className="mx-10">
         <p className="text-2xl text-customPurple  font-semibold mx-auto text-center py-7">Comments</p>
         <div>
           <form onSubmit={submitForm}>
@@ -56,18 +55,20 @@ const PostComment = ({ postId }) => {
               <label htmlFor="body" className="block mb-2 text-left">
                 Comment
               </label>
-              <input
-                type="text"
-                id="body"
-                name="body"
-                value={commentBody}
-                onChange={e => {
-                  setCommentBody(e.target.value);
-                }}
-                className="border rounded w-full py-2 px-3 mb-2"
-                placeholder="Nice post"
-                required
-              />
+              <div className="md:w-full mx-auto block">
+                <input
+                  type="text"
+                  id="body"
+                  name="body"
+                  value={commentBody}
+                  onChange={e => {
+                    setCommentBody(e.target.value);
+                  }}
+                  className="border rounded w-full py-2 px-3 mb-2"
+                  placeholder="Nice post"
+                  required
+                />
+              </div>
             </div>
 
             <div className="mx-auto w-32 my-8 text-center">
@@ -80,7 +81,6 @@ const PostComment = ({ postId }) => {
             </div>
           </form>
         </div>
-      </div>
     </div>
   );
 };
