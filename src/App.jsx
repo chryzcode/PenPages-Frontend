@@ -35,7 +35,7 @@ function App() {
           <Route path="/post/:postId" element={<PostPage />} />
           <Route path="/create-post" element={<AddPostPage />} />
           <Route path="/post/:postId/edit" element={<EditPostPage />} />
-          <Route path="/:username/followings" element={<FollowersFollowingPage />} />
+          <Route path="/profile/:username/:section" element={<FollowersFollowingPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password/:userId/:token" element={<ResetPasswordPage />} />
           <Route path="/search" element={<SearchPostPage />} />
