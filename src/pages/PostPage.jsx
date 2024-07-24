@@ -230,7 +230,7 @@ const PostPage = () => {
             <Spinner size={100} color={"#6c63ff"} display={"block"} />
           </h2>
         ) : (
-          <div className="w-9/12 mx-auto text-center">
+          <div className="px-10 mx-auto text-center">
             {post ? (
               <div>
                 <img className="w-60 h-60 object-contain mx-auto" src={post.image} alt="" />

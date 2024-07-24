@@ -81,14 +81,16 @@ const SearchPostPage = () => {
 
   return (
     <div className="container mx-auto my-10">
-      <input
-        type="text"
-        value={query}
-        onChange={handleInputChange}
-        onKeyDown={handleSearch}
-        placeholder="Search for posts"
-        className="border rounded w-full py-2 px-3 mb-2 focus:outline-none focus:ring-0"
-      />
+      <div className="md:w-full w-11/12 mx-auto block p-5">
+        <input
+          type="text"
+          value={query}
+          onChange={handleInputChange}
+          onKeyDown={handleSearch}
+          placeholder="Search for posts"
+          className="border rounded py-2 px-3 w-full mb-2 focus:outline-none focus:ring-0"
+        />
+      </div>
       <div className="container mx-auto my-10">
         {isLoading ? (
           <h2>
