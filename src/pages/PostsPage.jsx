@@ -16,7 +16,6 @@ const PostsPage = () => {
   }, []);
   return (
     <>
-      <MiniAuthNavBar isAuthenticated={isAuthenticated} />
       <PostListings />
     </>
   );

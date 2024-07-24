@@ -4,12 +4,20 @@ import { toast } from "react-toastify";
 import PostListing from "./PostListing";
 import Auth from "./Auth";
 import Cookies from "js-cookie";
+import MiniAuthNavBar from "./MiniAuthNavBar";
 
 const PersonalisedPostListings = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
   const token = Cookies.get("accessToken");
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Fetch user data from localStorage on component mount
+    const storedIsAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    setIsAuthenticated(storedIsAuthenticated);
+  }, []);
 
   useEffect(() => {
     const getPosts = async () => {
@@ -22,7 +30,7 @@ const PersonalisedPostListings = () => {
           },
         });
         const data = await res.json();
-        setPosts(data["allPosts"]);
+        setPosts(data.allPosts);
       } catch (error) {
         console.log("Error in fetching data:", error);
         toast.error("Failed to get data");
@@ -32,18 +40,19 @@ const PersonalisedPostListings = () => {
     };
 
     getPosts();
-  }, []);
+  }, [API_BASE_URL, token]);
+
   return (
     <div className="container mx-auto my-10">
+      <MiniAuthNavBar isAuthenticated={isAuthenticated} />
+
       {isLoading ? (
         <h2>
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
         </h2>
-      )
-        : posts.length === 0 ? (
+      ) : posts.length === 0 ? (
         <p className="text-center text-customPurple text-4xl">No posts available</p>
-        )
-          : (
+      ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mx-2">
           {posts.map(post => (
             <PostListing key={post._id} post={post} />

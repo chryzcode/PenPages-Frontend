@@ -230,7 +230,7 @@ const PostPage = () => {
             <Spinner size={100} color={"#6c63ff"} display={"block"} />
           </h2>
         ) : (
-          <div className="px-10 mx-auto text-center">
+          <div className="md:px-10 px-4 mx-auto text-center">
             {post ? (
               <div>
                 <img className="w-60 h-60 object-contain mx-auto" src={post.image} alt="" />
@@ -248,7 +248,7 @@ const PostPage = () => {
 
                 {isAuthor ? (
                   <div className="flex items-center justify-center gap-5">
-                    <Link to={`/post/${post._id}/edit`}>Edit</Link>
+                    <Link to={`/post/${post._id}/edit`}>Edit</Link> 
                     <Link onClick={onDeleteClick}>Delete</Link>
                   </div>
                 ) : null}
