@@ -9,6 +9,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef();
+  const dropdownRef = useRef();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -25,11 +26,17 @@ const Navbar = ({ isAuthenticated, userData }) => {
   const handleCloseMenu = () => {
     setIsMobileMenuOpen(false);
     setIsOpen(false);
-    setShowNotifications(false); // Close notifications dropdown
+    setShowNotifications(false);
   };
 
   const handleClickOutside = event => {
     if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsMobileMenuOpen(false);
+    }
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+    if (!dropdownRef.current.contains(event.target) && !menuRef.current.contains(event.target)) {
       handleCloseMenu();
     }
   };
@@ -71,7 +78,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
               )}
             </div>
 
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <span onClick={toggleDropdown} className="cursor-pointer flex items-center space-x-2">
                 <span className="text-sm font-medium">{userData.firstName}</span>
                 <IoMdArrowDropdown className="text-xl" />
