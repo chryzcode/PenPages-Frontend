@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FaSearch } from "react-icons/fa";
 import Spinner from "../components/Spinner";
 import PostListing from "../components/PostListing";
 import { toast } from "react-toastify";
@@ -10,7 +11,6 @@ const SearchPostPage = () => {
   const [posts, setPosts] = useState([]);
   const [query, setQuery] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
 
   useEffect(() => {
     // Fetch user data from localStorage on component mount
@@ -23,7 +23,6 @@ const SearchPostPage = () => {
     try {
       setIsLoading(true);
       const res = await fetch(`${API_BASE_URL}`, {
-        // Assuming your endpoint for fetching all posts
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +78,7 @@ const SearchPostPage = () => {
   };
 
   const handleSearch = e => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" || e.type === "click") {
       if (query.trim() === "") {
         fetchAllPosts();
       } else {
@@ -91,14 +90,20 @@ const SearchPostPage = () => {
   return (
     <div className="container mx-auto my-5">
       <div className="md:w-full w-11/12 mx-auto block px-5">
-        <input
-          type="text"
-          value={query}
-          onChange={handleInputChange}
-          onKeyDown={handleSearch}
-          placeholder="Search for posts"
-          className="border rounded py-2 px-3 w-full mb-2 focus:outline-none focus:ring-0"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            value={query}
+            onChange={handleInputChange}
+            onKeyDown={handleSearch}
+            placeholder="Search for posts"
+            className="border rounded py-2 px-3 pr-10 w-full mb-2 focus:outline-none focus:ring-0"
+          />
+          <FaSearch
+            className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-customPurple"
+            onClick={handleSearch}
+          />
+        </div>
       </div>
       <div className="container mx-auto">
         {isLoading ? (
