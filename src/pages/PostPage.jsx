@@ -6,6 +6,8 @@ import NotFoundPage from "./NotFoundPage";
 import CurrentUserAuthor from "../utils/CurrentUserAuthor";
 import Cookies from "js-cookie";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa6";
+import { FaEdit, FaCommentAlt } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import getCurrentUserData from "../utils/CurrentUserData";
 import PostComment from "../components/PostComment";
 import Comments from "../components/Comments";
@@ -248,8 +250,18 @@ const PostPage = () => {
 
                 {isAuthor ? (
                   <div className="flex items-center justify-center gap-5">
-                    <Link to={`/post/${post._id}/edit`}>Edit</Link> 
-                    <Link onClick={onDeleteClick}>Delete</Link>
+                    <Link
+                      to={`/post/${post._id}/edit`}
+                      className="flex items-center justify-center hover:underline hover:text-customPurple">
+                      {" "}
+                      <FaEdit className="text-customPurple" /> Edit
+                    </Link>
+                    <Link
+                      onClick={onDeleteClick}
+                      className="flex items-center justify-center hover:underline hover:text-customPurple">
+                      {" "}
+                      <MdDelete className="text-customPurple" /> Delete
+                    </Link>
                   </div>
                 ) : null}
 
@@ -286,8 +298,8 @@ const PostPage = () => {
                     </span>
                   </div>
 
-                  <p onClick={toggleComments} className="cursor-pointer">
-                    {post.comments.length} Comments
+                  <p onClick={toggleComments} className="cursor-pointer flex items-center gap-2">
+                   <FaCommentAlt className="text-customPurple"/> {post.comments.length} Comments
                   </p>
                 </div>
                 <div className={`${likeOpen ? "block" : "hidden"}`}>
