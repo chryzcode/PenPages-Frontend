@@ -58,7 +58,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
         PenPages
       </NavLink>
 
-      <div className="hidden sm:flex space-x-4">
+      <div className="hidden lg:flex lg:space-x-8 xl:space-x-10">
         {currentPath !== "/posts" && (
           <NavLink to="/posts" className="hover:text-customPurple">
             Feeds
@@ -81,7 +81,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
         )}
       </div>
 
-      <div className="hidden sm:flex items-center space-x-4">
+      <div className="hidden lg:flex items-center space-x-4">
         {isAuthenticated ? (
           <>
             <div className="relative">
@@ -138,7 +138,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
         )}
       </div>
 
-      <div className="sm:hidden flex items-center">
+      <div className="lg:hidden flex items-center">
         <div className="relative mr-4">
           {isAuthenticated && (
             <IoIosNotifications
