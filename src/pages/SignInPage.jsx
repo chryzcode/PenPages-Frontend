@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import signInSVG from "../assets/images/sign-in.svg";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import Spinner from "../components/Spinner";
+import { AuthContext } from "../layout/MainLayout";
 
 const SignInPage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -12,6 +13,7 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const { setAuthState } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const signIn = async user => {
@@ -30,6 +32,9 @@ const SignInPage = () => {
       } else {
         const token = data.token;
         Cookies.set("accessToken", token, { expires: 2 });
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("userData", JSON.stringify(data.user));
+        setAuthState(true, data.user);
         toast.success("Logged in successfully");
         navigate("/posts");
       }

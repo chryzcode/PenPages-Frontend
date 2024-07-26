@@ -2,12 +2,26 @@ import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import Navbar from "../components/Navbar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import getCurrentUserData from "../utils/CurrentUserData";
 
+export const AuthContext = createContext();
+
 const MainLayout = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem("isAuthenticated") === "true");
+  const [userData, setUserData] = useState(JSON.parse(localStorage.getItem("userData")));
+
+  const setAuthState = (authState, user) => {
+    setIsAuthenticated(authState);
+    setUserData(user);
+    if (authState) {
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("userData", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("userData");
+    }
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -39,11 +53,11 @@ const MainLayout = () => {
   }, []);
 
   return (
-    <>
+    <AuthContext.Provider value={{ isAuthenticated, userData, setAuthState }}>
       <Navbar isAuthenticated={isAuthenticated} userData={userData} />
       <Outlet />
       <ToastContainer />
-    </>
+    </AuthContext.Provider>
   );
 };
 
