@@ -30,6 +30,8 @@ const SignInPage = () => {
       } else {
         const token = data.token;
         Cookies.set("accessToken", token, { expires: 2 });
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("userData", JSON.stringify(data.user));
         toast.success("Logged in successfully");
         navigate("/posts");
       }
@@ -54,7 +56,7 @@ const SignInPage = () => {
 
   return (
     <div className="mx-10">
-      <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Sign In</p>
+      <p className="text-4xl text-customPurple font-semibold mx-auto text-center py-7">Sign In</p>
       <p className="text-center">
         Do not have an account?{" "}
         <a href="/sign-up" className="text-customPurple hover:underline">
@@ -103,7 +105,7 @@ const SignInPage = () => {
             <div className="mx-auto w-32 my-8 text-center">
               <button
                 disabled={isLoading}
-                className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto "
+                className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
                 type="submit">
                 Sign In {isLoading && <Spinner size={10} />}
               </button>
@@ -115,7 +117,7 @@ const SignInPage = () => {
           </div>
         </div>
         <div>
-          <img src={signInSVG} />
+          <img src={signInSVG} alt="Sign In" />
         </div>
       </div>
     </div>

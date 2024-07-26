@@ -1,26 +1,24 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import getCurrentUserData from "../utils/CurrentUserData";
 import Cookies from "js-cookie";
 
 const Auth = WrappedComponent => {
   const WithAuthComponent = props => {
     const navigate = useNavigate();
-    const Authentication = async () => {
-      const authenticated = await getCurrentUserData();
-      if (!authenticated) {
-        // navigate("/sign-in");
+
+    useEffect(() => {
+      const authenticated = localStorage.getItem("isAuthenticated") === "true";
+      const token = Cookies.get("accessToken");
+      const userData = JSON.parse(localStorage.getItem("userData"));
+
+      if (!authenticated || !token || !userData) {
         Cookies.remove("accessToken");
         localStorage.removeItem("isAuthenticated");
         localStorage.removeItem("userData");
-        // toast.error("Authentication timeout");
+        navigate("/sign-in");
       }
-    };
+    }, [navigate]);
 
-    Authentication();
-
-    // Return the wrapped component here
     return <WrappedComponent {...props} />;
   };
 
