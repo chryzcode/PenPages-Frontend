@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import signInSVG from "../assets/images/sign-in.svg";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import Spinner from "../components/Spinner";
+import { AuthContext } from "../layout/MainLayout";
 
 const SignInPage = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -12,6 +13,7 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const { setAuthState } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const signIn = async user => {
@@ -32,6 +34,7 @@ const SignInPage = () => {
         Cookies.set("accessToken", token, { expires: 2 });
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("userData", JSON.stringify(data.user));
+        setAuthState(true, data.user);
         toast.success("Logged in successfully");
         navigate("/posts");
       }
@@ -56,7 +59,7 @@ const SignInPage = () => {
 
   return (
     <div className="mx-10">
-      <p className="text-4xl text-customPurple font-semibold mx-auto text-center py-7">Sign In</p>
+      <p className="text-4xl text-customPurple  font-semibold mx-auto text-center py-7">Sign In</p>
       <p className="text-center">
         Do not have an account?{" "}
         <a href="/sign-up" className="text-customPurple hover:underline">
@@ -105,7 +108,7 @@ const SignInPage = () => {
             <div className="mx-auto w-32 my-8 text-center">
               <button
                 disabled={isLoading}
-                className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto"
+                className="bg-customPurple hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-auto "
                 type="submit">
                 Sign In {isLoading && <Spinner size={10} />}
               </button>
@@ -117,7 +120,7 @@ const SignInPage = () => {
           </div>
         </div>
         <div>
-          <img src={signInSVG} alt="Sign In" />
+          <img src={signInSVG} />
         </div>
       </div>
     </div>
