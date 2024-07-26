@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { toast } from "react-toastify";
 import PostListing from "./PostListing";
-import Auth from "./Auth";
 import Cookies from "js-cookie";
-import MiniAuthNavBar from "./MiniAuthNavBar";
 
 const PersonalisedPostListings = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -14,7 +12,6 @@ const PersonalisedPostListings = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Fetch user data from localStorage on component mount
     const storedIsAuthenticated = localStorage.getItem("isAuthenticated") === "true";
     setIsAuthenticated(storedIsAuthenticated);
   }, []);
@@ -29,6 +26,12 @@ const PersonalisedPostListings = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        if (res.status === 401) {
+          toast.error("Authentication failed. Please log in again.");
+          setIsAuthenticated(false);
+          localStorage.setItem("isAuthenticated", "false");
+          return;
+        }
         const data = await res.json();
         setPosts(data.allPosts);
       } catch (error) {
@@ -39,13 +42,15 @@ const PersonalisedPostListings = () => {
       }
     };
 
-    getPosts();
+    if (token) {
+      getPosts();
+    } else {
+      setIsLoading(false);
+    }
   }, [API_BASE_URL, token]);
 
   return (
     <div className="container mx-auto my-10">
-      <MiniAuthNavBar isAuthenticated={isAuthenticated} />
-
       {isLoading ? (
         <h2>
           <Spinner size={100} color={"#6c63ff"} display={"block"} />
@@ -63,4 +68,4 @@ const PersonalisedPostListings = () => {
   );
 };
 
-export default Auth(PersonalisedPostListings);
+export default PersonalisedPostListings;

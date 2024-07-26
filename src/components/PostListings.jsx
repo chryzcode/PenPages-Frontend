@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { toast } from "react-toastify";
 import PostListing from "./PostListing";
-import MiniAuthNavBar from "./MiniAuthNavBar";
 
 const PostListings = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
@@ -48,7 +47,6 @@ const PostListings = () => {
         <p className="text-center text-customPurple text-4xl">No posts available</p>
       ) : (
         <>
-          <MiniAuthNavBar isAuthenticated={isAuthenticated} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mx-2">
             {posts.map(post => (
               <PostListing key={post._id} post={post} />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { IoMdArrowDropdown, IoIosNotifications } from "react-icons/io";
 import { FaBars, FaTimes } from "react-icons/fa";
 import Notifications from "./Notifications";
@@ -10,6 +10,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef();
   const dropdownRef = useRef();
+  const location = useLocation();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -48,22 +49,39 @@ const Navbar = ({ isAuthenticated, userData }) => {
     };
   }, []);
 
+  // Determine the current path
+  const currentPath = location.pathname;
+
   return (
     <nav className="main-nav flex justify-between items-center bg-white shadow-md relative px-4 py-2">
       <NavLink to="/" className="text-xl font-bold text-customPurple">
         PenPages
       </NavLink>
 
-      <div className="hidden sm:flex space-x-4">
-        <NavLink to="/posts" className="hover:text-customPurple">
-          Feeds
-        </NavLink>
-        <NavLink to="/search" className="hover:text-customPurple">
-          Explore
-        </NavLink>
+      <div className="hidden lg:flex lg:space-x-8 xl:space-x-10">
+        {currentPath !== "/posts" && (
+          <NavLink to="/posts" className="hover:text-customPurple">
+            Feeds
+          </NavLink>
+        )}
+        {currentPath !== "/search" && (
+          <NavLink to="/search" className="hover:text-customPurple">
+            Explore
+          </NavLink>
+        )}
+        {isAuthenticated && currentPath !== "/personalised/posts" && (
+          <NavLink to="/personalised/posts" className="hover:text-customPurple">
+            Personalised Feeds
+          </NavLink>
+        )}
+        {isAuthenticated && currentPath !== "/create-post" && (
+          <NavLink to="/create-post" className="hover:text-customPurple">
+            Write
+          </NavLink>
+        )}
       </div>
 
-      <div className="hidden sm:flex items-center space-x-4">
+      <div className="hidden lg:flex items-center space-x-4">
         {isAuthenticated ? (
           <>
             <div className="relative">
@@ -120,7 +138,7 @@ const Navbar = ({ isAuthenticated, userData }) => {
         )}
       </div>
 
-      <div className="sm:hidden flex items-center">
+      <div className="lg:hidden flex items-center">
         <div className="relative mr-4">
           {isAuthenticated && (
             <IoIosNotifications
@@ -143,16 +161,30 @@ const Navbar = ({ isAuthenticated, userData }) => {
       {isMobileMenuOpen && (
         <div
           ref={menuRef}
-          className="absolute top-0 left-0 w-full h-screen bg-white z-20 flex flex-col items-center p-4 overflow-y-auto">
+          className="absolute top-0 left-0 w-full bg-white z-20 flex flex-col items-center p-4 overflow-y-auto">
           <button onClick={toggleMobileMenu} className="self-end text-2xl text-customPurple mb-4">
             <FaTimes />
           </button>
-          <NavLink to="/posts" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
-            Feeds
-          </NavLink>
-          <NavLink to="/search" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
-            Explore
-          </NavLink>
+          {currentPath !== "/posts" && (
+            <NavLink to="/posts" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
+              Feeds
+            </NavLink>
+          )}
+          {currentPath !== "/search" && (
+            <NavLink to="/search" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
+              Explore
+            </NavLink>
+          )}
+          {isAuthenticated && currentPath !== "/personalised/posts" && (
+            <NavLink to="/personalised/posts" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
+              Personalised Feeds
+            </NavLink>
+          )}
+          {isAuthenticated && currentPath !== "/create-post" && (
+            <NavLink to="/create-post" className="hover:text-customPurple mb-4" onClick={handleCloseMenu}>
+              Write
+            </NavLink>
+          )}
           {isAuthenticated ? (
             <>
               <NavLink

@@ -1,5 +1,6 @@
 import React from "react";
 import PersonalisedPostListings from "../components/PersonalisedPostListings";
+import Auth from "../components/Auth";
 
 const PersonalisedPostsPage = () => {
   return (
@@ -9,4 +10,4 @@ const PersonalisedPostsPage = () => {
   );
 };
 
-export default PersonalisedPostsPage;
+export default Auth(PersonalisedPostsPage);

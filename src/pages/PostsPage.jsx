@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import PostListings from "../components/PostListings";
-import MiniAuthNavBar from "../components/MiniAuthNavBar";
 
 const PostsPage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
