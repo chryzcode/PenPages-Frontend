@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { toast } from "react-toastify";
 import PostListing from "./PostListing";
-import MiniAuthNavBar from "./MiniAuthNavBar";
 
 const PostListings = () => {
   const API_BASE_URL = "https://penpages-api.onrender.com/api/v1/";
