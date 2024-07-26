@@ -48,7 +48,6 @@ const PostListings = () => {
         <p className="text-center text-customPurple text-4xl">No posts available</p>
       ) : (
         <>
-          <MiniAuthNavBar isAuthenticated={isAuthenticated} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mx-2">
             {posts.map(post => (
               <PostListing key={post._id} post={post} />
