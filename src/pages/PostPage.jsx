@@ -265,7 +265,7 @@ const PostPage = () => {
                   </div>
                 ) : null}
 
-                <div className="text-left my-8">
+                <div className={`my-8 ${post.type === "poem" ? "max-w-prose mx-auto text-center" : "text-left"}`}>
                   <p>{post.body}</p>
                 </div>
 
@@ -299,7 +299,7 @@ const PostPage = () => {
                   </div>
 
                   <p onClick={toggleComments} className="cursor-pointer flex items-center gap-2">
-                   <FaCommentAlt className="text-customPurple"/> {post.comments.length} Comments
+                    <FaCommentAlt className="text-customPurple" /> {post.comments.length} Comments
                   </p>
                 </div>
                 <div className={`${likeOpen ? "block" : "hidden"}`}>
@@ -308,7 +308,7 @@ const PostPage = () => {
                   ))}
                 </div>
 
-                <div className={`${commentOpen ? "flex gap-2 w-10/12 mx-auto my-5  flex-col" : "hidden"} `}>
+                <div className={`${commentOpen ? "flex gap-2 w-10/12 mx-auto my-5 flex-col" : "hidden"} `}>
                   {post.comments.map(comment => (
                     <Comments
                       key={comment._id}
