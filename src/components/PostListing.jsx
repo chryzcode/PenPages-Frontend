@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FaThumbsUp } from "react-icons/fa6";
 
 const PostListing = ({ post }) => {
   const formatDate = dateString => {
@@ -40,7 +41,7 @@ const PostListing = ({ post }) => {
 
       <div className="flex justify-between pt-6 text-sm">
         <div>{formatDate(post.createdAt)}</div>
-        <div>{post.likes.length} likes</div>
+        <div className="flex justify-center align-middle items-center gap-1"><FaThumbsUp className="text-customPurple"/>{post.likes.length} likes</div>
       </div>
     </div>
   );

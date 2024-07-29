@@ -257,7 +257,7 @@ const PostPage = () => {
                 </div>
 
                 {isAuthor ? (
-                  <div className="flex items-center justify-center gap-5">
+                  <div className="flex items-center justify-center gap-5 text-lg p-3">
                     <Link
                       to={`/post/${post._id}/edit`}
                       className="flex items-center justify-center hover:underline hover:text-customPurple">
@@ -273,8 +273,13 @@ const PostPage = () => {
                   </div>
                 ) : null}
 
-                <div className={`my-8 ${post.type === "poem" ? "max-w-prose mx-auto text-center" : "text-left"}`}>
-                  <p className="whitespace-pre-wrap" >{post.body}</p>
+                <div
+                  className={`my-8 ${
+                    post.type === "poem"
+                      ? "max-w-prose mx-auto text-center"
+                      : "text-left max-w-2xl mx-auto px-4 sm:px-6 lg:px-8"
+                  }`}>
+                  <p className="whitespace-pre-wrap text-base leading-loose">{post.body}</p>
                 </div>
 
                 <div className="flex items-center justify-center flex-col">
@@ -288,24 +293,17 @@ const PostPage = () => {
 
                 <div className="flex items-center justify-center gap-10 py-5 align-center">
                   <div className="flex items-center justify-center gap-2 align-center">
-                    {authenticated ? (
-                      <>
-                        <Link onClick={onLikeClick}>
-                          {liked ? (
-                            <FaThumbsDown className="text-customPurple text-lg" />
-                          ) : (
-                            <FaThumbsUp className="text-customPurple text-lg" />
-                          )}
-                        </Link>
-                      </>
-                    ) : null}
-
+                    <Link onClick={authenticated ? onLikeClick : null}>
+                      {liked ? (
+                        <FaThumbsDown className="text-customPurple text-lg" />
+                      ) : (
+                        <FaThumbsUp className="text-customPurple text-lg" />
+                      )}
+                    </Link>
                     <span onClick={toggleLikes} className="cursor-pointer">
-                      {" "}
                       {likesCount} Likes
                     </span>
                   </div>
-
                   <p onClick={toggleComments} className="cursor-pointer flex items-center gap-2">
                     <FaCommentAlt className="text-customPurple" /> {post.comments.length} Comments
                   </p>
