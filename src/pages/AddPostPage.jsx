@@ -46,6 +46,7 @@ const AddPostPage = () => {
       });
       const data = await res.json();
       if (data.error) {
+        console.log("Error adding post:", data.error);
         toast.error("Failed to publish post");
       } else if (data.post) {
         toast.success("Post published successfully");

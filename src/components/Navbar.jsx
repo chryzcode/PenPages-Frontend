@@ -37,7 +37,10 @@ const Navbar = ({ isAuthenticated, userData }) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
     }
-    if (!dropdownRef.current.contains(event.target) && !menuRef.current.contains(event.target)) {
+    if (
+      (!dropdownRef.current || !dropdownRef.current.contains(event.target)) &&
+      (!menuRef.current || !menuRef.current.contains(event.target))
+    ) {
       handleCloseMenu();
     }
   };

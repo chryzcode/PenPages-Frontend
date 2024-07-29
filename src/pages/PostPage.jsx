@@ -235,17 +235,25 @@ const PostPage = () => {
           <div className="md:px-10 px-4 mx-auto text-center">
             {post ? (
               <div>
-                <img className="w-60 h-60 object-contain mx-auto" src={post.image} alt="" />
-                <h2 className="text-4xl font-bold py-3">{post.title}</h2>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 py-5">
-                  <Link to={`/profile/${post.author.username}`} className="flex items-center">
-                    <img className="w-10 h-10 rounded-full mr-3" src={post.author.image} alt="" />
-                    <p>
-                      {post.author.firstName} {post.author.lastName}
+                <img
+                  className="w-full h-auto max-w-lg mx-auto object-cover rounded-xl shadow-md"
+                  src={post.image}
+                  alt=""
+                />
+                <h2 className="text-4xl font-bold pt-10">{post.title}</h2>
+                <div className="container mx-auto px-4">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 py-5">
+                    <Link to={`/profile/${post.author.username}`} className="flex items-center">
+                      <img className="w-10 h-10 rounded-full mr-3" src={post.author.image} alt="" />
+                      <p className="text-lg font-semibold">
+                        {post.author.firstName} {post.author.lastName}
+                      </p>
+                    </Link>
+                    <p className="text-sm text-gray-600">
+                      {post.updatedAt ? formatDate(post.updatedAt) : formatDate(post.createdAt)}
                     </p>
-                  </Link>
-                  <p>{post.updatedAt ? formatDate(post.updatedAt) : formatDate(post.createdAt)}</p>
-                  <p>{post.type}</p>
+                    <p className="text-sm text-gray-600">{post.type}</p>
+                  </div>
                 </div>
 
                 {isAuthor ? (
@@ -265,8 +273,8 @@ const PostPage = () => {
                   </div>
                 ) : null}
 
-                <div className="text-left my-8">
-                  <p>{post.body}</p>
+                <div className={`my-8 ${post.type === "poem" ? "max-w-prose mx-auto text-center" : "text-left"}`}>
+                  <p className="whitespace-pre-wrap" >{post.body}</p>
                 </div>
 
                 <div className="flex items-center justify-center flex-col">
@@ -299,7 +307,7 @@ const PostPage = () => {
                   </div>
 
                   <p onClick={toggleComments} className="cursor-pointer flex items-center gap-2">
-                   <FaCommentAlt className="text-customPurple"/> {post.comments.length} Comments
+                    <FaCommentAlt className="text-customPurple" /> {post.comments.length} Comments
                   </p>
                 </div>
                 <div className={`${likeOpen ? "block" : "hidden"}`}>
@@ -308,7 +316,7 @@ const PostPage = () => {
                   ))}
                 </div>
 
-                <div className={`${commentOpen ? "flex gap-2 w-10/12 mx-auto my-5  flex-col" : "hidden"} `}>
+                <div className={`${commentOpen ? "flex gap-2 w-10/12 mx-auto my-5 flex-col" : "hidden"} `}>
                   {post.comments.map(comment => (
                     <Comments
                       key={comment._id}
