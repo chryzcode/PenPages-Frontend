@@ -219,11 +219,14 @@ const ProfilePage = () => {
                 <Spinner size={100} color={"#6c63ff"} display={"block"} />
               </h2>
             ) : posts && posts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                {posts.map(post => (
-                  <PostListing key={post._id} post={post} />
-                ))}
-              </div>
+              <>
+                <p className="my-10 text-customPurple mx-auto w-max text-2xl font-semibold">My Contents</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                  {posts.map(post => (
+                    <PostListing key={post._id} post={post} />
+                  ))}
+                </div>
+              </>
             ) : (
               <p className="text-center text-customPurple text-3xl">No posts available</p>
             )}
